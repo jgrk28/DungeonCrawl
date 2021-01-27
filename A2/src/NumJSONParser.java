@@ -24,9 +24,8 @@ public class NumJSONParser {
 			e.printStackTrace();
 		}
 		
-		//if a curly brace, mark position and go down the line until we find the next curly brace
-		//if a bracket, do the same
-		//otherwise, just do the same with a space
+		//if a curly brace, mark position and go down the line until we find the next curly brace. Process with JSONTokener
+		//if a bracket or singular value, send values to corresponding operation
 		
 		/*JSONTokener inputTokener = new JSONTokener(System.in);
 		JSONObject inputJSON = new JSONObject(inputTokener);
