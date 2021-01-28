@@ -8,7 +8,6 @@ import java.util.ArrayList;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.json.JSONTokener;
 
 import java.lang.IllegalArgumentException;
 
@@ -145,8 +144,6 @@ public class NumJSONParser {
 		//Throw the corresponding exception if a operation is not provided or 
 		// if the input does not match a specified operation
 		try {
-			operation = args[0];
-			
 			if (args[0].equals("--sum")) {
 				operation = "sum";
 				//System.out.println("The operation is sum");
@@ -181,15 +178,6 @@ public class NumJSONParser {
 		}
 		
 		System.out.println(output);
-
-		//System.out.println(chunks);
-
-		/*JSONTokener inputTokener = new JSONTokener(System.in);
-		JSONObject inputJSON = new JSONObject(inputTokener);
-		
-		for (String key : inputJSON.keySet()) {
-			System.out.println(key);
-		}*/
 		
 	}
 	
