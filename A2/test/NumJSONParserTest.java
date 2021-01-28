@@ -88,15 +88,14 @@ public class NumJSONParserTest {
 			assertEquals("Operation must be sum or product", i.getMessage());
 		}
 	}
-	
-	/*
+
 	@Test
 	//Source for setting System.in and System.out
 	//http://one-line-it.blogspot.com/2013/05/java-testing-with-stdin-and-stdout.html
 	public void testMainSingleNumberProduct() {
 		String input = "12";
 		
-		String expectedOutput = "[{\"total\":12,\"object\":12}]";
+		String expectedOutput = "[{\"total\":12,\"object\":12}]\n";
 		
 		System.setIn(new ByteArrayInputStream(input.getBytes()));
 		
@@ -115,7 +114,7 @@ public class NumJSONParserTest {
 	public void testMainSingleNumberSum() {
 		String input = "12";
 		
-		String expectedOutput = "[{\"total\":12,\"object\":12}]";
+		String expectedOutput = "[{\"total\":12,\"object\":12}]\n";
 		
 		System.setIn(new ByteArrayInputStream(input.getBytes()));
 		
@@ -141,7 +140,7 @@ public class NumJSONParserTest {
 		String expectedOutput = "[{\"total\":12,\"object\":12},"
 				+ "{\"total\":8,\"object\":[2,\"foo\",4]},"
 				+ "{\"total\":396,\"object\":{\"other\":"
-				+ "{\"payload\":[4,7]},\"payload\":[12,33],\"name\":\"SwDev\"}}]";
+				+ "{\"payload\":[4,7]},\"payload\":[12,33],\"name\":\"SwDev\"}}]\n";
 		
 		System.setIn(new ByteArrayInputStream(input.getBytes()));
 		
@@ -166,7 +165,7 @@ public class NumJSONParserTest {
 		String expectedOutput = "[{\"total\":12,\"object\":12},"
 				+ "{\"total\":6,\"object\":[2,\"foo\",4]},"
 				+ "{\"total\":45,\"object\":{\"other\":{\"payload\":[4,7]},"
-				+ "\"payload\":[12,33],\"name\":\"SwDev\"}}]]";
+				+ "\"payload\":[12,33],\"name\":\"SwDev\"}}]\n";
 		
 		System.setIn(new ByteArrayInputStream(input.getBytes()));
 		
@@ -178,6 +177,5 @@ public class NumJSONParserTest {
 		
 		assertEquals(expectedOutput, output.toString());
 	}
-	*/	
 	
 }

@@ -94,20 +94,18 @@ public class NumJSONParser {
 		JSONArray outputArray = new JSONArray();
 		JSONTokener inputTokens = new JSONTokener(System.in);
 
-		while (!inputTokens.end()) {
+		while (true) {
 			Object value;
 			//nextValue() does not separate integers if there are multiple in a row
 			//If first character is not a { or [, parse manually
 			Character charCheck = inputTokens.nextClean();
+			//If EOF is read, end the loop
+			if (inputTokens.end()) {
+				break;
+			}
 			inputTokens.back();
 			if (charCheck != 123 && charCheck != 91) {
 				String input = inputTokens.nextTo(" \t");
-				//Avoids getting stuck in a loop of moving back and forth if last
-				//character(s) of STDIN are whitespace
-				if (input.equals("")) {
-					break;
-				}
-
 				if (isNum(input)) {
 					value = Integer.parseInt(input);
 				} else {
@@ -118,6 +116,7 @@ public class NumJSONParser {
 			} else {
 				value = inputTokens.nextValue();
 			}
+
 			JSONObject outputJSON = new JSONObject();
 			outputJSON.put("total", recursiveOp(value, operation));
 			outputJSON.put("object", value);
