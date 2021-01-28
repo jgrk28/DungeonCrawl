@@ -8,6 +8,17 @@ import org.json.JSONTokener;
 
 public class NumJSONParser {
 
+	//Determines whether the given string is an integer value
+	//Returns the corresponding boolean
+	public static Boolean isNum(String s) {
+		try {
+			Integer.parseInt(s);
+			return true;
+		} catch (NumberFormatException e) {
+			return false;
+		}
+	}
+
 	public static int recursiveOp(Object value, String operation) {
 		int ident;
 		if (operation.equals("sum")) {
@@ -64,7 +75,24 @@ public class NumJSONParser {
 		JSONTokener inputTokens = new JSONTokener(System.in);
 		try {
 			while (true) {
-				Object value = inputTokens.nextValue();
+				Object value;
+				Character charCheck = inputTokens.nextClean();
+				inputTokens.back();
+				if (charCheck != 123 && charCheck != 91) {
+					String input = inputTokens.nextTo(" \t");
+					if (input.equals("")) {
+						break;
+					}
+
+					if (isNum(input)) {
+						value = Integer.parseInt(input);
+					} else {
+						input = input.replaceAll("^\"|\"$", "");
+						value = input;
+					}
+				} else {
+					value = inputTokens.nextValue();
+				}
 				JSONObject outputJSON = new JSONObject();
 				outputJSON.put("total", recursiveOp(value, operation));
 				outputJSON.put("object", value);
