@@ -6,36 +6,40 @@ Package: Traveller
 The package Traveller provides the services of a route planner through a network of towns for a role-playing game. We request that this package be implemented using Java 8 (OpenJDK version 1.8.0_262) and should satisfy the definition outlined below:  
 
 ### Data ###  
-Character object with the following fields:  
-* Name  
-* Location   
+Character class with the following fields:  
+* Name (String)  
+* Location (Town) 
 
-Town object with the following fields:  
-* Name  
-* List of towns that the town is connected to  
+Town class with the following fields:  
+* Name (String)
+* List of towns that the town is connected to (ArrayList<Town>)
 
 ### Operations ###  
 Characters  
 * createCharacter  
-  * Initializes a new character with a unique name  
-  * Returns a character object  
+  * String -> Character
+  * Initializes a new character with a unique name
 * placeCharacter  
-  * Void method that places a character in a town and sets their location  
-* moveCharacter  
-  * Void method that moves a character to another town and updates their location  
-* validateMove  
-  * Checks that a character can reach a designed town without running into other characters  
-  * Returns a boolean. True if the character is able to move, false otherwise    
+  * Town -> Void
+  * Places this character in a town and sets their location  
+* moveCharacter 
+  * Town -> Void
+  * Moves a character to another town and updates their location  
+* validateMove
+  * Town -> Boolean
+  * Checks that this character can reach a designed town without running into other characters
 
 Towns  
-* createTown  
-  * Initializes a new town with a unique town  
-  * Returns a town object  
-* connectTowns  
-  * Connects towns to one another to form a network  
+* createTown
+  * String -> Town
+  * Initializes a new town with a unique name  
+* connectTowns
+  * Town -> ArrayList<Town>
+  * Adds a new town this towns list of neighbors 
   * Returns an ArrayList of adjacent towns  
 
 ### Behavior ###
-* Characters and towns must have unique names  
-* The connectTowns method must validate that the network satisfies the rules of a simple graph  
-* Connected towns must have a unique list of towns, and cannot include itself  
+* Errors thrown if these rules are violated:
+  * Characters and towns must have unique names  
+  * The connectTowns method must validate that the network satisfies the rules of a simple graph  
+  * Connected towns must have a unique list of towns, and cannot include itself  
