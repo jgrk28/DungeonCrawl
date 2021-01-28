@@ -2,10 +2,17 @@ package src;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-
-import java.lang.IllegalArgumentException;
 import org.json.JSONTokener;
 
+import java.lang.IllegalArgumentException;
+
+//A NumJSON is one of:
+//Integer
+//String
+//Array of NumJSONs
+//JSON with NumJSON in "payload" key
+
+//Class to parse NumJSONs.
 public class NumJSONParser {
 
 	//Determines whether the given string is an integer value
@@ -19,16 +26,25 @@ public class NumJSONParser {
 		}
 	}
 
+	//Depending on the given operation adds or multiplies all the integers
+	//in the potentially nested NumJSON value and returns the total
+	//Operations must be "sum" and "product"
+	//Value must be a NumJSON
 	public static int recursiveOp(Object value, String operation) {
+		//identity value for given operation
 		int ident;
 		if (operation.equals("sum")) {
 			ident = 0;
-		} else {
+		} else if (operation.equals("product")) {
 			ident = 1;
+		} else {
+			throw new IllegalArgumentException("Operation must be sum or product");
 		}
+
 		if (value instanceof Integer) {
 			return (Integer)value;
 		} else if (value instanceof String) {
+			//Strings are treated as the identity value so as to not change the total
 			return ident;
 		} else if (value instanceof JSONArray) {
 			JSONArray jarr = (JSONArray)value;
@@ -36,8 +52,10 @@ public class NumJSONParser {
 			for (int ii = 0; ii < jarr.length(); ii++) {
 				if (operation.equals("sum")) {
 					total = total + recursiveOp(jarr.get(ii), operation);
-				} else {
+				} else if (operation.equals("product")) {
 					total = total * recursiveOp(jarr.get(ii), operation);
+				} else {
+					throw new IllegalArgumentException("Operation must be sum or product");
 				}
 			}
 			return total;
@@ -49,20 +67,20 @@ public class NumJSONParser {
 		}
 	}
 
+	//Takes command line input to determine mathematical operation and applies
+	//it to the NumJSONs in STDIN.
+	//First command line argument must be "--sum" or "--product"
 	public static void main(String[] args) {
-		String operation;
-		
 		//Determine the operation specified from the command line
-		//Throw the corresponding exception if a operation is not provided or 
-		// if the input does not match a specified operation
+		//Throw an exception if a operation is not provided or
+		//if the input does not match a specified operation
+		String operation;
 		try {
 			if (args[0].equals("--sum")) {
 				operation = "sum";
-				//System.out.println("The operation is sum");
 			}
 			else if (args[0].equals("--product")) {
 				operation = "product";
-				//System.out.println("The operation is product");
 			}
 			else {
 				throw new IllegalArgumentException("Please enter a valid operation: --sum or --product");
@@ -71,35 +89,39 @@ public class NumJSONParser {
 			throw new ArrayIndexOutOfBoundsException("Please enter a valid operation: --sum or --product");
 		}
 
+		//Read NumJSONs from STDIN and apply operation to each one.
+		//Return as an array of JSONs with the NumJSON value and the total after operation.
 		JSONArray outputArray = new JSONArray();
 		JSONTokener inputTokens = new JSONTokener(System.in);
-		try {
-			while (true) {
-				Object value;
-				Character charCheck = inputTokens.nextClean();
-				inputTokens.back();
-				if (charCheck != 123 && charCheck != 91) {
-					String input = inputTokens.nextTo(" \t");
-					if (input.equals("")) {
-						break;
-					}
 
-					if (isNum(input)) {
-						value = Integer.parseInt(input);
-					} else {
-						input = input.replaceAll("^\"|\"$", "");
-						value = input;
-					}
-				} else {
-					value = inputTokens.nextValue();
+		while (!inputTokens.end()) {
+			Object value;
+			//nextValue() does not separate integers if there are multiple in a row
+			//If first character is not a { or [, parse manually
+			Character charCheck = inputTokens.nextClean();
+			inputTokens.back();
+			if (charCheck != 123 && charCheck != 91) {
+				String input = inputTokens.nextTo(" \t");
+				//Avoids getting stuck in a loop of moving back and forth if last
+				//character(s) of STDIN are whitespace
+				if (input.equals("")) {
+					break;
 				}
-				JSONObject outputJSON = new JSONObject();
-				outputJSON.put("total", recursiveOp(value, operation));
-				outputJSON.put("object", value);
-				outputArray.put(outputJSON);
-			}
-		} catch (org.json.JSONException e) {
 
+				if (isNum(input)) {
+					value = Integer.parseInt(input);
+				} else {
+					//Strips double quotes
+					input = input.replaceAll("^\"|\"$", "");
+					value = input;
+				}
+			} else {
+				value = inputTokens.nextValue();
+			}
+			JSONObject outputJSON = new JSONObject();
+			outputJSON.put("total", recursiveOp(value, operation));
+			outputJSON.put("object", value);
+			outputArray.put(outputJSON);
 		}
 
 		System.out.println(outputArray);
