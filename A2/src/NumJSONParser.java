@@ -131,7 +131,7 @@ public class NumJSONParser {
 			total = 1;
 			for (String v: values) {
 				if (isNum(v)) {
-					total = sum(total, Integer.parseInt(v));
+					total = product(total, Integer.parseInt(v));
 				}
 			}
 		}
