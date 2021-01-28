@@ -179,13 +179,13 @@ public class NumJSONParser {
 		JSONArray output = new JSONArray();
 
 		for (String s : chunks) {
-			//If the value in the array list is an array of NumJSON, process the array and add it to the output
-			if (s.contains("[") || s.contains("]")) {
-				output.put(appendToJSON(s, processArray(s, operation)));
-			}
 			//If the value in the array list is an Object, process the object and add it to the output
-			else if (s.contains("{") || s.contains("}")) {
+			if (s.contains("{") || s.contains("}")) {
 				//output.put(appendToJSON(s, processObject(s, operation)));
+			}
+			//If the value in the array list is an array of NumJSON, process the array and add it to the output
+			else if (s.contains("[") || s.contains("]")) {
+				output.put(appendToJSON(s, processArray(s, operation)));
 			}
 			//If the value is a singular number or a string, add it to the output with the corresponding total
 			else {
