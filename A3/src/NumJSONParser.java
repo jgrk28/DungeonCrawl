@@ -1,4 +1,3 @@
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONTokener;
@@ -70,7 +69,6 @@ public class NumJSONParser {
 	//it to the NumJSONs in STDIN.
 	//First command line argument must be "--sum" or "--product"
 	public static void main(String[] args) {
-		
 		//Determine the operation specified from the command line
 		//Throw an exception if a operation is not provided or
 		//if the input does not match a specified operation
@@ -98,7 +96,7 @@ public class NumJSONParser {
 			Object value;
 			//nextValue() does not separate integers if there are multiple in a row
 			//If first character is not a { or [, parse manually
-			Character charCheck = inputTokens.nextClean();
+			char charCheck = inputTokens.nextClean();
 			//If EOF is read, end the loop
 			if (inputTokens.end()) {
 				break;
