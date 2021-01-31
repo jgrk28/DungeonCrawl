@@ -1,3 +1,4 @@
+package traveller_server;
 
 public interface Town {
 	

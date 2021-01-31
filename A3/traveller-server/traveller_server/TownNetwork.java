@@ -1,4 +1,7 @@
+package traveller_server;
 
+import java.util.Map;
+import java.util.Set;
 
 public interface TownNetwork {
 	
@@ -29,5 +32,7 @@ public interface TownNetwork {
 	 * @throws IllegalArgumentException - if either the given character or town do not already exist in the town 
 	 * network*/
 	boolean hasClearPath(String characterName, String townName) throws IllegalArgumentException;
+	
+	public Boolean checkSameNetwork(Map<Town, Set<Town>> townConnections, Map<Town, Set<Character>> townInhabitants);
 
 }
