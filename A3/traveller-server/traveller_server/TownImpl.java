@@ -2,9 +2,17 @@ package traveller_server;
 
 import java.util.Objects;
 
+/**
+ * This class represents a character
+ * Overrides equals and hashcode
+ */
 public class TownImpl implements Town {
 	String name;
 	
+	/**
+	 * Constructs a new town
+	 * @param name - the name of the town
+	 */
 	public TownImpl(String name) {
 		this.name = name;
 	}

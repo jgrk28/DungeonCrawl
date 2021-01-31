@@ -3,29 +3,41 @@ package traveller_server;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * This interface represents the operations offered by the Town Network.
+ * A Town network is a simple graph specification together with a placement of 
+ * in-game characters
+ */
 public interface TownNetwork {
 	
-	/*Purpose: Create a new town in the town network with the given name
+	/** 
+	 * Create a new town in the town network with the given name
 	 * @param townName - a unique town name
-	 * @throws IllegalArgumentException - if the given town name already exists in the town network*/
+	 * @throws IllegalArgumentException - if the given town name already exists in the town network
+	 */
 	void createTown(String townName) throws IllegalArgumentException;
 	
-	/*Purpose: Add connection2 between two given towns in the town network
+	/** 
+	 * Add connection between two given towns in the town network
 	 * @param townNameA - an existing town name
 	 * @param townNameB - an existing town name
 	 * @throws IllegalArgumentException - if the given town names are the same, if either of the given towns 
 	 * do not already exist in the town network, or if there already exists a path between the two given towns 
-	 * in the town network*/
+	 * in the town network
+	 */
 	void connectTowns(String townNameA, String townNameB) throws IllegalArgumentException;
 	
-	/*Purpose: Create a named character and place them in the given town
+	/**
+	 * Create a named character and place them in the given town
 	 * @param characterName - a unique character name
 	 * @param townName - an existing town name
 	 * @throws IllegalArgumentException - if the given character name already exists in the town network or if 
-	 * the given town does not already exist in the town network*/
+	 * the given town does not already exist in the town network
+	 */
 	void placeCharacter(String characterName, String townName) throws IllegalArgumentException;
 	
-	/*purpose: Returns true if there exists a path3 through which a character could traverse to reach the given 
+	/**
+	 * Returns true if there exists a path through which a character could traverse to reach the given 
 	 * town without running into any other characters, otherwise returns false
 	 * @param townName - an existing town name
 	 * @param characterName - an existing character name
@@ -33,6 +45,11 @@ public interface TownNetwork {
 	 * network*/
 	boolean hasClearPath(String characterName, String townName) throws IllegalArgumentException;
 	
-	public Boolean checkSameNetwork(Map<Town, Set<Town>> townConnections, Map<Town, Set<Character>> townInhabitants);
+	/**
+	 * Returns true if the given TownNetwork is the same as this network
+	 * @param townConnections - a map of towns to the towns they are connected to
+	 * @param townInhabitants - a map of towns to characters placed in them
+	 */
+	boolean checkSameNetwork(Map<Town, Set<Town>> townConnections, Map<Town, Set<Character>> townInhabitants);
 
 }
