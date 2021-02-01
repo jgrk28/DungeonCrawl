@@ -98,7 +98,6 @@ public class Network implements TownNetwork{
 		inhabitantSet.add(newCharacter);
 		townInhabitants.put(currTown.getKey(), inhabitantSet);
 		
-		printCharacters();
 	}
 
 	@Override
