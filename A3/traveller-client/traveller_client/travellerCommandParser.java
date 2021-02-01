@@ -12,7 +12,7 @@ public class travellerCommandParser {
 	public static void main(String[] args) {		
 		
 		JSONTokener inputTokens = new JSONTokener(System.in);
-		Set<Town> townNetwork = new HashSet<Town>();
+		//Set<Town> townNetwork = new HashSet<Town>();
 		
 		Object value;
 		value = inputTokens.nextValue();
