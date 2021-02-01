@@ -229,10 +229,5 @@ public class Network implements TownNetwork{
 	public int hashCode() {
 		return Objects.hash(this.townConnections, this.townInhabitants);
 	}
-	
-	public void printCharacters() {
- 	for (Map.Entry<Town, Set<Character>> entry : townInhabitants.entrySet()) {
-	    System.out.println(entry.getKey() + ":" + entry.getValue().toString());
-	}
-	}
+
 }
