@@ -1,5 +1,6 @@
 package traveller_server;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
@@ -17,18 +18,26 @@ public class Network implements TownNetwork{
 	
 	// A map of towns to characters placed in them
 	private Map<Town, Set<Character>> townInhabitants;
+	
+	public Network() {
+		this.townConnections = new HashMap<Town, Set<Town>>();
+		this.townInhabitants = new HashMap<Town, Set<Character>>();
+	}
 
 	@Override
 	public void createTown(String townName) throws IllegalArgumentException {
 		// Check to see if the given town name already exists
 		// If it does not, create the town and add it to the network
-		if (getTown(townName).equals(null)) {
-			Town newTown = new TownImpl(townName);
-			Set<Town> emptySet = new HashSet<Town>();
-			townConnections.put(newTown, emptySet);
-		} else {
-			throw new IllegalArgumentException("A town with this name already exists");
-		}	
+		for (Town t : townConnections.keySet()) {
+			if (t.checkTownName(townName)) {
+				throw new IllegalArgumentException("A town with this name already exists");
+			}
+		}
+
+		Town newTown = new TownImpl(townName);
+		Set<Town> emptySet = new HashSet<Town>();
+		townConnections.put(newTown, emptySet);
+
 	}
 
 	@Override
@@ -36,14 +45,15 @@ public class Network implements TownNetwork{
 		// Get the town objects associated with the provided town names
 		Map.Entry<Town, Set<Town>> townA = getTown(townNameA);
 		Map.Entry<Town, Set<Town>> townB = getTown(townNameB);
+
 		
 		// Check to ensure that both towns exist in the network, that they are not already connected,
 		// and the town names are not the same
-		if (townA.equals(null) || townB.equals(null)) {
+		if (townA == null || townB == null) {
 			throw new IllegalArgumentException("Town does not exist in the network");
 		} else if (townA.getValue().contains(townB.getKey()) || townB.getValue().contains(townA.getKey())) {
 			throw new IllegalArgumentException("Towns are already connected");
-		} else if (townA.getValue().equals(townB.getValue())) {
+		} else if (townA.getValue() == townB.getValue()) {
 			throw new IllegalArgumentException("Cannot connect town to itself");
 		} 
 		
@@ -60,27 +70,35 @@ public class Network implements TownNetwork{
 
 	@Override
 	public void placeCharacter(String characterName, String townName) throws IllegalArgumentException {
-		
-		// Identify the inhabitants associated with the given town
-		Map.Entry<Town, Set<Character>> townCharacters = getInhabitants(townName);
+		// Identify the town object for the given town name
+		Map.Entry<Town, Set<Town>> currTown = getTown(townName);
 		
 		// Check that the town exists
-		if (townCharacters.equals(null)) {
+		if (currTown == null) {
 			throw new IllegalArgumentException("No town found");
 		}
 		
-		Set<Character> inhabitantSet = townCharacters.getValue();
+		// Identify the inhabitants associated with the given town
+		Map.Entry<Town, Set<Character>> townCharacters = getInhabitants(townName);
+		Set<Character> inhabitantSet = new HashSet<Character>();
+		Character newCharacter;
 		
-		// Check that the given character name does not already exist in the network
-		for (Character currCharacter : inhabitantSet) {
-			if (currCharacter.checkCharacterName(characterName)) {
-				throw new IllegalArgumentException("This character already exists in the network");
-			}		
-		}
+		// If characters exist in the town network, check that this is a new character
+		if (!(townCharacters == null)) {
+			inhabitantSet = townCharacters.getValue();
+			for (Character currCharacter : inhabitantSet) {
+				if (currCharacter.checkCharacterName(characterName)) {
+					throw new IllegalArgumentException("This character already exists in the network");
+				}		
+			}
+		} 
 		
-		Character newCharacter = new CharacterImpl(characterName);
+		// Add the town and character to townInhabitants
+		newCharacter = new CharacterImpl(characterName);
 		inhabitantSet.add(newCharacter);
-		townInhabitants.replace(townCharacters.getKey(), inhabitantSet);	
+		townInhabitants.put(currTown.getKey(), inhabitantSet);
+		
+		printCharacters();
 	}
 
 	@Override
@@ -94,10 +112,10 @@ public class Network implements TownNetwork{
 		Map.Entry<Town, Set<Town>> destTown = getTown(townName);
 		
 		// Check if the character or town do not exist in the town network
-		if (currTown.equals(null)) {
+		if (currTown == null) {
 			throw new IllegalArgumentException("Could not find character");
 		}
-		if (destTown.equals(null)) {
+		if (destTown == null) {
 			throw new IllegalArgumentException("Could not find town");
 		}
 		
@@ -124,14 +142,15 @@ public class Network implements TownNetwork{
 		visitedTowns.add(currTown);
 	
 		// Check that the current town is in the network
-		if (townConnections.get(currTown).equals(null)) {
+		if (townConnections.get(currTown) == null) {
 			throw new IllegalArgumentException("Current town not in town network");
 		}
 		
 		// Iterate over all adjacent towns to the current town
 		for (Town adjacentTown : townConnections.get(currTown)) {
-			if (townInhabitants.get(adjacentTown).equals(null)) {
-				// If the town does not exist, continue
+			
+			if (townInhabitants.get(adjacentTown) == null) {
+				//if the town does not exist, continue
 			}
 			// If the town is empty, check to see if the rest of the path is clear 
 			else if (townInhabitants.get(adjacentTown).isEmpty()) {
@@ -166,7 +185,8 @@ public class Network implements TownNetwork{
 	 */
 	private Map.Entry<Town, Set<Character>> getInhabitants(String townName) {
 		for (Map.Entry<Town, Set<Character>> entry : townInhabitants.entrySet()) {
-			if (entry.getKey().checkTownName(townName)); {
+			Town givenTown = getTown(townName).getKey();
+			if (entry.getKey().equals(givenTown)) {
 				return entry;
 			}
 		}
@@ -180,7 +200,7 @@ public class Network implements TownNetwork{
 	 */
 	private Map.Entry<Town, Set<Town>> getTown(String townName) {
 		for (Map.Entry<Town, Set<Town>> entry : townConnections.entrySet()) {
-			if (entry.getKey().checkTownName(townName)); {
+			if (entry.getKey().checkTownName(townName)) {
 				return entry;
 			}
 		}
@@ -208,5 +228,11 @@ public class Network implements TownNetwork{
 	@Override
 	public int hashCode() {
 		return Objects.hash(this.townConnections, this.townInhabitants);
+	}
+	
+	public void printCharacters() {
+ 	for (Map.Entry<Town, Set<Character>> entry : townInhabitants.entrySet()) {
+	    System.out.println(entry.getKey() + ":" + entry.getValue().toString());
+	}
 	}
 }

@@ -11,5 +11,18 @@ public interface Town {
 	 * @return true if the town name is the same, false otherwise
 	 */
 	public Boolean checkTownName(String name);
+	
+	/**
+	 * Overrides the equals method
+	 * @param obj - the given object
+	 * @return true if the towns are the same town, false otherwise
+	 */
+	public boolean equals(Object obj);
+	
+	/**
+	 * Overrides the hashcode method
+	 * @return the corresponding hashcode
+	 */
+	public int hashCode();
 
 }
