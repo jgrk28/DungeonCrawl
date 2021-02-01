@@ -187,5 +187,54 @@ public class travellerServerTest {
 		
 		assertFalse(testNetwork.hasClearPath("Allison", "Somerville"));
 	}
+	
+	@Test
+	public void testClearPathTrueLargeGraph() {
+		Network testNetwork = new Network();
+		testNetwork.createTown("Boston");
+		testNetwork.createTown("Cambridge");
+		testNetwork.createTown("Somerville");
+		testNetwork.createTown("Brookline");
+		testNetwork.placeCharacter("Allison", "Boston");
+		testNetwork.connectTowns("Boston", "Cambridge");
+		testNetwork.connectTowns("Cambridge", "Somerville");
+		testNetwork.connectTowns("Somerville", "Brookline");
+		
+		assertTrue(testNetwork.hasClearPath("Allison", "Brookline"));
+	}
+	
+	@Test
+	public void testClearPathFalseLargeGraph() {
+		Network testNetwork = new Network();
+		testNetwork.createTown("Boston");
+		testNetwork.createTown("Cambridge");
+		testNetwork.createTown("Somerville");
+		testNetwork.createTown("Brookline");
+		testNetwork.placeCharacter("Allison", "Boston");
+		testNetwork.placeCharacter("Andy", "Somerville");
+		testNetwork.connectTowns("Boston", "Cambridge");
+		testNetwork.connectTowns("Cambridge", "Somerville");
+		testNetwork.connectTowns("Somerville", "Brookline");
+		
+		assertFalse(testNetwork.hasClearPath("Allison", "Brookline"));
+	}
+	
+	@Test
+	public void testClearPathTrueLargeCircle() {
+		Network testNetwork = new Network();
+		testNetwork.createTown("Boston");
+		testNetwork.createTown("Cambridge");
+		testNetwork.createTown("Somerville");
+		testNetwork.createTown("Brookline");
+		testNetwork.placeCharacter("Allison", "Boston");
+		testNetwork.placeCharacter("Andy", "Somerville");
+		testNetwork.connectTowns("Boston", "Cambridge");
+		testNetwork.connectTowns("Cambridge", "Somerville");
+		testNetwork.connectTowns("Somerville", "Brookline");
+		testNetwork.connectTowns("Boston", "Brookline");
+		
+		assertTrue(testNetwork.hasClearPath("Allison", "Brookline"));
+	}
+
 
 }

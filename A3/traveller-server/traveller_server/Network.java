@@ -147,12 +147,9 @@ public class Network implements TownNetwork{
 		
 		// Iterate over all adjacent towns to the current town
 		for (Town adjacentTown : townConnections.get(currTown)) {
-			
+
+			// If the town has no inhabitants, check to see if the rest of the path is clear 
 			if (townInhabitants.get(adjacentTown) == null) {
-				//if the town does not exist, continue
-			}
-			// If the town is empty, check to see if the rest of the path is clear 
-			else if (townInhabitants.get(adjacentTown).isEmpty()) {
 				if (recursiveClearPath(adjacentTown, destTown, visitedTowns)) {
 					return true;
 				}
