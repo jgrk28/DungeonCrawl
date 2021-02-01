@@ -44,12 +44,5 @@ public interface TownNetwork {
 	 * @throws IllegalArgumentException - if either the given character or town do not already exist in the town 
 	 * network*/
 	boolean hasClearPath(String characterName, String townName) throws IllegalArgumentException;
-	
-	/**
-	 * Returns true if the given TownNetwork is the same as this network
-	 * @param townConnections - a map of towns to the towns they are connected to
-	 * @param townInhabitants - a map of towns to characters placed in them
-	 */
-	boolean checkSameNetwork(Map<Town, Set<Town>> townConnections, Map<Town, Set<Character>> townInhabitants);
 
 }

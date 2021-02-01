@@ -149,7 +149,8 @@ public class Network implements TownNetwork{
 		for (Town adjacentTown : townConnections.get(currTown)) {
 
 			// If the town has no inhabitants, check to see if the rest of the path is clear 
-			if (townInhabitants.get(adjacentTown) == null) {
+			if (townInhabitants.get(adjacentTown) == null
+					|| townInhabitants.get(adjacentTown).isEmpty()) {
 				if (recursiveClearPath(adjacentTown, destTown, visitedTowns)) {
 					return true;
 				}
@@ -202,9 +203,13 @@ public class Network implements TownNetwork{
 		}
 		return null;
 	}
-	
-	@Override
-	public boolean checkSameNetwork(Map<Town, Set<Town>> townConnections, Map<Town, Set<Character>> townInhabitants) {
+
+	/**
+	 * Returns true if the given TownNetwork is the same as this network
+	 * @param townConnections - a map of towns to the towns they are connected to
+	 * @param townInhabitants - a map of towns to characters placed in them
+	 */
+	private boolean checkSameNetwork(Map<Town, Set<Town>> townConnections, Map<Town, Set<Character>> townInhabitants) {
 		return townConnections.equals(this.townConnections) && townInhabitants.equals(this.townInhabitants);
 	}
 	
