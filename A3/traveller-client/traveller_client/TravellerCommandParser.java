@@ -37,7 +37,7 @@ public class TravellerCommandParser {
 
 	/**
 	 * Parse the commands from STDIN and call the corresponding method for the command
-	 * @throws an IllegalArgumentException if the command is not in JSON format, if
+	 * @throws IllegalArgumentException if the command is not in JSON format, if
 	 * the first command does not create the town network, or if the command is invalid
 	 */
 	private void parseCommands() {		
