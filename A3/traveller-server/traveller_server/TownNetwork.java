@@ -1,8 +1,5 @@
 package traveller_server;
 
-import java.util.Map;
-import java.util.Set;
-
 /**
  * This interface represents the operations offered by the Town Network.
  * A Town network is a simple graph specification together with a placement of 
