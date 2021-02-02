@@ -17,11 +17,20 @@ public class TownImpl implements Town {
 		this.name = name;
 	}
 
-	@Override
-	public Boolean checkTownName(String name) {
+	/**
+	 * Returns true if the given Town is the same as this Town
+	 * @param name - the name of the given town
+	 * @return true if the town name is the same, false otherwise
+	 */
+	private Boolean checkTownName(String name) {
 		return name.equals(this.name);
 	}
 	
+	/**
+	 * Overrides the equals method
+	 * @param obj - the given object
+	 * @return true if the towns are the same town, false otherwise
+	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (obj == this) {
@@ -30,10 +39,14 @@ public class TownImpl implements Town {
 		if (!(obj instanceof Town)) {
 			return false;
 		}
-		Town otherTown = (Town) obj;
+		TownImpl otherTown = (TownImpl) obj;
 		return otherTown.checkTownName(this.name);	
 	}
 	
+	/**
+	 * Overrides the hashcode method
+	 * @return the corresponding hashcode
+	 */
 	@Override
 	public int hashCode() {
 		return Objects.hash(this.name);

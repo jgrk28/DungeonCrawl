@@ -4,13 +4,6 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 public class travellerServerTest {
-
-	// Test for CharacterImpl constructor using checkCharacterName
-	@Test
-	public void testCharacterImplConstructor() {		
-		assertTrue(new CharacterImpl("Andy").checkCharacterName("Andy"));
-		assertFalse(new CharacterImpl("Allison").checkCharacterName("Andy"));
-	}
 	
 	// Test equals and hashcode override for CharacterImpl
 	@Test
@@ -26,13 +19,6 @@ public class travellerServerTest {
 		assertFalse(char1.equals(char3));
 		assertFalse(char1.equals(town1));
 		assertFalse(char1.hashCode() == char3.hashCode());
-	}
-	
-	// Test for TownImpl constructor using checkTownName
-	@Test
-	public void testTownImplConstructor() {		
-		assertTrue(new TownImpl("Boston").checkTownName("Boston"));
-		assertFalse(new TownImpl("Cambridge").checkTownName("Boston"));
 	}
 	
 	// Test equals and hashcode override for TownImpl
@@ -235,6 +221,5 @@ public class travellerServerTest {
 		
 		assertTrue(testNetwork.hasClearPath("Allison", "Brookline"));
 	}
-
 
 }

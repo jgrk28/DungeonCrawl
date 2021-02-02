@@ -29,7 +29,7 @@ public class Network implements TownNetwork{
 		// Check to see if the given town name already exists
 		// If it does not, create the town and add it to the network
 		for (Town t : townConnections.keySet()) {
-			if (t.checkTownName(townName)) {
+			if (t.equals(new TownImpl(townName))) {
 				throw new IllegalArgumentException("A town with this name already exists");
 			}
 		}
@@ -87,7 +87,7 @@ public class Network implements TownNetwork{
 		if (!(townCharacters == null)) {
 			inhabitantSet = townCharacters.getValue();
 			for (Character currCharacter : inhabitantSet) {
-				if (currCharacter.checkCharacterName(characterName)) {
+				if (currCharacter.equals(new CharacterImpl(characterName))) {
 					throw new IllegalArgumentException("This character already exists in the network");
 				}		
 			}
@@ -167,7 +167,7 @@ public class Network implements TownNetwork{
 	private Town findInhabitant(String characterName) {
 		for (Map.Entry<Town, Set<Character>> entry : townInhabitants.entrySet()) {
 			for (Character currCharacter : entry.getValue()) {
-				if (currCharacter.checkCharacterName(characterName)) {
+				if (currCharacter.equals(new CharacterImpl(characterName))) {
 					return entry.getKey();
 				}
 			}
@@ -197,7 +197,7 @@ public class Network implements TownNetwork{
 	 */
 	private Map.Entry<Town, Set<Town>> getTown(String townName) {
 		for (Map.Entry<Town, Set<Town>> entry : townConnections.entrySet()) {
-			if (entry.getKey().checkTownName(townName)) {
+			if (entry.getKey().equals(new TownImpl(townName))) {
 				return entry;
 			}
 		}
