@@ -197,6 +197,7 @@ public class TCPTravellerClient {
 		//TO-DO
 		//placeCharacterCommands.
 		
+		
 	}
 	
 	private void passageSafeQuery(JSONObject commandJSON) {
