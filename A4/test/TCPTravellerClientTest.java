@@ -286,7 +286,9 @@ public class TCPTravellerClientTest {
         + "{ \"command\" : \"passage-safe?\", "
         + "\"params\" : { \"character\" : \"Jacob\", \"town\" : \"Somerville\" } }";
     System.setIn(new ByteArrayInputStream(userInput.getBytes()));
-    String serverResponses = "\"1234\"";
+    String serverResponses = "\"1234\""
+        + "{\"name\":\"Jacob\",\"town\":\"Somerville\"}],"
+        + "\"response\":true}";
     setupStreams(serverResponses);
 
     String expectedToServer = "Jacob Kaplan"
