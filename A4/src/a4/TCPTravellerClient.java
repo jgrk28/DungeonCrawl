@@ -25,9 +25,9 @@ public class TCPTravellerClient {
 	private String username;
 	
 	// Input and output for the socket
-	private Socket socket;
-	private PrintStream outputToServer;
-	private JSONTokener inputFromServer;
+	protected Socket socket;
+	protected PrintStream outputToServer;
+	protected JSONTokener inputFromServer;
 	
 	// Keeps track of all place character commands for a given batch request
 	private Set<JSONObject> placeCharacterCommands;
@@ -72,7 +72,7 @@ public class TCPTravellerClient {
 	 * @param args - arguments from the command line (IP address, port, user's name)
 	 * @throws NumberFormatException if the destination port is not a number
 	 */
-	private void parseCommandLine(String[] args) throws NumberFormatException {
+	public void parseCommandLine(String[] args) throws NumberFormatException {
 		if (args.length < 3) {
 			username = "Glorifrir Flintshoulder";
 		} else {
@@ -91,16 +91,15 @@ public class TCPTravellerClient {
 			ipAddress = args[0];
 		}
 	}
-	
+
 	/**
 	 * Initializes the connection with the server 
-	 * @throws IOException if the session ID from the server is not a String
+	 * @throws IOException if cannot start socket
+	 * @throws IllegalArgumentException if ID is invalid
 	 */
-	private void initializeConnection() throws IOException {
+	public void initializeConnection() throws IOException {
 		// Open a connection to the server
-		socket = new Socket(ipAddress, port);
-		outputToServer = new PrintStream(socket.getOutputStream());
-		inputFromServer = new JSONTokener(socket.getInputStream());
+		startSocket();
 		
 		// Send sign-up name to the server
 		outputToServer.print(username);
@@ -111,8 +110,18 @@ public class TCPTravellerClient {
 			String sessionID = (String) inputObject;
 			printUserName(username);
 		} else {
-			throw new IOException("Invalid session ID from the server");
+			throw new IllegalArgumentException("Invalid session ID from the server");
 		}
+	}
+
+	/**
+	 * Connects to server and gets streams for input and output
+	 * @throws IOException if cannot connect to server
+	 */
+	protected void startSocket() throws IOException {
+		socket = new Socket(ipAddress, port);
+		outputToServer = new PrintStream(socket.getOutputStream());
+		inputFromServer = new JSONTokener(socket.getInputStream());
 	}
 	
 	/**
@@ -132,7 +141,7 @@ public class TCPTravellerClient {
 	 * Once the network has been successfully created, check for more
 	 * commands from the user and process if applicable
 	 */
-	private void handleUserInput() {
+	public void handleUserInput() {
 		// Read input from the user from STDIN
 		inputFromUser = new JSONTokener(System.in);
 		
@@ -318,6 +327,7 @@ public class TCPTravellerClient {
 			queryJSON.put("destination", destination);
 
 			sendServerBatchRequest(queryJSON);
+			placeCharacterCommands.clear();
 			receiveResponse(character, destination);
 			
 		// Output an error since the command is malformed
@@ -412,7 +422,7 @@ public class TCPTravellerClient {
 	/**
 	 * Ends the connection with the socket
 	 */
-	private void endConnection() {
+	public void endConnection() {
 		try {
 			socket.close();
 		} catch (IOException e) {
