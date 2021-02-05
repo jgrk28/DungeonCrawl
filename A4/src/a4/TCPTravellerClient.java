@@ -1,9 +1,7 @@
 package a4;
 
-import java.io.BufferedReader;
+
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.io.PrintStream;
 import java.net.Socket;
 import java.util.HashSet;
@@ -23,21 +21,21 @@ public class TCPTravellerClient {
 	JSONTokener inputFromUser;
 	
 	public TCPTravellerClient() {
-		
+		placeCharacterCommands = new HashSet<JSONObject>();
 	}
 
 	public static void main(String[] args) {
 		TCPTravellerClient client = new TCPTravellerClient();
 		client.parseCommandLine(args);
-		client.initializeConnection();	
-		client.createNetwork();
-		client.processUserCommands();
-		
-		if (!client.isServerAlive()) {
-			client.endConnection();
+		try {
+			client.initializeConnection();
+		} catch (IOException e) {
+			System.out.println("Unable to initialize connection");
+			e.printStackTrace();
 			return;
 		}
-		
+		client.handleUserInput();
+		client.endConnection();
 	}
 	
 	/**
@@ -83,17 +81,26 @@ public class TCPTravellerClient {
 		Object inputObject = inputFromServer.nextValue();
 		if (inputObject instanceof String) {
 			String sessionID = (String) inputObject;
-			printSessionID(sessionID);
+			printUserName(username);
 		} else {
 			throw new IOException("Invalid session ID from the server");
 		}
 	}
 	
-	private void printSessionID(String sessionID) {
+	private void printUserName(String username) {
 		JSONArray output = new JSONArray();
 		output.put("the server will call me");
-		output.put(sessionID);
+		output.put(username);
 		System.out.println(output.toString());
+	}
+
+	private void handleUserInput() {
+		if (inputFromUser.more()) {
+			createNetwork();
+		}
+		while (isServerAlive() && inputFromUser.more()) {
+			processUserCommands();
+		}
 	}
 	
 	private void createNetwork() {
@@ -109,11 +116,15 @@ public class TCPTravellerClient {
 			String command = createNetworkJSON.getString("command");
 			
 			if (!(command.equals("roads"))) {
-				throw new IllegalArgumentException("Invalid command. Must start with roads command.");
+				outputError(createNetworkJSON);
+				endConnection();
+				throw new IllegalArgumentException("First command must be roads. Ending program");
 			}
 			
 		} catch (JSONException e) {
-			throw new JSONException("The request does not contain a command");
+			outputError(createNetworkJSON);
+			endConnection();
+			throw new IllegalArgumentException("First command malformed. Ending program");
 		}
 		
 		sendServerCreateNetwork(createNetworkJSON);
@@ -129,9 +140,17 @@ public class TCPTravellerClient {
 		for (int i = 0; i < params.length(); i++) {
 			JSONObject currRoad = params.getJSONObject(i);
 			roads.put(currRoad);
-			
-			String fromTown = currRoad.getString("from");
-			String toTown = currRoad.getString("to");
+
+			String fromTown;
+			String toTown;
+			try {
+				fromTown = currRoad.getString("from");
+				toTown = currRoad.getString("to");
+			} catch (JSONException e) {
+				outputError(userCommand);
+				endConnection();
+				throw new IllegalArgumentException("First command malformed. Ending program");
+			}
 			
 			if (!towns.contains(fromTown)) {
 				towns.add(fromTown);
@@ -166,54 +185,112 @@ public class TCPTravellerClient {
 				passageSafeQuery(commandJSON);
 			} 
 			else {
-				throw new IllegalArgumentException("Invalid command. Must start with roads command.");
+				outputError(commandJSON);
 			}
 			
 		} catch (JSONException e) {
-			throw new JSONException("The request does not contain a command");
+			outputError(commandJSON);
 		}
 		
 		
 	}
-	
-	/*
-	 * { "command" : "place", 
-  	"params" : { "character" : String, "town" : String } }
-  	
-  	{ "characters" : [ { "name" : String, "town" : String }, ... ],
-  	"query" : { "character" : String, "destination" : String } }
-  	
-	 */
+
 	private void placeCharacter(JSONObject commandJSON) {
 		JSONObject newCharacterJSON = new JSONObject();
 		JSONObject params = commandJSON.getJSONObject("params");
-		
-		String name = params.getString("character");
-		String town = params.getString("town");
-		
-		newCharacterJSON.put("name", name);
-		newCharacterJSON.put("town", town);
-		
-		//TO-DO
-		//placeCharacterCommands.
-		
-		
+
+		try {
+			String name = params.getString("character");
+			String town = params.getString("town");
+			newCharacterJSON.put("name", name);
+			newCharacterJSON.put("town", town);
+			placeCharacterCommands.add(newCharacterJSON);
+		} catch (JSONException e) {
+			outputError(commandJSON);
+		}
 	}
-	
+
 	private void passageSafeQuery(JSONObject commandJSON) {
-		//Send batch of commands
+		JSONObject queryJSON = new JSONObject();
+		JSONObject params = commandJSON.getJSONObject("params");
+
+		try {
+			String character = params.getString("character");
+			String destination = params.getString("town");
+
+			queryJSON.put("character", character);
+			queryJSON.put("destination", destination);
+
+			sendServerBatchRequest(queryJSON);
+			receiveResponse(character, destination);
+		} catch (JSONException e) {
+			outputError(commandJSON);
+		}
+	}
+
+	private void sendServerBatchRequest(JSONObject queryJSON) {
+		JSONObject serverCommand = new JSONObject();
+
+		serverCommand.put("characters", new JSONArray(placeCharacterCommands));
+		serverCommand.put("query", queryJSON);
+
+		outputToServer.print(serverCommand);
 	}
 	
 	private boolean isServerAlive() {
 		return socket.isConnected();		
 	}
-	
-	private void receiveResponse() {
-		
+
+	private void receiveResponse(String character, String destination) {
+		//Receive session ID
+		Object inputObject = inputFromServer.nextValue();
+		JSONObject responseJSON = (JSONObject) inputObject;
+
+		JSONArray badPlacementJSON = responseJSON.getJSONArray("invalid");
+		outputInvalidPlacements(badPlacementJSON);
+
+		Boolean responseBool = responseJSON.getBoolean("response");
+		outputQueryResponse(character, destination, responseBool);
 	}
-	
+
+	private void outputInvalidPlacements(JSONArray placements) {
+		for (int i = 0; i < placements.length(); i++) {
+			JSONObject placement = placements.getJSONObject(i);
+			JSONArray outputMessage = new JSONArray();
+			outputMessage.put("invalid placement");
+			outputMessage.put(placement);
+			System.out.println(outputMessage.toString());
+		}
+	}
+
+	private void outputQueryResponse(String character, String destination, Boolean response) {
+		JSONObject query = new JSONObject();
+		query.put("character", character);
+		query.put("destination", destination);
+
+		JSONArray outputMessage = new JSONArray();
+		outputMessage.put("the response for");
+		outputMessage.put(query);
+		outputMessage.put("is");
+		outputMessage.put(response);
+
+		System.out.println(outputMessage.toString());
+	}
+
 	private void endConnection() {
-		
+		try {
+			socket.close();
+		} catch (IOException e) {
+			System.out.println("Unable to close connection");
+			e.printStackTrace();
+		}
+	}
+
+	private void outputError(JSONObject invalidJSON) {
+		JSONObject outputJSON = new JSONObject();
+		outputJSON.put("error", "not a request");
+		outputJSON.put("object", invalidJSON);
+		System.out.println(outputJSON.toString());
 	}
 	
 	
