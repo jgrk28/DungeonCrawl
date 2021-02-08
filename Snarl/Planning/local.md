@@ -23,7 +23,7 @@
          |   movePlayer()                     |   |                                                       v           |     |
          |   moveAdversary()                  |   |     +----------------------------------+      +-------+-------+   |     |
          |   playerInteraction()              |   +----->   Entity                         +<-----+   Adversary   |   |     |
-         |   adersaryInteraction()            |         +----------------------------------+      +---------------+   |     |
+         |   adversaryInteraction()           |         +----------------------------------+      +---------------+   |     |
          |                                    |         |   Boolean playerInteractable     |      |               |   |     |
          +-----+-------------------------+----+         |   Boolean adversaryInteractable  |      +---------------+   |     |
                ^                         ^              |                                  |                          |     |
