@@ -8,7 +8,7 @@ public class LevelImpl implements Level {
 	
 	private List<LevelComponent> levelMap;
 	
-	LevelImpl(List<LevelComponent> levelMap) {
+	public LevelImpl(List<LevelComponent> levelMap) {
 		this.levelMap = levelMap;
 	}
 

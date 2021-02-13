@@ -2,6 +2,6 @@ package view;
 
 public interface LevelView {
 	
-	void drawLevel();
+	public String drawLevel();
 
 }
