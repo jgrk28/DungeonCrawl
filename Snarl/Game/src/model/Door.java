@@ -1,10 +1,13 @@
 package model;
 
 public class Door implements Entity {
-	public LevelComponent connectedComponent;
+	public LevelComponent room;
+	public LevelComponent hall;
 	
-	Door(LevelComponent connectedComponent) {
-		this.connectedComponent = connectedComponent;
+	
+	public Door(LevelComponent room, LevelComponent hall) {
+		this.room = room;
+		this.hall = hall;
 	}
 
 }
