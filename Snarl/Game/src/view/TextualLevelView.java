@@ -9,19 +9,14 @@ public class TextualLevelView implements LevelView {
 	
 	private LevelModelView modelView;
 	
-	TextualLevelView(LevelModelView modelView) {
+	public TextualLevelView(LevelModelView modelView) {
 		this.modelView = modelView;
 	}
 
 	@Override
-	public void drawLevel() {
+	public String drawLevel() {
 		List<List<EntityType>> level = modelView.getMap();
-		//Draw the level to STDOUT
+		return "";
 	}
 
 }
-
-//Create level with random things, level components, connect them together
-//Create LevelView and pass in Model as modelView
-//Call drawLevel and check if the output reflects the input
-//X for wall, . for space, | for door
