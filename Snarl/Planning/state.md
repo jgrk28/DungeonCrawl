@@ -19,7 +19,7 @@
 **Constructor**   
 * Dungeon(List<Player> players, List<Adversary> adversaries)  
     * Initializes all the levels, sets the players and adversaries for the dungeon  
-    * Args:  
+    * Arguments:  
         * players - all players in this Dungeon  
         * adversaries - all adversaries in this Dungeon  
  
@@ -44,7 +44,7 @@
 **Constructor**  
 * Level(Set<Player> players, Set<Adversary> adversaries, long seed)  
     * Initialize a random level from the given seed. Level will place the given players and adversaries  
-    * Args:  
+    * Arguments:  
         * players - all active players to place in this Level  
         * adversaries - all active adversaries to place in this Level  
         * seed - used to initialize a random number generator  
@@ -60,7 +60,7 @@
 **Methods**  
 * void actorAction(Actor actor, Point destination)  
     * Moves the actor and deals with any interaction that occurs during the movement  
-    * Args:  
+    * Arguments:  
         * actor - the actor that is moving  
         * destination - the cartesian coordinate for the player’s destination  
 * GameState isLevelOver()  
@@ -77,11 +77,11 @@
     * Checks that the move is valid for the given player  
 * Entity getDestinationEntity(Point destination)  
     * Returns the entity at the destination   
-    * Args:  
+    * Arguments:  
         * destination - the cartesian coordinate for the destination  
 * void enterComponent(Actor actor, LevelComponent source)  
     * Places the actor in this LevelComponent  
-    * Args:  
+    * Arguments:  
         * actor - the actor moving to this component  
         * source - the LevelComponent the actor is currently in  
  
