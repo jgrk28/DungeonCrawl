@@ -1,5 +1,7 @@
 package model;
 
-public interface Entity {
+import modelView.EntityType;
 
+public interface Entity {
+  EntityType getEntityType();
 }

@@ -1,11 +1,11 @@
 package modelView;
 
-import java.util.List;
+import java.util.ArrayList;
 
 public interface LevelModelView {
 	
 	//Returns map of the whole level
-	List<List<EntityType>> getMap();
+	ArrayList<ArrayList<EntityType>> getMap();
 	
 	
 

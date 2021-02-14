@@ -1,5 +1,6 @@
 package view;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import modelView.EntityType;
@@ -15,7 +16,7 @@ public class TextualLevelView implements LevelView {
 
 	@Override
 	public String drawLevel() {
-		List<List<EntityType>> level = modelView.getMap();
+		ArrayList<ArrayList<EntityType>> level = modelView.getMap();
 		return "";
 	}
 

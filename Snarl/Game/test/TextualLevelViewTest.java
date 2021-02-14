@@ -27,17 +27,17 @@ public class TextualLevelViewTest {
 	private Entity space = new Space();
 	private Entity wall = new Wall();
 
-	LevelComponent room1;
-	LevelComponent room2;
-	LevelComponent room3;
-	LevelComponent room4;
+	Room room1;
+	Room room2;
+	Room room3;
+	Room room4;
 
-	LevelComponent hall1;
-	LevelComponent hall1Snake;
-	LevelComponent hall1RoomBrush;
-	LevelComponent hall1HallBrush;
-	LevelComponent hall2;
-	LevelComponent hall3;
+	Hall hall1;
+	Hall hall1Snake;
+	Hall hall1RoomBrush;
+	Hall hall1HallBrush;
+	Hall hall2;
+	Hall hall3;
 	
 	private void initializeRoom1() {
 		List<List<Entity>> componentMap = new ArrayList<List<Entity>>();
@@ -85,60 +85,31 @@ public class TextualLevelViewTest {
 	}
 	
 	private void initializeHall1() {
-		// https://piazza.com/class/kjj18tz29a76p2?cid=331
-		List<List<Entity>> componentMap = new ArrayList<List<Entity>>();
-		componentMap.add(Arrays.asList(wall, wall, wall, wall));
-		componentMap.add(Arrays.asList(space, space, space, wall));
-		componentMap.add(Arrays.asList(wall, wall, space, wall));
-		componentMap.add(Arrays.asList(wall, wall, space, wall));
-		componentMap.add(Arrays.asList(wall, wall, space, wall));
-		
-		// Not entirely sure how we want to define waypoints here
-		//After reviewing the examples in Piazza, I think we need walls for hallways
-		//Which mean that they must be at least 3 entities wide
-		//Using the space where the direction changes here
+		List<Entity> componentMap = Arrays.asList(space, space, space, space, space, space, space);
 		List<Point> waypoints = new ArrayList<Point>();
-		waypoints.add(new Point(6,3));
+		waypoints.add(new Point(6,2));
 		
 		hall1 = new Hall(componentMap, waypoints);
 	}
 
 	private void initializeHall1Snake() {
-		//Not implementing yet in case refactor but basically has waypoints
-		//(9,2), (9,4), (5,4).
-		List<List<Entity>> componentMap = new ArrayList<List<Entity>>();
-		componentMap.add(Arrays.asList(wall, wall, wall, wall));
-		componentMap.add(Arrays.asList(space, space, space, wall));
-		componentMap.add(Arrays.asList(wall, wall, space, wall));
-		componentMap.add(Arrays.asList(wall, wall, space, wall));
-		componentMap.add(Arrays.asList(wall, wall, space, wall));
-
-		// Not entirely sure how we want to define waypoints here
-		//After reviewing the examples in Piazza, I think we need walls for hallways
-		//Which mean that they must be at least 3 entities wide
-		//Using the space where the direction changes here
+		List<Entity> componentMap = Arrays.asList(space, space, space, space, space, space, space,
+				space, space, space, space, space, space);
 		List<Point> waypoints = new ArrayList<Point>();
-		waypoints.add(new Point(6,3));
+		waypoints.add(new Point(9,2));
+		waypoints.add(new Point(9,4));
+		waypoints.add(new Point(6,4));
 
 		hall1Snake = new Hall(componentMap, waypoints);
 	}
 
 	private void initializeHall1RoomBrush() {
-		//Not implementing yet in case refactor but basically has waypoints
-		//(9,2), (9,6), (6,6).
-		List<List<Entity>> componentMap = new ArrayList<List<Entity>>();
-		componentMap.add(Arrays.asList(wall, wall, wall, wall));
-		componentMap.add(Arrays.asList(space, space, space, wall));
-		componentMap.add(Arrays.asList(wall, wall, space, wall));
-		componentMap.add(Arrays.asList(wall, wall, space, wall));
-		componentMap.add(Arrays.asList(wall, wall, space, wall));
-
-		// Not entirely sure how we want to define waypoints here
-		//After reviewing the examples in Piazza, I think we need walls for hallways
-		//Which mean that they must be at least 3 entities wide
-		//Using the space where the direction changes here
+		List<Entity> componentMap = Arrays.asList(space, space, space, space, space, space, space,
+				space, space, space, space, space, space);
 		List<Point> waypoints = new ArrayList<Point>();
-		waypoints.add(new Point(6,3));
+		waypoints.add(new Point(9,2));
+		waypoints.add(new Point(9,6));
+		waypoints.add(new Point(6,6));
 
 		hall1RoomBrush = new Hall(componentMap, waypoints);
 	}
@@ -146,30 +117,21 @@ public class TextualLevelViewTest {
 	private void initializeHall1HallBrush() {
 		//Not implementing yet in case refactor but basically has waypoints
 		//(12,2), (12,10), (9,10), (9,3), (6,3).
-		List<List<Entity>> componentMap = new ArrayList<List<Entity>>();
-		componentMap.add(Arrays.asList(wall, wall, wall, wall));
-		componentMap.add(Arrays.asList(space, space, space, wall));
-		componentMap.add(Arrays.asList(wall, wall, space, wall));
-		componentMap.add(Arrays.asList(wall, wall, space, wall));
-		componentMap.add(Arrays.asList(wall, wall, space, wall));
-
-		// Not entirely sure how we want to define waypoints here
-		//After reviewing the examples in Piazza, I think we need walls for hallways
-		//Which mean that they must be at least 3 entities wide
-		//Using the space where the direction changes here
+		List<Entity> componentMap = Arrays.asList(space, space, space, space, space, space, space,
+				space, space, space, space, space, space, space, space, space, space, space, space, space,
+				space, space, space, space, space, space, space, space, space, space, space, space, space);
 		List<Point> waypoints = new ArrayList<Point>();
+		waypoints.add(new Point(12,2));
+		waypoints.add(new Point(12,10));
+		waypoints.add(new Point(9,10));
+		waypoints.add(new Point(9,3));
 		waypoints.add(new Point(6,3));
 
 		hall1HallBrush = new Hall(componentMap, waypoints);
 	}
 	
 	private void initializeHall2() {
-		List<List<Entity>> componentMap = new ArrayList<List<Entity>>();
-		componentMap.add(Arrays.asList(wall, wall, wall, wall));
-		componentMap.add(Arrays.asList(wall, space, space, space));
-		componentMap.add(Arrays.asList(wall, space, wall, wall));
-		componentMap.add(Arrays.asList(wall, space, wall));
-
+		List<Entity> componentMap = Arrays.asList(space, space, space, space, space);
 		List<Point> waypoints = new ArrayList<Point>();
 		waypoints.add(new Point(2,11));
 		
@@ -177,50 +139,31 @@ public class TextualLevelViewTest {
 	}
 	
 	private void initializeHall3() {
-		List<List<Entity>> componentMap = new ArrayList<List<Entity>>();
-		componentMap.add(Arrays.asList(wall, wall, wall, wall));
-		componentMap.add(Arrays.asList(space, space, space, space));
-		componentMap.add(Arrays.asList(wall, wall, wall, wall));
-
+		List<Entity> componentMap = Arrays.asList(space, space, space, space);
 		List<Point> waypoints = new ArrayList<Point>();
 		
 		hall3 = new Hall(componentMap, waypoints);
 	}
 
 	private void initializeDoorsHall1() {
-		//I tried reworking the door class to keep track of the room and hall the door connects
-		//It was really confusing creating doors multiple times, especially when a room has
-		//more than 1 door
-
-		//Maybe we should think about taking out the door entity. After all you cant hold a door and
-		//an actor in the same space right now. Points->Hall map?
-		//https://piazza.com/class/kjj18tz29a76p2?cid=370
-
 		//Doors for hall1
-		Door room1Door = new Door(room1, hall1);
-		//We need to decide if we want to put this in the interface for LevelComponent
-		room1.placeDoor(room1Door);
-		Door room2Door1 = new Door(room2, hall1);
-		room2.placeDoor(room2Door1);
-		hall1.placeDoors(new Point(3,3), room1Door, new Point(6,7), room2Door1);
+		room1.connectHall(new Point(4,2), hall1);
+		room2.connectHall(new Point(6,6), hall1);
+		hall1.connectRooms(new Point(3,2), room1, new Point(6,7), room2);
 	}
 
 	private void initializeDoorsHall2() {
 		//Doors for hall2
-		Door room3Door = new Door(room3, hall2);
-		room3.placeDoor(room3Door);
-		Door room2Door2 = new Door(room2, hall2);
-		room2.placeDoor(room2Door2);
-		hall2.placeDoors(new Point(2, 14), room3Door, new Point(5, 11), room2Door2);
+		room2.connectHall(new Point(4,11), hall2);
+		room3.connectHall(new Point(2,13), hall2);
+		hall2.connectRooms(new Point(2,14), room3, new Point(5,11), room2);
 	}
 
 	private void initializeDoorsHall3() {
 		//Doors for hall3
-		Door room4Door = new Door(room4, hall3);
-		room4.placeDoor(room4Door);
-		Door room2Door3 = new Door(room2, hall3);
-		room2.placeDoor(room2Door3);
-		hall3.placeDoors(new Point(13,11), room4Door, new Point(8,11), room2Door3);
+		room2.connectHall(new Point(9,11), hall3);
+		room4.connectHall(new Point(12,11), hall3);
+		hall3.connectRooms(new Point(8,11), room2, new Point(13,11), room4);
 	}
 
 	private void initializeLevelMap() {
@@ -251,14 +194,10 @@ public class TextualLevelViewTest {
 	}
 
 	private void initializeDoorsHall1Snake() {
-
 		//Doors for hall1Snake
-		Door room1Door = new Door(room1, hall1Snake);
-		//We need to decide if we want to put this in the interface for LevelComponent
-		room1.placeDoor(room1Door);
-		Door room2Door1 = new Door(room2, hall1Snake);
-		room2.placeDoor(room2Door1);
-		hall1Snake.placeDoors(new Point(3,3), room1Door, new Point(6,7), room2Door1);
+		room1.connectHall(new Point(4,2), hall1Snake);
+		room2.connectHall(new Point(6,6), hall1Snake);
+		hall1Snake.connectRooms(new Point(3,2), room1, new Point(6,7), room2);
 	}
 
 	private void initializeLevelMapSnake() {
@@ -280,12 +219,9 @@ public class TextualLevelViewTest {
 
 	private void initializeDoorsHall1RoomBrush() {
 		//Doors for hall1RoomBrush
-		Door room1Door = new Door(room1, hall1RoomBrush);
-		//We need to decide if we want to put this in the interface for LevelComponent
-		room1.placeDoor(room1Door);
-		Door room2Door1 = new Door(room2, hall1RoomBrush);
-		room2.placeDoor(room2Door1);
-		hall1RoomBrush.placeDoors(new Point(3,3), room1Door, new Point(6,7), room2Door1);
+		room1.connectHall(new Point(4,2), hall1RoomBrush);
+		room2.connectHall(new Point(6,6), hall1RoomBrush);
+		hall1RoomBrush.connectRooms(new Point(3,2), room1, new Point(6,7), room2);
 	}
 
 	private void initializeLevelMapRoomBrush() {
@@ -308,12 +244,9 @@ public class TextualLevelViewTest {
 
 	private void initializeDoorsHall1HallBrush() {
 		//Doors for hall1HallBrush
-		Door room1Door = new Door(room1, hall1HallBrush);
-		//We need to decide if we want to put this in the interface for LevelComponent
-		room1.placeDoor(room1Door);
-		Door room2Door1 = new Door(room2, hall1HallBrush);
-		room2.placeDoor(room2Door1);
-		hall1HallBrush.placeDoors(new Point(3,3), room1Door, new Point(6,7), room2Door1);
+		room1.connectHall(new Point(4,2), hall1HallBrush);
+		room2.connectHall(new Point(6,6), hall1HallBrush);
+		hall1HallBrush.connectRooms(new Point(3,2), room1, new Point(6,7), room2);
 	}
 
 	private void initializeLevelMapHallBrush() {
@@ -363,12 +296,12 @@ public class TextualLevelViewTest {
 
 		String expectedOut = ""
 				+ "XXXX              \n"
-				+ "X..XXXXX          \n"
-				+ "X..|...X          \n"
-				+ "XXXXXX.X          \n"
-				+ "     X.X          \n"
-				+ "     X.X          \n"
-				+ "     X.X          \n"
+				+ "X..X              \n"
+				+ "X..|--+           \n"
+				+ "XXXX  |           \n"
+				+ "      |           \n"
+				+ "      |           \n"
+				+ "      |           \n"
 				+ "     X|XX         \n"
 				+ "     X..X         \n"
 				+ "     X..X         \n"
@@ -408,9 +341,9 @@ public class TextualLevelViewTest {
 				+ "XXXX         \n"
 				+ "X..X         \n"
 				+ "X..X         \n"
-				+ "X..XXXXXXXXXX\n"
-				+ "X..|....|...X\n"
-				+ "XXXXXXXXX...X\n"
+				+ "X..X    XXXXX\n"
+				+ "X...****....X\n"
+				+ "XXXX    X...X\n"
 				+ "        X...X\n"
 				+ "        X...X\n"
 				+ "        XXXXX\n";
