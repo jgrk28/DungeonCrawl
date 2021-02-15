@@ -4,21 +4,43 @@ import java.awt.Point;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.swing.UIDefaults.LazyInputMap;
 import modelView.EntityType;
 
+/** 
+ * A LevelComponent that represents a Room within a Level
+ * A room has an upper-left Cartesian position, and one or more doors
+ * Entities, such as the key and the level exit, can be placed inside
+ * of a Room
+ */
 public class Room implements LevelComponent {
+	
+	//Upper-left Cartesian coordinates of the Room
 	Point position;
+	
+	//A list of all entities within this LevelComponent
 	List<List<Entity>> componentMap;
+	
+	//A Map of the location and Hall that doors in the Room connect to
 	Map<Point, Hall> doors;
 	
+	/**
+	 * Initializes a new Room with the position and componentMap
+	 * @param position - upper-left Cartesian coordinates of the Room
+	 * @param componentMap - the map of all entities in the Room
+	 */
 	public Room(Point position, List<List<Entity>> componentMap) {
 		this.position = position;
-		//Ensure component map is not empty
+		//TO-DO Ensure component map is not empty
 		this.componentMap = componentMap;
-		this.doors = new HashMap();
+		this.doors = new HashMap<Point, Hall>();
 	}
 
+	/**
+	 * Connects the Room to the given Hall
+	 * @param doorPosition - the connecting coordinates of the Hall 
+	 * @param adjHall - the Hall the Room is being connected to
+	 * @throws IllegalArgumentException if the Door is not on the boundary of the room
+	 */
 	public void connectHall(Point doorPosition, Hall adjHall) {
 		Point bottomRightPosition = getBottomRightBound();
 		if (validDoor(doorPosition, bottomRightPosition)) {
@@ -28,6 +50,12 @@ public class Room implements LevelComponent {
 		}
 	}
 
+	/**
+	 * Checks if the placement of a door in a Room is valid
+	 * @param doorPosition - the coordinates of the door
+	 * @param bottomRightPosition - the lower right boundary of the Room
+	 * @return True if the door placement is valid, false otherwise
+	 */
 	private boolean validDoor(Point doorPosition, Point bottomRightPosition) {
 		return doorPosition.x == this.position.x ||
 				doorPosition.x == bottomRightPosition.x ||
@@ -35,6 +63,12 @@ public class Room implements LevelComponent {
 				doorPosition.y == bottomRightPosition.y;
 	}
 
+	/**
+	 * Checks if a given coordinate is located within the Room
+	 * @param point - the coordinate to check
+	 * @param bottomRightPosition - the lower right boundary of the Room
+	 * @return True if the point is located within the LevelComponent, false otherwise
+	 */
 	private boolean validPoint(Point point, Point bottomRightPosition) {
 		return point.x > this.position.x &&
 				point.x < bottomRightPosition.x &&
@@ -49,10 +83,12 @@ public class Room implements LevelComponent {
 
 	@Override
 	public Point getBottomRightBound() {
+		//Get the size of the Room
 		int roomY = this.componentMap.size();
 		List<Entity> roomTopRow = this.componentMap.get(0);
 		int roomX = roomTopRow.size();
 
+		//Find the bottom right bound based on the upper left bound and the size of the Room
 		Point bottomRightPosition = new Point(this.position.x + roomX, this.position.y + roomY);
 		return bottomRightPosition;
 	}
@@ -65,10 +101,13 @@ public class Room implements LevelComponent {
 	@Override
 	public Entity getDestinationEntity(Point point) {
 		Point bottomRight = getBottomRightBound();
+		
+		//Check to see if the destination point exists in the Room
 		if (!validPoint(point, bottomRight)) {
 			throw new IllegalArgumentException("Point not in component");
 		}
 
+		//If the destination exists, return the Entity at that location 
 		int relativeX = point.x - this.position.x;
 		int relativeY = point.y - this.position.y;
 		List<Entity> row = this.componentMap.get(relativeY);

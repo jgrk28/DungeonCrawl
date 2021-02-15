@@ -1,19 +1,34 @@
 package model;
 
 import java.awt.Point;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import modelView.EntityType;
 
+/**
+ * A LevelComponent that represents a Hall within a Level
+ * A Hall connects two rooms in the Level
+ */
 public class Hall implements LevelComponent {
+	
+	//A list of all entities within this LevelComponent
 	List<Entity> componentMap;
+	
+	//A list of all points that represent corners in a Hall
 	List<Point> waypoints;
+	
+	//The Room at the beginning of the Hall
 	Room startRoom;
+	
+	//The Room at the end of the Hall
 	Room endRoom;
 
-	
+	/**
+	 * Initializes a new Hall with the componentMap and waypoints
+	 * Both the start and end room are null during initialization 
+	 * @param componentMap - the map of all entities in the hall
+	 * @param waypoints - a list of points that represent corners in the hall
+	 */
 	public Hall(List<Entity> componentMap, List<Point> waypoints) {
 		this.componentMap = componentMap;
 		this.waypoints = waypoints;
@@ -21,6 +36,15 @@ public class Hall implements LevelComponent {
 		this.endRoom = null;
 	}
 
+	/**
+	 * Connects the Hall to two given rooms
+	 * @param positionStart - the connecting coordinates of the startRoom
+	 * @param startRoom - the Room at the beginning of the Hall
+	 * @param positionEnd - the connecting coordinates of the endRoom
+	 * @param endRoom - the Room at the end of the Hall
+	 * @throws IllegalArgumentException if the Hall is already connected
+	 * or if the start and end Rooms are not orthogonally aligned with the Hall
+	 */
 	public void connectRooms(Point positionStart, Room startRoom, Point positionEnd, Room endRoom) {
 		if (this.startRoom != null || this.endRoom != null) {
 			throw new IllegalArgumentException("Hallway already connected");
@@ -43,6 +67,11 @@ public class Hall implements LevelComponent {
 		}
 	}
 
+	/**
+	 * Checks if the Room being connected to the beginning of the Hall is a valid connection
+	 * @param positionStart - the connecting coordinates of the Room
+	 * @return True if the room is orthogonally aligned with the first waypoint, false otherwise
+	 */
 	private boolean validStart(Point positionStart) {
 		if (this.waypoints.isEmpty()) {
 			return true;
@@ -52,6 +81,11 @@ public class Hall implements LevelComponent {
 				firstWaypoint.y == positionStart.y;
 	}
 
+	/**
+	 * Checks if the Room being connected to the end of the Hall is a valid connection
+	 * @param positionEnd - the connecting coordinates of the Room
+	 * @return True if the room is orthogonally aligned with the last waypoint, false otherwise
+	 */
 	private boolean validEnd(Point positionEnd) {
 		if (this.waypoints.isEmpty()) {
 			return true;
@@ -69,7 +103,7 @@ public class Hall implements LevelComponent {
 		Integer minX = firstWaypoint.x;
 		Integer minY = firstWaypoint.y;
 
-
+		//Iterate through all waypoints to find the minimum x and y values
 		for (Point waypoint : this.waypoints) {
 			if (waypoint.x < minX) {
 				minX = waypoint.x;
@@ -88,7 +122,7 @@ public class Hall implements LevelComponent {
 		Integer maxX = firstWaypoint.x;
 		Integer maxY = firstWaypoint.y;
 
-
+		//Iterate through all waypoints to find the maximum x and y values
 		for (Point waypoint : this.waypoints) {
 			if (waypoint.x > maxX) {
 				maxX = waypoint.x;
@@ -103,6 +137,7 @@ public class Hall implements LevelComponent {
 	@Override
 	public EntityType getEntityType(Entity entity) {
 		EntityType generalType = entity.getEntityType();
+		//If the Entity is a SPACE, return the HALL_SPACE EntityType
 		switch (generalType) {
 			case SPACE:
 				return EntityType.HALL_SPACE;
@@ -111,8 +146,6 @@ public class Hall implements LevelComponent {
 		}
 	}
 
-	//List<Entity> componentMap;
-//	List<Point> waypoints;
 	@Override
 	public Entity getDestinationEntity(Point point) {
 		List<Integer> segments = new ArrayList<>();

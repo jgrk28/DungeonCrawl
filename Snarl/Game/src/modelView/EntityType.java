@@ -1,10 +1,13 @@
 package modelView;
 
-import model.Entity;
-import model.Hall;
-import model.LevelComponent;
-import model.Room;
-
+/**
+ * Represents the type of an Entity
+ * This includes:
+ * - Walls
+ * - Spaces
+ * - Hall Spaces
+ * - Empty - where no entities have been placed 
+ */
 public enum EntityType {
-	WALL, SPACE, EMPTY, HALL_SPACE
+	WALL, SPACE, HALL_SPACE, EMPTY
 }

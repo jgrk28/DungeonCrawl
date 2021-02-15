@@ -1,13 +1,16 @@
 package view;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import modelView.EntityType;
 import modelView.LevelModelView;
 
+/**
+ * Represents an ACSII art view of the Level
+ */
 public class TextualLevelView implements LevelView {
 	
+	//The read-only version of the Level model
 	private LevelModelView modelView;
 	
 	public TextualLevelView(LevelModelView modelView) {
