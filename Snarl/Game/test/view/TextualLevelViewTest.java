@@ -15,28 +15,28 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-//X for wall, . for space, * for hallways
+//Tests for the TextualLevelView class. This class displays a level in ascii art with
+//X for wall, . for space, * for hallways.
 public class TextualLevelViewTest {
 	
 	private List<LevelComponent> levelMap;
-	private LevelModelView modelView;
-	private LevelView view;
 	private Entity space = new Space();
 	private Entity wall = new Wall();
 
-	Room room1;
-	Room room2;
-	Room room3;
-	Room room4;
+	private Room room1;
+	private Room room2;
+	private Room room3;
+	private Room room4;
 
-	Hall hall1;
-	Hall hall1Snake;
-	Hall hall1RoomBrush;
-	Hall hall1HallBrush;
-	Hall hall2;
-	Hall hall3;
+	private Hall hall1;
+	private Hall hall1Snake;
+	private Hall hall1RoomBrush;
+	private Hall hall1HallBrush;
+	private Hall hall2;
+	private Hall hall3;
 	
 	private void initializeRoom1() {
+		//Simple 4x4 room with one space for a possible door
 		List<List<Entity>> componentMap = new ArrayList<List<Entity>>();
 		componentMap.add(Arrays.asList(wall, wall, wall, wall));
 		componentMap.add(Arrays.asList(wall, space, space, wall));
@@ -47,6 +47,7 @@ public class TextualLevelViewTest {
 	}
 	
 	private void initializeRoom2() {
+		//4x6 room with three spaces for possible doors
 		List<List<Entity>> componentMap = new ArrayList<List<Entity>>();
 		componentMap.add(Arrays.asList(wall, space, wall, wall));
 		componentMap.add(Arrays.asList(wall, space, space, wall));
@@ -57,7 +58,8 @@ public class TextualLevelViewTest {
 		
 		room2 = new Room(new Point(5,7), componentMap);
 	}
-	
+
+	//6x5 room with one spaces for a possible door
 	private void initializeRoom3() {
 		List<List<Entity>> componentMap = new ArrayList<List<Entity>>();
 		componentMap.add(Arrays.asList(wall, wall, space, wall, wall, wall));
@@ -70,6 +72,7 @@ public class TextualLevelViewTest {
 	}
 	
 	private void initializeRoom4() {
+		//5x6 room with one space for a possible door
 		List<List<Entity>> componentMap = new ArrayList<List<Entity>>();
 		componentMap.add(Arrays.asList(wall, wall, wall, wall, wall));
 		componentMap.add(Arrays.asList(space, space, space, space, wall));
@@ -82,6 +85,7 @@ public class TextualLevelViewTest {
 	}
 	
 	private void initializeHall1() {
+		//Hall that can connect room1 to room2
 		List<Entity> componentMap = Arrays.asList(space, space, space, space, space, space, space);
 		List<Point> waypoints = new ArrayList<Point>();
 		waypoints.add(new Point(6,2));
@@ -90,6 +94,7 @@ public class TextualLevelViewTest {
 	}
 
 	private void initializeHall1Snake() {
+		//Hall to replace hall1 that makes multiple turns
 		List<Entity> componentMap = Arrays.asList(space, space, space, space, space, space, space,
 				space, space, space, space, space, space);
 		List<Point> waypoints = new ArrayList<Point>();
@@ -101,6 +106,7 @@ public class TextualLevelViewTest {
 	}
 
 	private void initializeHall1RoomBrush() {
+		//Hall to replace hall1 that travels directly next to a room
 		List<Entity> componentMap = Arrays.asList(space, space, space, space, space, space, space,
 				space, space, space, space, space, space);
 		List<Point> waypoints = new ArrayList<Point>();
@@ -112,6 +118,7 @@ public class TextualLevelViewTest {
 	}
 
 	private void initializeHall1HallBrush() {
+		//Hall to replace hall1 that travels directly next to other halls and itself
 		//(12,2), (12,10), (9,10), (9,3), (6,3).
 		List<Entity> componentMap = Arrays.asList(space, space, space, space, space, space, space,
 				space, space, space, space, space, space, space, space, space, space, space, space, space,
@@ -127,6 +134,7 @@ public class TextualLevelViewTest {
 	}
 	
 	private void initializeHall2() {
+		//Hall that can connect room2 to room3
 		List<Entity> componentMap = Arrays.asList(space, space, space, space, space);
 		List<Point> waypoints = new ArrayList<Point>();
 		waypoints.add(new Point(2,11));
@@ -135,6 +143,7 @@ public class TextualLevelViewTest {
 	}
 	
 	private void initializeHall3() {
+		//Hall that can connect room2 to room4
 		List<Entity> componentMap = Arrays.asList(space, space, space, space);
 		List<Point> waypoints = new ArrayList<Point>();
 		
@@ -163,10 +172,11 @@ public class TextualLevelViewTest {
 	}
 
 	private void initializeLevelMap() {
+		//Connects hall1, hall2, and hall3 to the normal 4 rooms
 		initializeDoorsHall1();
 		initializeDoorsHall2();
 		initializeDoorsHall3();
-		
+
 		levelMap = new ArrayList<LevelComponent>();
 		
 		levelMap.add(room1);
@@ -180,6 +190,8 @@ public class TextualLevelViewTest {
 	}
 
 	private void initializeLevelMapSmall() {
+		//Only connects hall3 between room2 and room4
+		//This map does not have have a room at the origin (0,0)
 		initializeDoorsHall3();
 
 		levelMap = new ArrayList<LevelComponent>();
@@ -197,6 +209,7 @@ public class TextualLevelViewTest {
 	}
 
 	private void initializeLevelMapSnake() {
+		//Initializes normal level replacing hall1 for hall1Snake
 		initializeDoorsHall1Snake();
 		initializeDoorsHall2();
 		initializeDoorsHall3();
@@ -221,7 +234,7 @@ public class TextualLevelViewTest {
 	}
 
 	private void initializeLevelMapRoomBrush() {
-
+		//Initializes normal level replacing hall1 for hall1RoomBrush
 		initializeDoorsHall1RoomBrush();
 		initializeDoorsHall2();
 		initializeDoorsHall3();
@@ -246,7 +259,7 @@ public class TextualLevelViewTest {
 	}
 
 	private void initializeLevelMapHallBrush() {
-
+		//Initializes normal level replacing hall1 for hall1HallBrush
 		initializeDoorsHall1HallBrush();
 		initializeDoorsHall2();
 		initializeDoorsHall3();
@@ -265,6 +278,8 @@ public class TextualLevelViewTest {
 
 	@Before
 	public void initLevelComponents() {
+		//Initialize all components for use
+		//They have not been added to a level but they are available for use
 		initializeRoom1();
 		initializeRoom1();
 		initializeRoom2();
@@ -279,16 +294,27 @@ public class TextualLevelViewTest {
 		initializeHall3();
 	}
 
-	@Test
-	public void testDrawLevel() {
-		initializeLevelMap();
+	private void testDrawLevel(List<LevelComponent> map, String expectedOut) {
+		//Initialize ModelView and View
+		LevelModelView modelView = new LevelImpl(map);
+		LevelView view = new TextualLevelView(modelView);
 
-		modelView = new LevelImpl(levelMap);
-		view = new TextualLevelView(modelView);
-
+		//Assign output of STDOUT to new Stream
 		ByteArrayOutputStream output = new ByteArrayOutputStream();
 		PrintStream print = new PrintStream(output);
 		System.setOut(print);
+
+		//Draw level to STDOUT
+		view.drawLevel();
+
+		//Check that level was drawn as expected
+		assertEquals(expectedOut, output.toString());
+	}
+
+	//Tests drawing a normal room
+	@Test
+	public void testDrawLevelNormal() {
+		initializeLevelMap();
 
 		String expectedOut = ""
 				+ "XXXX              \n"
@@ -310,24 +336,14 @@ public class TextualLevelViewTest {
 				+ "X....X            \n"
 				+ "X....X            \n"
 				+ "XXXXXX            \n";
-	    
-		view.drawLevel();
 
-		assertEquals(expectedOut, output.toString());
-
+		testDrawLevel(this.levelMap, expectedOut);
 	}
 
 	//Check drawing when right and top do not line up with 0
 	@Test
 	public void testDrawLevelSmall() {
 		initializeLevelMapSmall();
-
-		modelView = new LevelImpl(levelMap);
-		view = new TextualLevelView(modelView);
-
-		ByteArrayOutputStream output = new ByteArrayOutputStream();
-		PrintStream print = new PrintStream(output);
-		System.setOut(print);
 
 		String expectedOut = ""
 				+ "X.XX         \n"
@@ -340,9 +356,7 @@ public class TextualLevelViewTest {
 				+ "        X...X\n"
 				+ "        XXXXX\n";
 
-		view.drawLevel();
-
-		assertEquals(expectedOut, output.toString());
+		testDrawLevel(this.levelMap, expectedOut);
 
 	}
 
@@ -351,13 +365,6 @@ public class TextualLevelViewTest {
 	public void testDrawLevelSnake() {
 		initializeLevelMapSnake();
 
-		modelView = new LevelImpl(levelMap);
-		view = new TextualLevelView(modelView);
-
-		ByteArrayOutputStream output = new ByteArrayOutputStream();
-		PrintStream print = new PrintStream(output);
-		System.setOut(print);
-
 		String expectedOut = ""
 				+ "XXXX              \n"
 				+ "X..X              \n"
@@ -379,10 +386,7 @@ public class TextualLevelViewTest {
 				+ "X....X            \n"
 				+ "XXXXXX            \n";
 
-		view.drawLevel();
-
-		assertEquals(expectedOut, output.toString());
-
+		testDrawLevel(this.levelMap, expectedOut);
 	}
 
 	//Tests drawing with hall directly next to a room
@@ -390,13 +394,6 @@ public class TextualLevelViewTest {
 	public void testDrawLevelRoomBrush() {
 		initializeLevelMapRoomBrush();
 
-		modelView = new LevelImpl(levelMap);
-		view = new TextualLevelView(modelView);
-
-		ByteArrayOutputStream output = new ByteArrayOutputStream();
-		PrintStream print = new PrintStream(output);
-		System.setOut(print);
-
 		String expectedOut = ""
 				+ "XXXX              \n"
 				+ "X..X              \n"
@@ -418,24 +415,13 @@ public class TextualLevelViewTest {
 				+ "X....X            \n"
 				+ "XXXXXX            \n";
 
-		view.drawLevel();
-
-		assertEquals(expectedOut, output.toString());
-
+		testDrawLevel(this.levelMap, expectedOut);
 	}
 
 	//Tests drawing with hall directly next to another hall or itself
 	@Test
 	public void testDrawLevelHallBrush() {
 		initializeLevelMapHallBrush();
-
-		modelView = new LevelImpl(levelMap);
-		view = new TextualLevelView(modelView);
-
-		ByteArrayOutputStream output = new ByteArrayOutputStream();
-		PrintStream print = new PrintStream(output);
-		System.setOut(print);
-
 		
 		String expectedOut = ""
 				+ "XXXX              \n"
@@ -458,10 +444,7 @@ public class TextualLevelViewTest {
 				+ "X....X            \n"
 				+ "XXXXXX            \n";
 
-		view.drawLevel();
-
-		assertEquals(expectedOut, output.toString());
-
+		testDrawLevel(this.levelMap, expectedOut);
 	}
 
 }
