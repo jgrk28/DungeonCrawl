@@ -15,13 +15,13 @@ import modelView.EntityType;
 public class Room implements LevelComponent {
 	
 	//Upper-left Cartesian coordinates of the Room
-	Point position;
+	private Point position;
 	
 	//A list of all entities within this LevelComponent
-	List<List<Entity>> componentMap;
+	private List<List<Entity>> componentMap;
 	
 	//A Map of the location and Hall that doors in the Room connect to
-	Map<Point, Hall> doors;
+	private Map<Point, Hall> doors;
 	
 	/**
 	 * Initializes a new Room with the position and componentMap
@@ -37,7 +37,7 @@ public class Room implements LevelComponent {
 
 	/**
 	 * Connects the Room to the given Hall
-	 * @param doorPosition - the connecting coordinates of the Hall 
+	 * @param doorPosition - the position in the Hall that connects through the door to the Room
 	 * @param adjHall - the Hall the Room is being connected to
 	 * @throws IllegalArgumentException if the Door is not on the boundary of the room
 	 */
@@ -52,15 +52,15 @@ public class Room implements LevelComponent {
 
 	/**
 	 * Checks if the placement of a door in a Room is valid
-	 * @param doorPosition - the coordinates of the door
+	 * @param doorPosition - the position in the Hall that connects through the door to the Room
 	 * @param bottomRightPosition - the lower right boundary of the Room
 	 * @return True if the door placement is valid, false otherwise
 	 */
 	private boolean validDoor(Point doorPosition, Point bottomRightPosition) {
-		return doorPosition.x == this.position.x ||
-				doorPosition.x == bottomRightPosition.x ||
-				doorPosition.y == this.position.y ||
-				doorPosition.y == bottomRightPosition.y;
+		return doorPosition.x == (this.position.x - 1) ||
+				doorPosition.x == (bottomRightPosition.x + 1) ||
+				doorPosition.y == (this.position.y - 1)||
+				doorPosition.y == (bottomRightPosition.y + 1);
 	}
 
 	/**
@@ -70,10 +70,10 @@ public class Room implements LevelComponent {
 	 * @return True if the point is located within the LevelComponent, false otherwise
 	 */
 	private boolean validPoint(Point point, Point bottomRightPosition) {
-		return point.x > this.position.x &&
-				point.x < bottomRightPosition.x &&
-				point.y > this.position.y &&
-				point.y < bottomRightPosition.y;
+		return point.x >= this.position.x &&
+				point.x <= bottomRightPosition.x &&
+				point.y >= this.position.y &&
+				point.y <= bottomRightPosition.y;
 	}
 
 	@Override
@@ -84,9 +84,9 @@ public class Room implements LevelComponent {
 	@Override
 	public Point getBottomRightBound() {
 		//Get the size of the Room
-		int roomY = this.componentMap.size();
+		int roomY = this.componentMap.size() - 1;
 		List<Entity> roomTopRow = this.componentMap.get(0);
-		int roomX = roomTopRow.size();
+		int roomX = roomTopRow.size() - 1;
 
 		//Find the bottom right bound based on the upper left bound and the size of the Room
 		Point bottomRightPosition = new Point(this.position.x + roomX, this.position.y + roomY);

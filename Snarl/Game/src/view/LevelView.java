@@ -8,8 +8,9 @@ public interface LevelView {
 	
 	/**
 	 * Draws the Level, which is composed of connected LevelComponents
-	 * @return a String that represents the placement of Rooms, Halls, and Entities within the Level
+	 * Outputs a String to STDOUT that represents the placement of Rooms, 
+	 * Halls, and Entities within the Level
 	 */
-	String drawLevel();
+	void drawLevel();
 
 }

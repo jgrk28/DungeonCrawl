@@ -104,8 +104,8 @@ public class LevelImpl implements Level {
 	 */
 	ArrayList<ArrayList<EntityType>> initializeEmptyMap() {
 		//Determine the size of the map based on the bounds
-		int xSize = this.bottomRightBound.x - this.topLeftBound.x;
-		int ySize = this.bottomRightBound.y - this.topLeftBound.y;
+		int xSize = this.bottomRightBound.x - this.topLeftBound.x + 1;
+		int ySize = this.bottomRightBound.y - this.topLeftBound.y + 1;
 
 		ArrayList<ArrayList<EntityType>> emptyMap = new ArrayList<>();
 
@@ -127,8 +127,8 @@ public class LevelImpl implements Level {
 	 */
 	private void addToViewableMap(LevelComponent component) {
 		//Iterate through the viewableMap
-		for (int i = this.topLeftBound.y; i < this.bottomRightBound.y; i++) {
-			for (int j = topLeftBound.x; j < bottomRightBound.x; j++) {
+		for (int i = this.topLeftBound.y; i <= this.bottomRightBound.y; i++) {
+			for (int j = this.topLeftBound.x; j <= this.bottomRightBound.x; j++) {
 				try {
 					//Check if an Entity exists at the given coordinates in the LevelComponent
 					//If these coordinates are not available for this LevelComponent, no changes are made
@@ -138,8 +138,10 @@ public class LevelImpl implements Level {
 					EntityType destEntityDrawable = component.getEntityType(destEntity);
 					
 					//Add the EntityType to the viewableMap
-					ArrayList<EntityType> editRow = this.viewableMap.get(i);
-					editRow.set(j, destEntityDrawable);
+					int croppedYIndex = i - this.topLeftBound.y;
+					int croppedXIndex = j - this.topLeftBound.x;
+					ArrayList<EntityType> editRow = this.viewableMap.get(croppedYIndex);
+					editRow.set(croppedXIndex, destEntityDrawable);
 				} catch (IllegalArgumentException e) {
 					//Do Nothing
 				}

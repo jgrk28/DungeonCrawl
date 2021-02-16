@@ -1,7 +1,6 @@
 package model;
 
 import java.awt.Point;
-import java.util.ArrayList;
 import java.util.List;
 import modelView.EntityType;
 
@@ -12,16 +11,22 @@ import modelView.EntityType;
 public class Hall implements LevelComponent {
 	
 	//A list of all entities within this LevelComponent
-	List<Entity> componentMap;
+	private List<Entity> componentMap;
 	
 	//A list of all points that represent corners in a Hall
-	List<Point> waypoints;
+	private List<Point> waypoints;
 	
 	//The Room at the beginning of the Hall
-	Room startRoom;
+	private Room startRoom;
 	
 	//The Room at the end of the Hall
-	Room endRoom;
+	private Room endRoom;
+	
+	//The position in the StartRoom that connects through the door to the Hall
+	private Point startRoomPosition;
+	
+	//The position in the EndRoom that connects through the door to the Hall
+	private Point endRoomPosition;
 
 	/**
 	 * Initializes a new Hall with the componentMap and waypoints
@@ -38,9 +43,9 @@ public class Hall implements LevelComponent {
 
 	/**
 	 * Connects the Hall to two given rooms
-	 * @param positionStart - the connecting coordinates of the startRoom
+	 * @param positionStart - the position in the StartRoom that connects through the door to the Hall
 	 * @param startRoom - the Room at the beginning of the Hall
-	 * @param positionEnd - the connecting coordinates of the endRoom
+	 * @param positionEnd - the position in the EndRoom that connects through the door to the Hall
 	 * @param endRoom - the Room at the end of the Hall
 	 * @throws IllegalArgumentException if the Hall is already connected
 	 * or if the start and end Rooms are not orthogonally aligned with the Hall
@@ -50,58 +55,47 @@ public class Hall implements LevelComponent {
 			throw new IllegalArgumentException("Hallway already connected");
 		}
 
-		if (validStart(positionStart)) {
-			this.waypoints.add(0, positionStart);
+		if (validHallConnection(positionStart, positionEnd)) {
 			this.startRoom = startRoom;
-		} else {
-			throw new IllegalArgumentException("Start position not orthogonally in line with hallway "
-					+ "waypoints");
-		}
-
-		if (validEnd(positionEnd)) {
-			this.waypoints.add(positionEnd);
+			this.startRoomPosition = positionStart;
 			this.endRoom = endRoom;
+			this.endRoomPosition = positionEnd;
 		} else {
-			throw new IllegalArgumentException("End position not orthogonally in line with hallway "
+			throw new IllegalArgumentException("Room positions are not orthogonally in line with hallway "
 					+ "waypoints");
 		}
 	}
-
+	
 	/**
-	 * Checks if the Room being connected to the beginning of the Hall is a valid connection
-	 * @param positionStart - the connecting coordinates of the Room
-	 * @return True if the room is orthogonally aligned with the first waypoint, false otherwise
+	 * Checks if the Rooms being connected to the Hall are valid connections 
+	 * @param positionRoomStart - the position in the StartRoom that connects through the door to the Hall
+	 * @param positionRoomEnd - the position in the EndRoom that connects through the door to the Hall
+	 * @return
 	 */
-	private boolean validStart(Point positionStart) {
+	private boolean validHallConnection(Point positionRoomStart, Point positionRoomEnd) {
+		
 		if (this.waypoints.isEmpty()) {
-			return true;
+			//Check that the room positions are orthogonal
+			return (positionRoomStart.x == positionRoomEnd.x) || (positionRoomStart.y == positionRoomEnd.y);
 		}
+		
 		Point firstWaypoint = this.waypoints.get(0);
-		return firstWaypoint.x == positionStart.x ||
-				firstWaypoint.y == positionStart.y;
-	}
-
-	/**
-	 * Checks if the Room being connected to the end of the Hall is a valid connection
-	 * @param positionEnd - the connecting coordinates of the Room
-	 * @return True if the room is orthogonally aligned with the last waypoint, false otherwise
-	 */
-	private boolean validEnd(Point positionEnd) {
-		if (this.waypoints.isEmpty()) {
-			return true;
-		}
+		boolean validStart = firstWaypoint.x == positionRoomStart.x ||
+				firstWaypoint.y == positionRoomStart.y;
+		
 		Point lastWaypoint = this.waypoints.get(this.waypoints.size() - 1);
-		return lastWaypoint.x == positionEnd.x ||
-				lastWaypoint.y == positionEnd.y;
+		boolean validEnd = lastWaypoint.x == positionRoomEnd.x ||
+				lastWaypoint.y == positionRoomEnd.y;
+		
+		return validStart && validEnd;	
 	}
 
 
+	//Top right left includes the door that the hall is connected to 
 	@Override
 	public Point getTopLeftBound() {
-		//Always will be at least 2 waypoints because the doors are represented as waypoints
-		Point firstWaypoint = this.waypoints.get(0);
-		Integer minX = firstWaypoint.x;
-		Integer minY = firstWaypoint.y;
+		Integer minX = startRoomPosition.x;
+		Integer minY = startRoomPosition.y;
 
 		//Iterate through all waypoints to find the minimum x and y values
 		for (Point waypoint : this.waypoints) {
@@ -112,15 +106,23 @@ public class Hall implements LevelComponent {
 				minY = waypoint.y;
 			}
 		}
+		
+		if (endRoomPosition.x < minX) {
+			minX = endRoomPosition.x;
+		}
+		
+		if (endRoomPosition.y < minY) {
+			minY = endRoomPosition.y;
+		}
+		
 		return new Point(minX, minY);
 	}
 
+	//Bottom right bound includes the door that the hall is connected to 
 	@Override
 	public Point getBottomRightBound() {
-		//Always will be at least 2 waypoints because the doors are represented as waypoints
-		Point firstWaypoint = this.waypoints.get(0);
-		Integer maxX = firstWaypoint.x;
-		Integer maxY = firstWaypoint.y;
+		Integer maxX = startRoomPosition.x;
+		Integer maxY = startRoomPosition.y;
 
 		//Iterate through all waypoints to find the maximum x and y values
 		for (Point waypoint : this.waypoints) {
@@ -131,6 +133,15 @@ public class Hall implements LevelComponent {
 				maxY = waypoint.y;
 			}
 		}
+		
+		if (endRoomPosition.x > maxX) {
+			maxX = endRoomPosition.x;
+		}
+		
+		if (endRoomPosition.y > maxY) {
+			maxY = endRoomPosition.y;
+		}
+		
 		return new Point(maxX, maxY);
 	}
 
@@ -145,23 +156,64 @@ public class Hall implements LevelComponent {
 				return generalType;
 		}
 	}
-
+		
+	//Next destination => next waypoint, or destination room
+	//Loop through counter for length of hall
+	//Each time in the loop, update internal position by 1 (x or y) based on next destination 
+	//When at the destination, update destination
+	//Check each time if you are at the point you are looking for. If yes, exit
+	//Count is index for component map
 	@Override
-	public Entity getDestinationEntity(Point point) {
-		List<Integer> segments = new ArrayList<>();
-		for (int i = 0; i < this.waypoints.size() - 1; i++) {
-			Point thisWaypoint = waypoints.get(i);
-			Point nextWaypoint = waypoints.get(i + 1);
-			Integer length = Math.abs(thisWaypoint.x - nextWaypoint.x +
-					thisWaypoint.y - thisWaypoint.y);
-			segments.add(length);
+	public Entity getDestinationEntity(Point point) {	
+		//Start at StartRoom
+		Point currentPosition = this.startRoomPosition;
+		
+		//Keeps track of the current waypoint
+		int waypointCounter = 0;
+		
+		Point nextDestination;
+		
+		if (this.waypoints.isEmpty()) {
+			nextDestination = this.endRoomPosition;
+		} else {
+			nextDestination = this.waypoints.get(waypointCounter);
+		}
+		
+		currentPosition = stepTowardDestination(currentPosition, nextDestination);
+		
+		for (int steps = 0; steps < this.componentMap.size(); steps++) {
+			if (currentPosition.equals(point)) {
+				return this.componentMap.get(steps);
+			}
+			
+			if (nextDestination.equals(currentPosition)) {
+				waypointCounter++;
+				if (this.waypoints.size() == waypointCounter) {
+					nextDestination = this.endRoomPosition;
+				} else {
+					nextDestination = this.waypoints.get(waypointCounter);
+				}
+			}
+			currentPosition = stepTowardDestination(currentPosition, nextDestination);
 		}
 
-		//Iterate through all distances to see when the position at that distance equals the given point
-		//Then return entity at that distance.
-		for (int j = 0; j < this.componentMap.size(); j++) {
-
-		}
-		return null;
+		throw new IllegalArgumentException("Point not in component");
+	}
+	
+	private Point stepTowardDestination(Point source, Point destination) {
+		
+		if ((source.x != destination.x) && (source.y != destination.y)) {
+			throw new IllegalArgumentException("Source and destination are not orthogonally aligned");
+		} else if (source.x > destination.x) {
+			return new Point(source.x - 1, source.y);
+		} else if (source.x < destination.x) {
+			return new Point(source.x + 1, source.y);
+		} else if (source.y > destination.y) {
+			return new Point(source.x, source.y - 1);
+		} else if (source.y < destination.y) {
+			return new Point(source.x, source.y + 1);
+		} else {
+			return source;		
+		}				
 	}
 }
