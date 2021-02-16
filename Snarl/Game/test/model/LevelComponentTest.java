@@ -76,7 +76,7 @@ public class LevelComponentTest {
   public void testGetTopLeftBound() {
     assertEquals(new Point(0,0), this.room1.getTopLeftBound());
     assertEquals(new Point(15,7), this.room2.getTopLeftBound());
-    assertEquals(new Point(2,8), this.hall1.getTopLeftBound());
+    assertEquals(new Point(1,7), this.hall1.getTopLeftBound());
     assertEquals(new Point(2,3), this.hall2.getTopLeftBound());
   }
 
@@ -85,15 +85,15 @@ public class LevelComponentTest {
     assertEquals(new Point(3,3), this.room1.getBottomRightBound());
     assertEquals(new Point(16,8), this.room2.getBottomRightBound());
     assertEquals(new Point(5,11), this.hall1.getBottomRightBound());
-    assertEquals(new Point(5,10), this.hall2.getBottomRightBound());
+    assertEquals(new Point(5,11), this.hall2.getBottomRightBound());
   }
 
   @Test
   public void testGetDestinationEntity() {
-    assertEquals(new Wall(), this.room1.getDestinationEntity(new Point(0,0)));
-    assertEquals(new Space(), this.room1.getDestinationEntity(new Point(1,1)));
-    assertEquals(new Space(), this.hall1.getDestinationEntity(new Point(5,11)));
-    assertEquals(new Space(), this.hall1.getDestinationEntity(new Point(5,9)));
+    assertEquals(wall, this.room1.getDestinationEntity(new Point(0,0)));
+    assertEquals(space, this.room1.getDestinationEntity(new Point(1,1)));
+    assertEquals(space, this.hall1.getDestinationEntity(new Point(5,11)));
+    assertEquals(space, this.hall1.getDestinationEntity(new Point(5,9)));
   }
 
   @Test

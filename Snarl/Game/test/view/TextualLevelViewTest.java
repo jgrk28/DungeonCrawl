@@ -15,11 +15,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-//Create level with random things, level components, connect them together
-//Create LevelView and pass in Model as modelView
-//Call drawLevel and check if the output reflects the input
-//X for wall, . for space, | for door
-
+//X for wall, . for space, * for hallways
 public class TextualLevelViewTest {
 	
 	private List<LevelComponent> levelMap;
@@ -44,7 +40,7 @@ public class TextualLevelViewTest {
 		List<List<Entity>> componentMap = new ArrayList<List<Entity>>();
 		componentMap.add(Arrays.asList(wall, wall, wall, wall));
 		componentMap.add(Arrays.asList(wall, space, space, wall));
-		componentMap.add(Arrays.asList(wall, space, space, wall));
+		componentMap.add(Arrays.asList(wall, space, space, space));
 		componentMap.add(Arrays.asList(wall, wall, wall, wall));
 
 		room1 = new Room(new Point(0,0), componentMap);
@@ -52,11 +48,11 @@ public class TextualLevelViewTest {
 	
 	private void initializeRoom2() {
 		List<List<Entity>> componentMap = new ArrayList<List<Entity>>();
-		componentMap.add(Arrays.asList(wall, wall, wall, wall));
+		componentMap.add(Arrays.asList(wall, space, wall, wall));
 		componentMap.add(Arrays.asList(wall, space, space, wall));
 		componentMap.add(Arrays.asList(wall, space, space, wall));
 		componentMap.add(Arrays.asList(wall, space, space, wall));
-		componentMap.add(Arrays.asList(wall, space, space, wall));
+		componentMap.add(Arrays.asList(space, space, space, space));
 		componentMap.add(Arrays.asList(wall, wall, wall, wall));
 		
 		room2 = new Room(new Point(5,7), componentMap);
@@ -64,7 +60,7 @@ public class TextualLevelViewTest {
 	
 	private void initializeRoom3() {
 		List<List<Entity>> componentMap = new ArrayList<List<Entity>>();
-		componentMap.add(Arrays.asList(wall, wall, wall, wall, wall, wall));
+		componentMap.add(Arrays.asList(wall, wall, space, wall, wall, wall));
 		componentMap.add(Arrays.asList(wall, space, space, space, space, wall));
 		componentMap.add(Arrays.asList(wall, space, space, space, space, wall));
 		componentMap.add(Arrays.asList(wall, space, space, space, space, wall));
@@ -76,7 +72,7 @@ public class TextualLevelViewTest {
 	private void initializeRoom4() {
 		List<List<Entity>> componentMap = new ArrayList<List<Entity>>();
 		componentMap.add(Arrays.asList(wall, wall, wall, wall, wall));
-		componentMap.add(Arrays.asList(wall, space, space, space, wall));
+		componentMap.add(Arrays.asList(space, space, space, space, wall));
 		componentMap.add(Arrays.asList(wall, space, space, space, wall));
 		componentMap.add(Arrays.asList(wall, space, space, space, wall));
 		componentMap.add(Arrays.asList(wall, space, space, space, wall));
@@ -116,7 +112,6 @@ public class TextualLevelViewTest {
 	}
 
 	private void initializeHall1HallBrush() {
-		//Not implementing yet in case refactor but basically has waypoints
 		//(12,2), (12,10), (9,10), (9,3), (6,3).
 		List<Entity> componentMap = Arrays.asList(space, space, space, space, space, space, space,
 				space, space, space, space, space, space, space, space, space, space, space, space, space,
@@ -298,28 +293,24 @@ public class TextualLevelViewTest {
 		String expectedOut = ""
 				+ "XXXX              \n"
 				+ "X..X              \n"
-				+ "X..|--+           \n"
-				+ "XXXX  |           \n"
-				+ "      |           \n"
-				+ "      |           \n"
-				+ "      |           \n"
-				+ "     X|XX         \n"
+				+ "X...***           \n"
+				+ "XXXX  *           \n"
+				+ "      *           \n"
+				+ "      *           \n"
+				+ "      *           \n"
+				+ "     X.XX         \n"
 				+ "     X..X         \n"
 				+ "     X..X         \n"
-				+ " XXXXX..XXXXXXXXXX\n"
-				+ " X...|..|....|...X\n"
-				+ " X.XXXXXXXXXXX...X\n"
-				+ " X.X         X...X\n"
-				+ "XX|XXX       X...X\n"
+				+ "     X..X    XXXXX\n"
+				+ "  ***....****....X\n"
+				+ "  *  XXXX    X...X\n"
+				+ "  *          X...X\n"
+				+ "XX.XXX       X...X\n"
 				+ "X....X       XXXXX\n"
 				+ "X....X            \n"
 				+ "X....X            \n"
 				+ "XXXXXX            \n";
 	    
-		//Changed this to return a string since it will probably be easier to test that way
-		//Still need to add correctly drawn level for the expected value
-		//Changed back to STDOUT because its easy enough to test and we will have to do it at
-		//some point
 		view.drawLevel();
 
 		assertEquals(expectedOut, output.toString());
@@ -339,11 +330,11 @@ public class TextualLevelViewTest {
 		System.setOut(print);
 
 		String expectedOut = ""
-				+ "XXXX         \n"
+				+ "X.XX         \n"
 				+ "X..X         \n"
 				+ "X..X         \n"
 				+ "X..X    XXXXX\n"
-				+ "X...****....X\n"
+				+ "....****....X\n"
 				+ "XXXX    X...X\n"
 				+ "        X...X\n"
 				+ "        X...X\n"
@@ -369,20 +360,20 @@ public class TextualLevelViewTest {
 
 		String expectedOut = ""
 				+ "XXXX              \n"
-				+ "X..XXXXXXXX       \n"
-				+ "X..|......X       \n"
-				+ "XXXXXXXXX.X       \n"
-				+ "     X....X       \n"
-				+ "     X.XXXX       \n"
-				+ "     X.X          \n"
-				+ "     X|XX         \n"
+				+ "X..X              \n"
+				+ "X...******        \n"
+				+ "XXXX     *        \n"
+				+ "      ****        \n"
+				+ "      *           \n"
+				+ "      *           \n"
+				+ "     X.XX         \n"
 				+ "     X..X         \n"
 				+ "     X..X         \n"
-				+ " XXXXX..XXXXXXXXXX\n"
-				+ " X...|..|....|...X\n"
-				+ " X.XXXXXXXXXXX...X\n"
-				+ " X.X         X...X\n"
-				+ "XX|XXX       X...X\n"
+				+ "     X..X    XXXXX\n"
+				+ "  ***....****....X\n"
+				+ "  *  XXXX    X...X\n"
+				+ "  *          X...X\n"
+				+ "XX.XXX       X...X\n"
 				+ "X....X       XXXXX\n"
 				+ "X....X            \n"
 				+ "X....X            \n"
@@ -408,20 +399,20 @@ public class TextualLevelViewTest {
 
 		String expectedOut = ""
 				+ "XXXX              \n"
-				+ "X..XXXXXXXX       \n"
-				+ "X..|......X       \n"
-				+ "XXXXXXXXX.X       \n"
-				+ "        X.X       \n"
-				+ "     XXXX.X       \n"
-				+ "     X....X       \n"
-				+ "     X|XXXX       \n"
+				+ "X..X              \n"
+				+ "X...******        \n"
+				+ "XXXX     *        \n"
+				+ "         *        \n"
+				+ "         *        \n"
+				+ "      ****        \n"
+				+ "     X.XX         \n"
 				+ "     X..X         \n"
 				+ "     X..X         \n"
-				+ " XXXXX..XXXXXXXXXX\n"
-				+ " X...|..|....|...X\n"
-				+ " X.XXXXXXXXXXX...X\n"
-				+ " X.X         X...X\n"
-				+ "XX|XXX       X...X\n"
+				+ "     X..X    XXXXX\n"
+				+ "  ***....****....X\n"
+				+ "  *  XXXX    X...X\n"
+				+ "  *          X...X\n"
+				+ "XX.XXX       X...X\n"
 				+ "X....X       XXXXX\n"
 				+ "X....X            \n"
 				+ "X....X            \n"
@@ -445,22 +436,23 @@ public class TextualLevelViewTest {
 		PrintStream print = new PrintStream(output);
 		System.setOut(print);
 
+		
 		String expectedOut = ""
 				+ "XXXX              \n"
-				+ "X..XXXXXXXXXXX    \n"
-				+ "X..|.........X    \n"
-				+ "XXXXXX....XX.X    \n"
-				+ "     X.XX.XX.X    \n"
-				+ "     X.XX.XX.X    \n"
-				+ "     X.XX.XX.X    \n"
-				+ "     X|XX.XX.X    \n"
-				+ "     X..X.XX.X    \n"
-				+ "     X..X.XX.X    \n"
-				+ " XXXXX..X....XXXXX\n"
-				+ " X...|..|....|...X\n"
-				+ " X.XXXXXXXXXXX...X\n"
-				+ " X.X         X...X\n"
-				+ "XX|XXX       X...X\n"
+				+ "X..X              \n"
+				+ "X...*********     \n"
+				+ "XXXX  ****  *     \n"
+				+ "      *  *  *     \n"
+				+ "      *  *  *     \n"
+				+ "      *  *  *     \n"
+				+ "     X.XX*  *     \n"
+				+ "     X..X*  *     \n"
+				+ "     X..X*  *     \n"
+				+ "     X..X****XXXXX\n"
+				+ "  ***....****....X\n"
+				+ "  *  XXXX    X...X\n"
+				+ "  *          X...X\n"
+				+ "XX.XXX       X...X\n"
 				+ "X....X       XXXXX\n"
 				+ "X....X            \n"
 				+ "X....X            \n"
@@ -471,12 +463,5 @@ public class TextualLevelViewTest {
 		assertEquals(expectedOut, output.toString());
 
 	}
-
-	// A level is comprised of a series of rooms connected by hallways.
-	// A level is valid if no two rooms overlap, no two hallways overlap,
-	// and no hallways overlap with any rooms.
-
-	// We are not making levels like we will in the future so it seems kinda silly to test that now
-
 
 }
