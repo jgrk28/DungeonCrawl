@@ -17,20 +17,20 @@
 ## Class Dungeon ##  
 
 **Constructor**   
-* Dungeon(List<Player> players, List<Adversary> adversaries)  
+* Dungeon(List\<Player\> players, List\<Adversary\> adversaries)  
     * Initializes all the levels, sets the players and adversaries for the dungeon  
     * Arguments:  
         * players - all players in this Dungeon  
         * adversaries - all adversaries in this Dungeon  
  
 **Fields**  
-* Set<Players> players  
+* Set\<Players\> players  
     * All players in the game regardless of status in current level  
-* Set<Adversary> adversaries  
+* Set\<Adversary\> adversaries  
     * All adversaries in the game regardless of status in current level  
 * Int currLevel  
     * Current level number of the Dungeon that the players are on  
-* List<Level> levels  
+* List\<Level\> levels  
     * All levels in the game. Each level keeps track of the game state that is specific to itself  
 
 **Methods**   
@@ -42,7 +42,7 @@
 ## Class Level ##   
 
 **Constructor**  
-* Level(Set<Player> players, Set<Adversary> adversaries, long seed)  
+* Level(Set\<Player\> players, Set\<Adversary\> adversaries, long seed)  
     * Initialize a random level from the given seed. Level will place the given players and adversaries  
     * Arguments:  
         * players - all active players to place in this Level  
@@ -50,10 +50,10 @@
         * seed - used to initialize a random number generator  
 
 **Fields**  
-* LinkedHashMap<Actor,LevelComponent> actorLocations  
+* LinkedHashMap\<Actor,LevelComponent\> actorLocations  
     * Ordered map of players and adversaries that reflects the turn order and maps to each player to their current location  
-* List<List<Entity>> levelMap  
-    * Matrix of the entire level that shows the entities positions relative to each other   
+* List\<LevelComponent\> levelMap  
+    * List of all LevelComponents within the Level. Each component stores its own location     
 * Boolean exitUnlocked  
     * True if exit has been unlocked by finding the key  
 
@@ -88,14 +88,27 @@
 ## Class Hall implements LevelComponent ##  
 
 **Fields**  
-* List<Entity> componentMap  
-    * Contains all entities within the hall, including a door at each end to connect to the corresponding room  
-* List<Point> waypoints  
+* List\<Entity\> componentMap  
+    * Contains all entities within the hall in order from the startRoom to the endRoom  
+* List\<Point\> waypoints  
     * Contains the cartesian points that represent the direction of the hallway  
+* Room startRoom  
+    * Room connected at the start of the hallway  
+* Room endRoom  
+    * Room connected at the end of the hallway  
+* Point startRoomPosition  
+    * Position of the connecting door in the startRoom  
+* Point endRoomPosition
+    * Position of the connecting door in the endRoom  
+
  
 ## Class Room implements LevelComponent ##  
 
 **Fields**  
-* List<List<Entity>> componentMap  
+* List\<List\<Entity\>\> componentMap  
     * Contains all entities within the room  
+* Map\<Point, Hall\> doors  
+    * Locations of all the doors within the room  
+* Point position  
+    * Cartesian coordinates of the upper left corner of the room  
 
