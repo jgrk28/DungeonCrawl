@@ -10,10 +10,10 @@ import modelView.EntityType;
  * 
  * An ASCII representation of the hall may like a series of 
  * asterisk characters, where each endpoint connects to a Room: 
- *   ******
- * 		  *
- * 		  *
- * 		  *******
+ *  ******
+ *       *
+ *       *
+ *       *******
  */
 public class Hall implements LevelComponent {
 	
