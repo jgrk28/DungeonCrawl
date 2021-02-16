@@ -11,6 +11,17 @@ import modelView.EntityType;
  * A room has an upper-left Cartesian position, and one or more doors
  * Entities, such as the key and the level exit, can be placed inside
  * of a Room
+ * 
+ * An ASCII representation of the room may like this:
+ * 
+ * XX.XXX       
+ * X....X       
+ * X....X      
+ * X....X        
+ * XXXXXX
+ * 
+ * Where a Wall corresponds to "X" and a Space corresponds to ".".
+ * A Space on the border of a room is a door
  */
 public class Room implements LevelComponent {
 	

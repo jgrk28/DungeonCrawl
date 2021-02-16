@@ -8,6 +8,21 @@ import modelView.EntityType;
 
 /**
  * Represents a Level within a game of Snarl
+ * An ASCII representation of the Level may like this:
+ * 
+ * XXXX         
+ * X..X         
+ * X..X         
+ * X..X    XXXXX
+ * X...****....X
+ * XXXX    X...X
+ *         X...X
+ *         X...X
+ *         XXXXX
+ * 
+ * Where a Wall corresponds to "X", a Space corresponds 
+ * to ".", a Hall Space corresponds to "*", and 
+ * an Empty Space is simply " "
  */
 public class LevelImpl implements Level {
 	
@@ -26,10 +41,14 @@ public class LevelImpl implements Level {
 	 * @param levelMap - the map of all LevelComponents within the level
 	 */
 	public LevelImpl(List<LevelComponent> levelMap) {
-		//TO-DO
-		//A level is comprised of a series of rooms connected by hallways.
-		//A level is valid if no two rooms overlap, no two hallways overlap,
-		//and no hallways overlap with any rooms.
+		/** 
+		 * A level is comprised of a series of rooms connected by hallways.
+		 * A level is valid if no two rooms overlap, no two hallways overlap,
+		 * and no hallways overlap with any rooms.
+		 * 
+		 * This validation will be implemented when levels are generated 
+		 * automatically
+		 */
 		this.levelMap = levelMap;
 	}
 

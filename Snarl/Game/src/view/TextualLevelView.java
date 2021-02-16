@@ -7,6 +7,22 @@ import modelView.LevelModelView;
 
 /**
  * Represents an ACSII art view of the Level
+ * 
+ * An textual view of the Level may like this:
+ * 
+ * XXXX         
+ * X..X         
+ * X..X         
+ * X..X    XXXXX
+ * X...****....X
+ * XXXX    X...X
+ *         X...X
+ *         X...X
+ *         XXXXX
+ *         
+ * Where a Wall corresponds to "X", a Space corresponds 
+ * to ".", a Hall Space corresponds to "*", and 
+ * an Empty Space is simply " "
  */
 public class TextualLevelView implements LevelView {
 	
@@ -23,6 +39,8 @@ public class TextualLevelView implements LevelView {
 		ArrayList<ArrayList<EntityType>> level = modelView.getMap();
 		StringBuilder output = new StringBuilder();
 		
+		//Iterate through the level, identify the entity, and append to
+		//the output
 		for (int i = 0; i < level.size(); i++) {
 			ArrayList<EntityType> row = level.get(i);
 			for (int j = 0; j < row.size(); j++) {
@@ -34,6 +52,11 @@ public class TextualLevelView implements LevelView {
 		System.out.print(output.toString());
 	}
 	
+	/**
+	 * Returns the String representation for a given EntityType
+	 * @param entity - the given EntityType from the Level
+	 * @return the String corresponding to an EntityType
+	 */
 	private String drawEntity(EntityType entity) {
 		switch (entity) {
 			case SPACE: return ".";

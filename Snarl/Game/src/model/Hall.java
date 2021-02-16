@@ -7,6 +7,13 @@ import modelView.EntityType;
 /**
  * A LevelComponent that represents a Hall within a Level
  * A Hall connects two rooms in the Level
+ * 
+ * An ASCII representation of the hall may like a series of 
+ * asterisk characters, where each endpoint connects to a Room: 
+ *   ******
+ * 		  *
+ * 		  *
+ * 		  *******
  */
 public class Hall implements LevelComponent {
 	
@@ -32,7 +39,8 @@ public class Hall implements LevelComponent {
 	 * Initializes a new Hall with the componentMap and waypoints
 	 * Both the start and end room are null during initialization 
 	 * @param componentMap - the map of all entities in the hall
-	 * @param waypoints - a list of points that represent corners in the hall
+	 * @param waypoints - a list of points that represent corners in the hall. 
+	 * If there are no corners in the hall, this list will be empty
 	 */
 	public Hall(List<Entity> componentMap, List<Point> waypoints) {
 		this.componentMap = componentMap;
@@ -74,15 +82,17 @@ public class Hall implements LevelComponent {
 	 */
 	private boolean validHallConnection(Point positionRoomStart, Point positionRoomEnd) {
 		
+		//Check that the room positions are orthogonal to each other 
 		if (this.waypoints.isEmpty()) {
-			//Check that the room positions are orthogonal
 			return (positionRoomStart.x == positionRoomEnd.x) || (positionRoomStart.y == positionRoomEnd.y);
 		}
 		
+		//Check that the startRoom is orthogonal to the first waypoint
 		Point firstWaypoint = this.waypoints.get(0);
 		boolean validStart = firstWaypoint.x == positionRoomStart.x ||
 				firstWaypoint.y == positionRoomStart.y;
 		
+		//Check that the endRoom is orthogonal to the last waypoint
 		Point lastWaypoint = this.waypoints.get(this.waypoints.size() - 1);
 		boolean validEnd = lastWaypoint.x == positionRoomEnd.x ||
 				lastWaypoint.y == positionRoomEnd.y;
@@ -90,10 +100,10 @@ public class Hall implements LevelComponent {
 		return validStart && validEnd;	
 	}
 
-
-	//Top right left includes the door that the hall is connected to 
 	@Override
+	//Top right left includes the door that the hall is connected to 
 	public Point getTopLeftBound() {
+		
 		Integer minX = startRoomPosition.x;
 		Integer minY = startRoomPosition.y;
 
@@ -109,8 +119,7 @@ public class Hall implements LevelComponent {
 		
 		if (endRoomPosition.x < minX) {
 			minX = endRoomPosition.x;
-		}
-		
+		}	
 		if (endRoomPosition.y < minY) {
 			minY = endRoomPosition.y;
 		}
@@ -118,9 +127,10 @@ public class Hall implements LevelComponent {
 		return new Point(minX, minY);
 	}
 
-	//Bottom right bound includes the door that the hall is connected to 
 	@Override
+	//Bottom right bound includes the door that the hall is connected to 
 	public Point getBottomRightBound() {
+		
 		Integer maxX = startRoomPosition.x;
 		Integer maxY = startRoomPosition.y;
 
@@ -137,7 +147,6 @@ public class Hall implements LevelComponent {
 		if (endRoomPosition.x > maxX) {
 			maxX = endRoomPosition.x;
 		}
-		
 		if (endRoomPosition.y > maxY) {
 			maxY = endRoomPosition.y;
 		}
@@ -147,7 +156,9 @@ public class Hall implements LevelComponent {
 
 	@Override
 	public EntityType getEntityType(Entity entity) {
+		
 		EntityType generalType = entity.getEntityType();
+		
 		//If the Entity is a SPACE, return the HALL_SPACE EntityType
 		switch (generalType) {
 			case SPACE:
@@ -157,51 +168,69 @@ public class Hall implements LevelComponent {
 		}
 	}
 		
-	//Next destination => next waypoint, or destination room
-	//Loop through counter for length of hall
-	//Each time in the loop, update internal position by 1 (x or y) based on next destination 
-	//When at the destination, update destination
-	//Check each time if you are at the point you are looking for. If yes, exit
-	//Count is index for component map
+	/**
+	 * Walk through each location in the hall to determine if it matches the given 
+	 * point. If so, return the Entity at that location
+	 */
 	@Override
 	public Entity getDestinationEntity(Point point) {	
 		//Start at StartRoom
 		Point currentPosition = this.startRoomPosition;
 		
-		//Keeps track of the current waypoint
+		//Keep track of the current waypoint
 		int waypointCounter = 0;
 		
 		Point nextDestination;
 		
+		//If there are no waypoints, the destination is the endRoom
+		//Otherwise, the destination is the next waypoint
 		if (this.waypoints.isEmpty()) {
 			nextDestination = this.endRoomPosition;
 		} else {
 			nextDestination = this.waypoints.get(waypointCounter);
 		}
 		
+		//Take one step into the hall in the direction of the nextDestination
 		currentPosition = stepTowardDestination(currentPosition, nextDestination);
 		
+		//Iterate through each entity in the hall
 		for (int steps = 0; steps < this.componentMap.size(); steps++) {
+			
+			//If the current coordinate is the given point, return the Entity at this location
 			if (currentPosition.equals(point)) {
 				return this.componentMap.get(steps);
 			}
 			
+			//If you have reached the next waypoint, check to see what the nextDestination is
 			if (nextDestination.equals(currentPosition)) {
 				waypointCounter++;
+				
+				//If we have reached the end of the waypoints, the nextDestination is the EndRoom
 				if (this.waypoints.size() == waypointCounter) {
 					nextDestination = this.endRoomPosition;
 				} else {
+					//Otherwise, get the next waypoint in the list
 					nextDestination = this.waypoints.get(waypointCounter);
 				}
 			}
+			//Update the current position to the next step in the Hall
 			currentPosition = stepTowardDestination(currentPosition, nextDestination);
 		}
 
+		//If the Entity is not located, throw the corresponding error
 		throw new IllegalArgumentException("Point not in component");
 	}
 	
+	/**
+	 * Returns the coordinate for the next step in the direction of the destination
+	 * @param source - the current position in the hall
+	 * @param destination - the direction to move towards in the hall (waypoint or endRoom)
+	 * @return the coordinates for the next step in the hall
+	 */
 	private Point stepTowardDestination(Point source, Point destination) {
 		
+		//If the source and destination are not aligned horizontally or vertically, throw an error
+		//Otherwise, identify which direction to move toward and return the corresponding coordinate
 		if ((source.x != destination.x) && (source.y != destination.y)) {
 			throw new IllegalArgumentException("Source and destination are not orthogonally aligned");
 		} else if (source.x > destination.x) {
