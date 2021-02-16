@@ -44,7 +44,7 @@ public class RoomTest {
     componentMap.add(Arrays.asList(wall, space, space, wall));
     componentMap.add(Arrays.asList(wall, wall, wall, wall));
 
-    this.room2 = new Room(new Point(-2,-1), componentMap);
+    this.room3 = new Room(new Point(-2,-1), componentMap);
   }
 
   @Test

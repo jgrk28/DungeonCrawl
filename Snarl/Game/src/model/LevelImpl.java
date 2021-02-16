@@ -19,10 +19,12 @@ import modelView.EntityType;
  *         X...X
  *         X...X
  *         XXXXX
- * 
- * Where a Wall corresponds to "X", a Space corresponds 
- * to ".", a Hall Space corresponds to "*", and 
- * an Empty Space is simply " "
+ *
+ * Where a Wall corresponds to "X", a Space corresponds to ".",
+ * a Hall Space corresponds to "*", a Key corresponds
+ * to "!", an Exit corresponds to "@", and an Empty Space
+ * is simply " "
+ * For more examples, see test/view/TextualLevelView.java
  */
 public class LevelImpl implements Level {
 	

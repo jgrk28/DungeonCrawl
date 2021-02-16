@@ -19,9 +19,11 @@ import modelView.EntityType;
  * X....X      
  * X....X        
  * XXXXXX
- * 
- * Where a Wall corresponds to "X" and a Space corresponds to ".".
- * A Space on the border of a room is a door
+ *
+ * Where a Wall corresponds to "X", a Space corresponds to ".",
+ * a Key corresponds to "!", an Exit corresponds to "@", and an Empty Space
+ * is simply " "
+ * For more examples, see test/model/RoomTest.java
  */
 public class Room implements LevelComponent {
 	

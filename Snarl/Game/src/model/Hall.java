@@ -14,6 +14,7 @@ import modelView.EntityType;
  *       *
  *       *
  *       *******
+ * For more examples, see test/model/HallTest.java
  */
 public class Hall implements LevelComponent {
 	
@@ -206,7 +207,7 @@ public class Hall implements LevelComponent {
 				waypointCounter++;
 				
 				//If we have reached the end of the waypoints, the nextDestination is the EndRoom
-				if (this.waypoints.size() == waypointCounter) {
+				if (this.waypoints.size() <= waypointCounter) {
 					nextDestination = this.endRoomPosition;
 				} else {
 					//Otherwise, get the next waypoint in the list

@@ -46,12 +46,14 @@ public class LevelComponentTest {
   private Hall hall2;
   private Wall wall = new Wall();
   private Space space = new Space();
+  private Key key = new Key();
+  private Exit exit = new Exit();
 
   private void initRoom1() {
     //Simple 4x4 room
     List<List<Entity>> componentMap = new ArrayList<List<Entity>>();
     componentMap.add(Arrays.asList(wall, wall, wall, wall));
-    componentMap.add(Arrays.asList(wall, space, space, wall));
+    componentMap.add(Arrays.asList(wall, key, space, wall));
     componentMap.add(Arrays.asList(wall, space, space, wall));
     componentMap.add(Arrays.asList(wall, wall, wall, wall));
 
@@ -62,7 +64,7 @@ public class LevelComponentTest {
     //Weird 2x2 room
     List<List<Entity>> componentMap = new ArrayList<List<Entity>>();
     componentMap.add(Arrays.asList(space, wall));
-    componentMap.add(Arrays.asList(wall, space));
+    componentMap.add(Arrays.asList(wall, exit));
 
     this.room2 = new Room(new Point(15,7), componentMap);
   }
@@ -92,7 +94,7 @@ public class LevelComponentTest {
   private void initHall2() {
     //Hall goes (4,3) -> (5,3) -> (5,6) -> (2,6) -> (2,10)
     List<Entity> componentMap = Arrays.asList(space, space, space, space, space, space, space,
-        space, space, space, space, space, space);
+        space, space, space, space, space);
     List<Point> waypoints = new ArrayList<Point>();
     waypoints.add(new Point(5,3));
     waypoints.add(new Point(5,6));
@@ -144,7 +146,9 @@ public class LevelComponentTest {
   @Test
   public void testGetDestinationEntity() {
     assertEquals(wall, this.room1.getDestinationEntity(new Point(0,0)));
-    assertEquals(space, this.room1.getDestinationEntity(new Point(1,1)));
+    assertEquals(space, this.room1.getDestinationEntity(new Point(1,2)));
+    assertEquals(key, this.room1.getDestinationEntity(new Point(1,1)));
+    assertEquals(exit, this.room2.getDestinationEntity(new Point(16,8)));
     //Halls right now only give spaces but when other entities get added we can test here
     assertEquals(space, this.hall1.getDestinationEntity(new Point(5,11)));
     assertEquals(space, this.hall1.getDestinationEntity(new Point(5,9)));
@@ -186,6 +190,8 @@ public class LevelComponentTest {
   public void testGetEntityType() {
     assertEquals(EntityType.WALL, this.room1.getEntityType(new Wall()));
     assertEquals(EntityType.SPACE, this.room1.getEntityType(new Space()));
+    assertEquals(EntityType.KEY, this.room1.getEntityType(new Key()));
+    assertEquals(EntityType.EXIT, this.room1.getEntityType(new Exit()));
     assertEquals(EntityType.WALL, this.hall1.getEntityType(new Wall()));
     //Hall space is a special type as it will be displayed differently
     assertEquals(EntityType.HALL_SPACE, this.hall1.getEntityType(new Space()));
