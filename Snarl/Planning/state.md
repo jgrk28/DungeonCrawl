@@ -19,9 +19,6 @@
 **Constructor**   
 * Dungeon(List\<Player\> players, List\<Adversary\> adversaries)  
     * Initializes all the levels, sets the players and adversaries for the dungeon  
-    * Arguments:  
-        * players - all players in this Dungeon  
-        * adversaries - all adversaries in this Dungeon  
  
 **Fields**  
 * Set\<Players\> players  
@@ -44,10 +41,6 @@
 **Constructor**  
 * Level(Set\<Player\> players, Set\<Adversary\> adversaries, long seed)  
     * Initialize a random level from the given seed. Level will place the given players and adversaries  
-    * Arguments:  
-        * players - all active players to place in this Level  
-        * adversaries - all active adversaries to place in this Level  
-        * seed - used to initialize a random number generator  
 
 **Fields**  
 * LinkedHashMap\<Actor,LevelComponent\> actorLocations  
@@ -60,9 +53,6 @@
 **Methods**  
 * void actorAction(Actor actor, Point destination)  
     * Moves the actor and deals with any interaction that occurs during the movement  
-    * Arguments:  
-        * actor - the actor that is moving  
-        * destination - the cartesian coordinate for the player’s destination  
 * GameState isLevelOver()  
     * Checks if the level is over. If so, if it was won or lost  
     * GameState can be Active, Won, or Lost  
@@ -76,14 +66,9 @@
 * Boolean checkValidMove(Player player, Point destination)  
     * Checks that the move is valid for the given player  
 * Entity getDestinationEntity(Point destination)  
-    * Returns the entity at the destination   
-    * Arguments:  
-        * destination - the cartesian coordinate for the destination  
+    * Returns the entity at the destination  
 * void enterComponent(Actor actor, LevelComponent source)  
     * Places the actor in this LevelComponent  
-    * Arguments:  
-        * actor - the actor moving to this component  
-        * source - the LevelComponent the actor is currently in  
  
 ## Class Hall implements LevelComponent ##  
 
