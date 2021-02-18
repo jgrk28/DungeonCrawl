@@ -22,6 +22,8 @@ public class TextualLevelViewTest {
 	private List<LevelComponent> levelMap;
 	private Entity space = new Space();
 	private Entity wall = new Wall();
+	private Entity key = new Key();
+	private Entity exit = new Exit();
 
 	private Room room1;
 	private Room room2;
@@ -39,7 +41,7 @@ public class TextualLevelViewTest {
 		//Simple 4x4 room with one space for a possible door
 		List<List<Entity>> componentMap = new ArrayList<List<Entity>>();
 		componentMap.add(Arrays.asList(wall, wall, wall, wall));
-		componentMap.add(Arrays.asList(wall, space, space, wall));
+		componentMap.add(Arrays.asList(wall, key, space, wall));
 		componentMap.add(Arrays.asList(wall, space, space, space));
 		componentMap.add(Arrays.asList(wall, wall, wall, wall));
 
@@ -53,7 +55,7 @@ public class TextualLevelViewTest {
 		componentMap.add(Arrays.asList(wall, space, space, wall));
 		componentMap.add(Arrays.asList(wall, space, space, wall));
 		componentMap.add(Arrays.asList(wall, space, space, wall));
-		componentMap.add(Arrays.asList(space, space, space, space));
+		componentMap.add(Arrays.asList(space, space, exit, space));
 		componentMap.add(Arrays.asList(wall, wall, wall, wall));
 		
 		room2 = new Room(new Point(5,7), componentMap);
@@ -318,7 +320,7 @@ public class TextualLevelViewTest {
 
 		String expectedOut = ""
 				+ "XXXX              \n"
-				+ "X..X              \n"
+				+ "X!.X              \n"
 				+ "X...***           \n"
 				+ "XXXX  *           \n"
 				+ "      *           \n"
@@ -328,7 +330,7 @@ public class TextualLevelViewTest {
 				+ "     X..X         \n"
 				+ "     X..X         \n"
 				+ "     X..X    XXXXX\n"
-				+ "  ***....****....X\n"
+				+ "  ***..@.****....X\n"
 				+ "  *  XXXX    X...X\n"
 				+ "  *          X...X\n"
 				+ "XX.XXX       X...X\n"
@@ -350,7 +352,7 @@ public class TextualLevelViewTest {
 				+ "X..X         \n"
 				+ "X..X         \n"
 				+ "X..X    XXXXX\n"
-				+ "....****....X\n"
+				+ "..@.****....X\n"
 				+ "XXXX    X...X\n"
 				+ "        X...X\n"
 				+ "        X...X\n"
@@ -367,7 +369,7 @@ public class TextualLevelViewTest {
 
 		String expectedOut = ""
 				+ "XXXX              \n"
-				+ "X..X              \n"
+				+ "X!.X              \n"
 				+ "X...******        \n"
 				+ "XXXX     *        \n"
 				+ "      ****        \n"
@@ -377,7 +379,7 @@ public class TextualLevelViewTest {
 				+ "     X..X         \n"
 				+ "     X..X         \n"
 				+ "     X..X    XXXXX\n"
-				+ "  ***....****....X\n"
+				+ "  ***..@.****....X\n"
 				+ "  *  XXXX    X...X\n"
 				+ "  *          X...X\n"
 				+ "XX.XXX       X...X\n"
@@ -396,7 +398,7 @@ public class TextualLevelViewTest {
 
 		String expectedOut = ""
 				+ "XXXX              \n"
-				+ "X..X              \n"
+				+ "X!.X              \n"
 				+ "X...******        \n"
 				+ "XXXX     *        \n"
 				+ "         *        \n"
@@ -406,7 +408,7 @@ public class TextualLevelViewTest {
 				+ "     X..X         \n"
 				+ "     X..X         \n"
 				+ "     X..X    XXXXX\n"
-				+ "  ***....****....X\n"
+				+ "  ***..@.****....X\n"
 				+ "  *  XXXX    X...X\n"
 				+ "  *          X...X\n"
 				+ "XX.XXX       X...X\n"
@@ -425,7 +427,7 @@ public class TextualLevelViewTest {
 		
 		String expectedOut = ""
 				+ "XXXX              \n"
-				+ "X..X              \n"
+				+ "X!.X              \n"
 				+ "X...*********     \n"
 				+ "XXXX  ****  *     \n"
 				+ "      *  *  *     \n"
@@ -435,7 +437,7 @@ public class TextualLevelViewTest {
 				+ "     X..X*  *     \n"
 				+ "     X..X*  *     \n"
 				+ "     X..X****XXXXX\n"
-				+ "  ***....****....X\n"
+				+ "  ***..@.****....X\n"
 				+ "  *  XXXX    X...X\n"
 				+ "  *          X...X\n"
 				+ "XX.XXX       X...X\n"
