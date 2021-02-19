@@ -19,7 +19,7 @@ The purpose of this interface is to check the rules for our GameState. We initia
   * An actor can be a player or an adversary
 
 
-## Class Dungeon extends RuleChecker ##
+## Class Dungeon implements RuleChecker ##
 
 ## Interface Level ## 
 
