@@ -246,4 +246,17 @@ public class Hall implements LevelComponent {
 			return source;		
 		}				
 	}
+
+	@Override
+	public InteractionResult actorAction(Actor actor, Point destination) {
+		Entity destinationEntity = getDestinationEntity(destination);
+		EntityType destinationType = this.getEntityType(destinationEntity);
+		return actor.getInteractionResult(destinationType);
+	}
+
+	@Override
+	public void placeActor(Actor actor, Point destination) {
+		// TODO Auto-generated method stub
+		
+	}
 }

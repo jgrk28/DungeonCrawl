@@ -1,5 +1,7 @@
 package model;
 
+import java.awt.Point;
+
 import modelView.LevelModelView;
 
 /**
@@ -8,5 +10,9 @@ import modelView.LevelModelView;
  * Level
  */
 public interface Level extends LevelModelView {
+	
+	void actorAction(Actor actor, Point destination);
+	
+	GameState isLevelOver();
 
 }

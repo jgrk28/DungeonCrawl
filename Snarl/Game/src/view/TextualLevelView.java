@@ -20,10 +20,16 @@ import modelView.LevelModelView;
  *         X...X
  *         XXXXX
  *
- * Where a Wall corresponds to "X", a Space corresponds to ".",
- * a Hall Space corresponds to "*", a Key corresponds
- * to "!", an Exit corresponds to "@", and an Empty Space
- * is simply " "
+ * Where each Entity corresponds to the following:
+ * - Wall (X)
+ * - Space (.)
+ * - Hall Space (*)
+ * - Key (!)
+ * - Exit (@)
+ * - Player (P)
+ * - Adversary - Ghost (G)
+ * - Adversary - Zombie (Z)
+ * - Empty - where no entities have been placed  (" ")
  */
 public class TextualLevelView implements LevelView {
 	
@@ -65,6 +71,9 @@ public class TextualLevelView implements LevelView {
 			case HALL_SPACE: return "*";
 			case KEY: return "!";
 			case EXIT: return "@";
+			case PLAYER: return "P";
+			case GHOST: return "G";
+			case ZOMBIE: return "Z";
 			case EMPTY: return " ";
 			default: throw new IllegalArgumentException("Entity type is not valid");
 		}

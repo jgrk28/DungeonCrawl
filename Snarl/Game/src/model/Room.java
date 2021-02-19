@@ -126,5 +126,19 @@ public class Room implements LevelComponent {
 		List<Entity> row = this.componentMap.get(relativeY);
 		return row.get(relativeX);
 	}
+
+	@Override
+	public InteractionResult actorAction(Actor actor, Point destination) {
+		Entity destinationEntity = getDestinationEntity(destination);
+		EntityType destinationType = this.getEntityType(destinationEntity);
+		return actor.getInteractionResult(destinationType);
+	}
+
+	@Override
+	public void placeActor(Actor actor, Point destination) {
+		//We will need to check that the destination is valid and 
+		//check the destination entity as well
+		
+	}
 }
 

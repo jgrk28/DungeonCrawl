@@ -39,4 +39,9 @@ public interface LevelComponent {
    * the LevelComponent
    */
   Entity getDestinationEntity(Point point);
+  
+  InteractionResult actorAction(Actor actor, Point destination);
+  
+  void placeActor(Actor actor, Point destination);
+
 }

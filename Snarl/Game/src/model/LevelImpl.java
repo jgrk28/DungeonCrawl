@@ -2,7 +2,9 @@ package model;
 
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Random;
 
 import modelView.EntityType;
 
@@ -20,10 +22,17 @@ import modelView.EntityType;
  *         X...X
  *         XXXXX
  *
- * Where a Wall corresponds to "X", a Space corresponds to ".",
- * a Hall Space corresponds to "*", a Key corresponds
- * to "!", an Exit corresponds to "@", and an Empty Space
- * is simply " "
+ * Where each Entity corresponds to the following:
+ * - Wall (X)
+ * - Space (.)
+ * - Hall Space (*)
+ * - Key (!)
+ * - Exit (@)
+ * - Player (P)
+ * - Adversary - Ghost (G)
+ * - Adversary - Zombie (Z)
+ * - Empty - where no entities have been placed  (" ")
+ *  
  * For more examples, see test/view/TextualLevelView.java
  */
 public class LevelImpl implements Level {
@@ -37,6 +46,20 @@ public class LevelImpl implements Level {
 	
 	//The map of all EntityTypes used to render the Level
 	private ArrayList<ArrayList<EntityType>> viewableMap;
+	
+	//Ordered map of players that reflects the turn order 
+	//and maps to each player to their current location
+	private LinkedHashMap<Player,LevelComponent> playerLocations;
+	
+	//Ordered map of adversaries that reflects the turn order 
+	//and maps to each adversary to their current location
+	private LinkedHashMap<Adversary,LevelComponent> adversaryLocations;
+	
+	//True if exit has been unlocked by finding the key
+	private Boolean exitUnlocked;
+	
+	//True if at least one player has exited the level
+	private Boolean levelExited;
 	
 	/** 
 	 * Initializes a new level
@@ -53,6 +76,43 @@ public class LevelImpl implements Level {
 		 */
 		this.levelMap = levelMap;
 	}
+	
+	//Initialize a random level from the given seed. Level will place the given players 
+	//and adversaries
+	public LevelImpl(List<Player> players, List<Adversary> adversaries, long seed) {
+		//Create all the rooms, then connect with halls
+		//Make sure the room does not overlap with existing rooms
+		//Randomize dimensions of room
+		//Helper function that takes in a list of level components and the random num, gives
+		//us a size and location for a new room that is valid
+		//Pass this to the level component and add to the levelMap
+		//Set bounds for min and max number of rooms in a level
+	}
+	
+	//Create a new random LevelComponent 
+	private LevelComponent generateRandomRoom(Random generator) {
+		//Generate a random size and position
+		//Check if valid
+		//Loop until valid values are found
+		//Create the room
+	}
+	
+	//
+	private Boolean validRoomPlacement(Point topLeftPos, Point bottomRightPos) {
+		//Loop through all things in the LevelMap
+		for (LevelComponent component : levelMap) {
+			Point componentTopLeft = component.getTopLeftBound();
+			Point componentBottomRight = component.getBottomRightBound();
+			
+			//Check if the top left position is inside the component
+			if (topLeftPos.x < componentBottomRight.x && ) {
+				
+			}
+			//Check if rooms overlap, return false if this is the case
+		}
+		return true;
+	}
+	
 
 	@Override
 	public ArrayList<ArrayList<EntityType>> getMap() {
@@ -170,6 +230,23 @@ public class LevelImpl implements Level {
 		}
 	}
 
+	@Override
+	public void actorAction(Actor actor, Point destination) {
+		// TODO Auto-generated method stub
+		
+	}
 
+	@Override
+	public GameState isLevelOver() {
+		if (!playerLocations.isEmpty()) {
+			return GameState.ACTIVE;
+		}
+		if (levelExited) {
+			return GameState.WON;
+		}
+		else {
+			return GameState.LOST;
+		}
+	}
 
 }
