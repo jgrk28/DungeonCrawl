@@ -1,3 +1,5 @@
+The purpose of this interface is to check the rules for our GameState. We initially built checking into our GameState, so this interface primarily calls those methods from a high level. We decided to keep the checking in each respective interface, Level and LevelComponent, because they have access to the data needed to check the rules. This interface could be used by the GameController to validate moves and check when the level or game is over.
+
 ## Interface RuleChecker ##
 
 ### Methods ###
