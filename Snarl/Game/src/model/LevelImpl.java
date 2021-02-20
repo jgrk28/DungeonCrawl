@@ -1,9 +1,11 @@
 package model;
 
 import java.awt.Point;
+import java.lang.reflect.GenericDeclaration;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 import modelView.EntityType;
@@ -39,11 +41,7 @@ public class LevelImpl implements Level {
 	
 	//The map of LevelComponents that compose the Level
 	private List<LevelComponent> levelMap;
-	
-	//The upper and lower bounds of the level within a Cartesian plane
-	private Point topLeftBound;
-	private Point bottomRightBound;
-	
+
 	//The map of all EntityTypes used to render the Level
 	private ArrayList<ArrayList<EntityType>> viewableMap;
 	
@@ -62,21 +60,135 @@ public class LevelImpl implements Level {
 	private Boolean levelExited;
 	
 	/** 
-	 * Initializes a new level
+	 * Initializes a new level and places actors in starting positions
+	 * @param players - list of all players in the level
+	 * @param adversaries - list of all adversaries in the level
 	 * @param levelMap - the map of all LevelComponents within the level
 	 */
-	public LevelImpl(List<LevelComponent> levelMap) {
-		/** 
+	public LevelImpl(List<Player> players, List<Adversary> adversaries, List<LevelComponent> levelMap) {
+		/**
 		 * A level is comprised of a series of rooms connected by hallways.
 		 * A level is valid if no two rooms overlap, no two hallways overlap,
 		 * and no hallways overlap with any rooms.
-		 * 
+		 *
 		 * This validation will be implemented when levels are generated 
 		 * automatically
 		 */
+
+		if (levelMap.isEmpty()) {
+			throw new IllegalArgumentException("Level map does not have any components");
+		}
 		this.levelMap = levelMap;
+		this.exitUnlocked = false;
+		this.levelExited = false;
+
+		Room topLeftRoom = getBoundaryRoom(true);
+		Room bottomRightRoom = getBoundaryRoom(false);
+
+		//Add players to top left room
+		for (Player player : players) {
+			playerLocations.put(player, topLeftRoom);
+			placeActorValidly(player, topLeftRoom);
+		}
+		//Add adversaries to bottom right room
+		for (Adversary adversary : adversaries) {
+			adversaryLocations.put(adversary, bottomRightRoom);
+			placeActorValidly(adversary, bottomRightRoom);
+		}
 	}
-	
+
+	/**
+	 * Initializes a new level and places actors in specified positions
+	 * @param players - list of all players in the level
+	 * @param adversaries - list of all adversaries in the level
+	 * @param levelMap - the map of all LevelComponents within the level
+	 */
+	public LevelImpl(
+			Map<Player, Point> players,
+			Map<Adversary, Point> adversaries,
+			List<LevelComponent> levelMap,
+			boolean levelExited,
+			boolean exitUnlocked
+	)
+	{
+		if (levelMap.isEmpty()) {
+			throw new IllegalArgumentException("Level map does not have any components");
+		}
+		this.levelMap = levelMap;
+		this.exitUnlocked = exitUnlocked;
+		this.levelExited = levelExited;
+
+		//Add players to corresponding LevelComponent
+		for (Map.Entry<Player, Point> entry : players.entrySet()) {
+			LevelComponent component = findComponent(entry.getValue());
+			playerLocations.put(entry.getKey(), component);
+			component.placeActor(entry.getKey(), entry.getValue());
+		}
+		//Add adversaries to corresponding LevelComponent
+		for (Map.Entry<Adversary, Point> entry : adversaries.entrySet()) {
+			LevelComponent component = findComponent(entry.getValue());
+			adversaryLocations.put(entry.getKey(), component);
+			component.placeActor(entry.getKey(), entry.getValue());
+		}
+	}
+
+	private Room getBoundaryRoom(boolean closeToOriginFlag) {
+		Room boundaryRoom = null;
+		LevelComponent firstComponent = levelMap.get(0);
+		Point firstTopLeft = firstComponent.getTopLeftBound();
+		Point origin = new Point(0, 0);
+		double distToOrigin = firstTopLeft.distance(origin);
+		for (LevelComponent component : levelMap) {
+			if (!(component instanceof Room)) {
+				continue;
+			}
+			Point topLeft = component.getTopLeftBound();
+
+			double newDistToOrigin = topLeft.distance(origin);
+			if (closeToOriginFlag && newDistToOrigin < distToOrigin) {
+				distToOrigin = newDistToOrigin;
+				boundaryRoom = (Room)firstComponent;
+			}
+			if (!closeToOriginFlag && newDistToOrigin > distToOrigin) {
+				distToOrigin = newDistToOrigin;
+				boundaryRoom = (Room)firstComponent;
+			}
+		}
+		if (boundaryRoom == null) {
+			throw new IllegalArgumentException("No rooms in level");
+		}
+
+		return boundaryRoom;
+	}
+
+	private void placeActorValidly(Actor actor, Room room) {
+		Point roomTopLeft = room.getTopLeftBound();
+		Point roomBottomRight = room.getBottomRightBound();
+
+		for (int row = roomTopLeft.y; row <= roomBottomRight.y; row++) {
+			for (int col = roomTopLeft.x; col <= roomBottomRight.x; col++) {
+				Point currPoint = new Point(col, row);
+				try {
+					room.placeActor(actor, currPoint);
+					return;
+				} catch (IllegalArgumentException e) {
+					//Do nothing
+				}
+			}
+		}
+		throw new IllegalArgumentException("Room has no empty spaces to place a new actor");
+	}
+
+	private LevelComponent findComponent(Point point) {
+		for (LevelComponent component : this.levelMap) {
+			if (component.inComponent(point)) {
+				return component;
+			}
+		}
+		throw new IllegalArgumentException("Point is not anywhere within the level");
+	}
+
+	//This method will be implemented at a later milestone as we realized this was not asked for
 	//Initialize a random level from the given seed. Level will place the given players 
 	//and adversaries
 	public LevelImpl(List<Player> players, List<Adversary> adversaries, long seed) {
@@ -88,40 +200,60 @@ public class LevelImpl implements Level {
 		//Pass this to the level component and add to the levelMap
 		//Set bounds for min and max number of rooms in a level
 	}
-	
+
+	//This method will be implemented at a later milestone as we realized this was not asked for
 	//Create a new random LevelComponent 
 	private LevelComponent generateRandomRoom(Random generator) {
 		//Generate a random size and position
 		//Check if valid
 		//Loop until valid values are found
 		//Create the room
+		return null;
 	}
-	
-	//
+
+	//This method will be useful when we start to build the random level generator
 	private Boolean validRoomPlacement(Point topLeftPos, Point bottomRightPos) {
 		//Loop through all things in the LevelMap
 		for (LevelComponent component : levelMap) {
+			Point topRightPos = new Point(bottomRightPos.x, topLeftPos.y);
+			Point bottomLeftPos = new Point(topLeftPos.x, bottomRightPos.y);
+
 			Point componentTopLeft = component.getTopLeftBound();
 			Point componentBottomRight = component.getBottomRightBound();
-			
-			//Check if the top left position is inside the component
-			if (topLeftPos.x < componentBottomRight.x && ) {
-				
-			}
+
 			//Check if rooms overlap, return false if this is the case
+			//Conditions that rooms overlap:
+			// - any corner of new room is in old room
+			// - old room TopLeft or old room BotRight is in new room
+			if (component.inComponent(topLeftPos)
+					|| component.inComponent(topRightPos)
+					|| component.inComponent(bottomLeftPos)
+					|| component.inComponent(bottomRightPos)
+				  || isPointWithinBounds(componentTopLeft, topLeftPos, bottomRightPos)
+				  || isPointWithinBounds(componentBottomRight, topLeftPos, bottomRightPos))
+			{
+				return false;
+			}
 		}
 		return true;
+	}
+
+	private boolean isPointWithinBounds(Point pointToCheck, Point topLeftBound, Point bottomRightBound) {
+		return pointToCheck.x <= bottomRightBound.x
+				&& pointToCheck.x >= topLeftBound.x
+				&& pointToCheck.y <= bottomRightBound.y
+				&& pointToCheck.y >= topLeftBound.y;
 	}
 	
 
 	@Override
 	public ArrayList<ArrayList<EntityType>> getMap() {
-		this.topLeftBound = getTopLeft();
-		this.bottomRightBound = getBottomRight();
-		this.viewableMap = initializeEmptyMap();
+		Point topLeftBound = getTopLeft();
+		Point bottomRightBound = getBottomRight();
+		this.viewableMap = initializeEmptyMap(topLeftBound, bottomRightBound);
 
 		for (LevelComponent component : levelMap) {
-			addToViewableMap(component);
+			addToViewableMap(component, topLeftBound, bottomRightBound);
 		}
 
 		return this.viewableMap;
@@ -182,11 +314,14 @@ public class LevelImpl implements Level {
 	/**
 	 * Initializes a new map of EntityTypes as EMPTY
 	 * @return the map of EMPTY EntityTypes
+	 * @param topLeftBound - top left bound of viewable level
+	 * @param bottomRightBound - bottom right bound of viewable level
 	 */
-	ArrayList<ArrayList<EntityType>> initializeEmptyMap() {
+	ArrayList<ArrayList<EntityType>> initializeEmptyMap(Point topLeftBound,
+			Point bottomRightBound) {
 		//Determine the size of the map based on the bounds
-		int xSize = this.bottomRightBound.x - this.topLeftBound.x + 1;
-		int ySize = this.bottomRightBound.y - this.topLeftBound.y + 1;
+		int xSize = bottomRightBound.x - topLeftBound.x + 1;
+		int ySize = bottomRightBound.y - topLeftBound.y + 1;
 
 		ArrayList<ArrayList<EntityType>> emptyMap = new ArrayList<>();
 
@@ -205,11 +340,14 @@ public class LevelImpl implements Level {
 	/**
 	 * Adds each Entity within a LevelComponent to the viewableMap
 	 * @param component - the LevelComponent to add to the viewableMap
+	 * @param topLeftBound - top left bound of viewable level
+	 * @param bottomRightBound - bottom right bound of viewable level
 	 */
-	private void addToViewableMap(LevelComponent component) {
+	private void addToViewableMap(LevelComponent component, Point topLeftBound,
+			Point bottomRightBound) {
 		//Iterate through the viewableMap
-		for (int i = this.topLeftBound.y; i <= this.bottomRightBound.y; i++) {
-			for (int j = this.topLeftBound.x; j <= this.bottomRightBound.x; j++) {
+		for (int i = topLeftBound.y; i <= bottomRightBound.y; i++) {
+			for (int j = topLeftBound.x; j <= bottomRightBound.x; j++) {
 				try {
 					//Check if an Entity exists at the given coordinates in the LevelComponent
 					//If these coordinates are not available for this LevelComponent, no changes are made
@@ -219,8 +357,8 @@ public class LevelImpl implements Level {
 					EntityType destEntityDrawable = component.getEntityType(destEntity);
 					
 					//Add the EntityType to the viewableMap
-					int croppedYIndex = i - this.topLeftBound.y;
-					int croppedXIndex = j - this.topLeftBound.x;
+					int croppedYIndex = i - topLeftBound.y;
+					int croppedXIndex = j - topLeftBound.x;
 					ArrayList<EntityType> editRow = this.viewableMap.get(croppedYIndex);
 					editRow.set(croppedXIndex, destEntityDrawable);
 				} catch (IllegalArgumentException e) {

@@ -76,13 +76,9 @@ public class Room implements LevelComponent {
 				doorPosition.y == (bottomRightPosition.y + 1);
 	}
 
-	/**
-	 * Checks if a given coordinate is located within the Room
-	 * @param point - the coordinate to check
-	 * @param bottomRightPosition - the lower right boundary of the Room
-	 * @return True if the point is located within the LevelComponent, false otherwise
-	 */
-	private boolean validPoint(Point point, Point bottomRightPosition) {
+	@Override
+	public boolean inComponent(Point point) {
+		Point bottomRightPosition = getBottomRightBound();
 		return point.x >= this.position.x &&
 				point.x <= bottomRightPosition.x &&
 				point.y >= this.position.y &&
@@ -113,10 +109,8 @@ public class Room implements LevelComponent {
 
 	@Override
 	public Entity getDestinationEntity(Point point) {
-		Point bottomRight = getBottomRightBound();
-		
 		//Check to see if the destination point exists in the Room
-		if (!validPoint(point, bottomRight)) {
+		if (!inComponent(point)) {
 			throw new IllegalArgumentException("Point not in component");
 		}
 
@@ -136,9 +130,12 @@ public class Room implements LevelComponent {
 
 	@Override
 	public void placeActor(Actor actor, Point destination) {
-		//We will need to check that the destination is valid and 
-		//check the destination entity as well
-		
+		Entity destEntity = this.getDestinationEntity(destination);
+		if (destEntity instanceof Space) {
+			List<Entity> row = this.componentMap.get(destination.y);
+			row.set(destination.x, actor);
+		}
+		throw new IllegalArgumentException("Cannot place actor, destination is not a space");
 	}
 }
 

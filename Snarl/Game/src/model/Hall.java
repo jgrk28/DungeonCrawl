@@ -168,13 +168,32 @@ public class Hall implements LevelComponent {
 				return generalType;
 		}
 	}
-		
+
+	@Override
+	public boolean inComponent(Point point) {
+		try {
+			getHallwayIndex(point);
+			return true;
+		} catch (IllegalArgumentException e) {
+			return false;
+		}
+	}
+
 	/**
-	 * Walk through each location in the hall to determine if it matches the given 
+	 * Walk through each location in the hall to determine if it matches the given
 	 * point. If so, return the Entity at that location
 	 */
 	@Override
-	public Entity getDestinationEntity(Point point) {	
+	public Entity getDestinationEntity(Point point) {
+		int hallIndex = getHallwayIndex(point);
+		return componentMap.get(hallIndex);
+	}
+
+		/**
+     * Walk through each location in the hall to determine if it matches the given
+     * point. If so, return the index of the hallway at that point.
+     */
+	private int getHallwayIndex(Point point) {
 		//Start at StartRoom
 		Point currentPosition = this.startRoomPosition;
 		
@@ -199,7 +218,7 @@ public class Hall implements LevelComponent {
 			
 			//If the current coordinate is the given point, return the Entity at this location
 			if (currentPosition.equals(point)) {
-				return this.componentMap.get(steps);
+				return steps;
 			}
 			
 			//If you have reached the next waypoint, check to see what the nextDestination is
@@ -256,7 +275,10 @@ public class Hall implements LevelComponent {
 
 	@Override
 	public void placeActor(Actor actor, Point destination) {
-		// TODO Auto-generated method stub
-		
+		int hallIndex = getHallwayIndex(destination);
+		if (!(componentMap.get(hallIndex) instanceof Space)) {
+			throw new IllegalArgumentException("Cannot place actor, destination is not a space");
+		}
+		componentMap.set(hallIndex, actor);
 	}
 }

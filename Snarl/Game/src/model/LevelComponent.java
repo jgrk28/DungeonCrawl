@@ -32,6 +32,13 @@ public interface LevelComponent {
   EntityType getEntityType(Entity entity);
 
   /**
+   * Checks if a given coordinate is located within the Room
+   * @param point - the coordinate to check
+   * @return True if the point is located within the LevelComponent, false otherwise
+   */
+  boolean inComponent(Point point);
+
+  /**
    * Finds the entity at a given point within the componentMap 
    * @param point - the coordinates of the requested entity
    * @return the entity located at the given coordinates

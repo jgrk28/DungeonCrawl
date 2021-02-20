@@ -20,13 +20,17 @@ public class Dungeon {
 	private List<Level> levels;
 	
 	//Initializes all the levels, sets the players and adversaries for the dungeon
-	public Dungeon(List<Player> players, List<Adversary> adversaries, int currLevel, List<Level> levels) {	
+	public Dungeon(List<Player> players, List<Adversary> adversaries, int currLevel, List<Level> levels) {
+		if (players.size() < 1 || players.size() > 4) {
+			throw new IllegalArgumentException("Invalid number of players");
+		}
 		this.players = players;
 		this.adversaries = adversaries;
 		this.currLevel = currLevel;	
 		this.levels = levels;
 	}
-	
+
+	//This method will be used when we start to randomly generate games states
 	public Dungeon(List<Player> players, List<Adversary> adversaries, long seed) {
 		this.players = players;
 		this.adversaries = adversaries;
