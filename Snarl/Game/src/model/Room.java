@@ -122,20 +122,36 @@ public class Room implements LevelComponent {
 	}
 
 	@Override
-	public InteractionResult actorAction(Actor actor, Point destination) {
-		Entity destinationEntity = getDestinationEntity(destination);
-		EntityType destinationType = this.getEntityType(destinationEntity);
-		return actor.getInteractionResult(destinationType);
+	public void moveActor(Actor actor, Point destination) {
+		removeActor(actor);	
+		placeActor(actor, destination);
+	}
+	
+	@Override
+	public void removeActor(Actor actor) {
+		Point actorLocation = findActor(actor);
+		List<Entity> actorRow = componentMap.get(actorLocation.y);
+		actorRow.set(actorLocation.x, new Space());
+	}
+	
+	private Point findActor(Actor actor) {
+		for (int i = 0; i < componentMap.size(); i++) {
+			List<Entity> entityRow = componentMap.get(i);
+			for (int j = 0; j < entityRow.size(); j++) {
+				Entity currEntity = entityRow.get(j);
+				if (currEntity.equals(actor)) {
+					return new Point(j,i);
+				}
+			}
+		}
+		throw new IllegalArgumentException("Actor is not in this component");
 	}
 
 	@Override
 	public void placeActor(Actor actor, Point destination) {
-		Entity destEntity = this.getDestinationEntity(destination);
-		if (destEntity instanceof Space) {
-			List<Entity> row = this.componentMap.get(destination.y);
-			row.set(destination.x, actor);
-		}
-		throw new IllegalArgumentException("Cannot place actor, destination is not a space");
+		List<Entity> row = this.componentMap.get(destination.y);
+		row.set(destination.x, actor);
 	}
+
 }
 

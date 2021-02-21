@@ -1,7 +1,6 @@
 package model;
 
 import java.awt.Point;
-import java.lang.reflect.GenericDeclaration;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -122,12 +121,20 @@ public class LevelImpl implements Level {
 		for (Map.Entry<Player, Point> entry : players.entrySet()) {
 			LevelComponent component = findComponent(entry.getValue());
 			playerLocations.put(entry.getKey(), component);
+			Entity destinationEntity = component.getDestinationEntity(entry.getValue());
+			if (!(destinationEntity instanceof Space)) {
+				throw new IllegalArgumentException("Cannot place player, destination is not a space"); 
+			}
 			component.placeActor(entry.getKey(), entry.getValue());
 		}
 		//Add adversaries to corresponding LevelComponent
 		for (Map.Entry<Adversary, Point> entry : adversaries.entrySet()) {
 			LevelComponent component = findComponent(entry.getValue());
 			adversaryLocations.put(entry.getKey(), component);
+			Entity destinationEntity = component.getDestinationEntity(entry.getValue());
+			if (!(destinationEntity instanceof Space)) {
+				throw new IllegalArgumentException("Cannot place adversary, destination is not a space"); 
+			}
 			component.placeActor(entry.getKey(), entry.getValue());
 		}
 	}
@@ -368,11 +375,95 @@ public class LevelImpl implements Level {
 		}
 	}
 
+	/**
+	 * Check if the actor is leaving the room that they are currently in
+	 * If so, we want to try to place them in the new room and remove them from the old room
+	 * Otherwise, we want to move them within the current room 
+	 */
 	@Override
-	public void actorAction(Actor actor, Point destination) {
-		// TODO Auto-generated method stub
+	public void playerAction(Player player, Point destination) {
+		LevelComponent sourceComponent = this.playerLocations.get(player);
+		LevelComponent destinationComponent;
 		
+		if (sourceComponent.inComponent(destination)) {
+			destinationComponent = sourceComponent;		
+		} else {
+			destinationComponent = findComponent(destination);
+		}
+		
+		Entity destinationEntity = destinationComponent.getDestinationEntity(destination);
+		EntityType destinationType = destinationComponent.getEntityType(destinationEntity);
+		InteractionResult interaction = player.getInteractionResult(destinationType);
+		
+		//If player runs into a exit or adversary, we are removing instead of moving
+		boolean placePlayer = !interaction.equals(InteractionResult.EXIT) 
+				|| !interaction.equals(InteractionResult.REMOVE_PLAYER);
+			
+		//If player is moving to a new room, we need to check that we can place them in this room
+		if (!destinationComponent.equals(sourceComponent)) {
+			sourceComponent.removeActor(player);
+		} else {
+			destinationComponent.removeActor(player);
+		}
+		
+		if (placePlayer) {
+			destinationComponent.placeActor(player, destination);
+			this.playerLocations.replace(player, destinationComponent);	
+		} else {
+			this.playerLocations.remove(player);
+		}
+		
+		if (interaction.equals(InteractionResult.EXIT)) {
+			this.levelExited = true;
+		}
+		
+		if (interaction.equals(InteractionResult.FOUND_KEY)) {
+			this.exitUnlocked = true;
+		}			
 	}
+	
+	@Override
+	public void adversaryAction(Adversary adversary, Point destination) {
+		
+		LevelComponent sourceComponent = this.adversaryLocations.get(adversary);
+		LevelComponent destinationComponent;
+		
+		if (sourceComponent.inComponent(destination)) {
+			destinationComponent = sourceComponent;		
+		} else {
+			destinationComponent = findComponent(destination);
+		}
+		
+		Entity destinationEntity = destinationComponent.getDestinationEntity(destination);
+		EntityType destinationType = destinationComponent.getEntityType(destinationEntity);
+		InteractionResult interaction = adversary.getInteractionResult(destinationType);
+			
+		//If player is moving to a new room, we need to check that we can place them in this room
+		if (!destinationComponent.equals(sourceComponent)) {
+			sourceComponent.removeActor(adversary);
+		} else {
+			destinationComponent.removeActor(adversary);
+		}
+		
+		destinationComponent.placeActor(adversary, destination);
+		this.adversaryLocations.replace(adversary, destinationComponent);	
+	
+		if (interaction.equals(InteractionResult.REMOVE_PLAYER)) {
+			this.playerLocations.remove(destinationEntity);
+		}		
+	}
+	
+	/**
+	 * 		case SPACE: 
+				return InteractionResult.NONE;
+			case HALL_SPACE: 
+				return InteractionResult.NONE;
+			case PLAYER:
+				return InteractionResult.REMOVE_PLAYER;
+			default:
+				throw new IllegalArgumentException("Illegal interaction entity for adversary");
+	 */
+	
 
 	@Override
 	public GameState isLevelOver() {

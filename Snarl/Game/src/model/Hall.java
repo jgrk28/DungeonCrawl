@@ -267,18 +267,30 @@ public class Hall implements LevelComponent {
 	}
 
 	@Override
-	public InteractionResult actorAction(Actor actor, Point destination) {
-		Entity destinationEntity = getDestinationEntity(destination);
-		EntityType destinationType = this.getEntityType(destinationEntity);
-		return actor.getInteractionResult(destinationType);
+	public void moveActor(Actor actor, Point destination) {
+		removeActor(actor);
+		placeActor(actor, destination);	
+	}
+
+	@Override
+	public void removeActor(Actor actor) {
+		int actorIndex = findActor(actor);
+		componentMap.set(actorIndex, new Space());			
+	}
+	
+	private int findActor(Actor actor) {
+		for (int i = 0; i < componentMap.size(); i++) {
+			if (componentMap.get(i).equals(actor)) {
+				return i;
+			}
+		}
+		throw new IllegalArgumentException("Actor is not in this component");
 	}
 
 	@Override
 	public void placeActor(Actor actor, Point destination) {
 		int hallIndex = getHallwayIndex(destination);
-		if (!(componentMap.get(hallIndex) instanceof Space)) {
-			throw new IllegalArgumentException("Cannot place actor, destination is not a space");
-		}
 		componentMap.set(hallIndex, actor);
 	}
+
 }

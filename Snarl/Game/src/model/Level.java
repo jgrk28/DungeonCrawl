@@ -11,7 +11,9 @@ import modelView.LevelModelView;
  */
 public interface Level extends LevelModelView {
 	
-	void actorAction(Actor actor, Point destination);
+	void playerAction(Player player, Point destination);
+	
+	void adversaryAction(Adversary adversary, Point destination);
 	
 	GameState isLevelOver();
 
