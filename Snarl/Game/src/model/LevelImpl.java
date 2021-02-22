@@ -59,6 +59,15 @@ public class LevelImpl implements Level {
 	private Boolean levelExited;
 	
 	/** 
+	 * Initializes a new level
+	 * This constructor is used primarily for testing 
+	 * @param levelMap - the map of all LevelComponents within the level
+	 */
+	public LevelImpl(List<LevelComponent> levelMap) {
+		this.levelMap = levelMap;
+	}
+	
+	/** 
 	 * Initializes a new level and places actors in starting positions
 	 * @param players - list of all players in the level
 	 * @param adversaries - list of all adversaries in the level

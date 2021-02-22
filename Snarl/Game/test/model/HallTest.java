@@ -30,7 +30,7 @@ public class HallTest {
   private void initHall2() {
     //Hall goes (4,3) -> (5,3) -> (5,6) -> (2,6) -> (2,10)
     List<Entity> componentMap = Arrays.asList(space, space, space, space, player, space, space,
-        space, space, zombie, ghost, space, space);
+        space, zombie, ghost, space, space);
     List<Point> waypoints = new ArrayList<Point>();
     waypoints.add(new Point(5,3));
     waypoints.add(new Point(5,6));

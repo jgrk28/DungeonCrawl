@@ -132,41 +132,6 @@ public class TestRoomTest {
 		assertEquals(expectedOutput, output.toString());
 	}
 	
-	//Tests that a point on the edge of the room does not include adjacent walls 
-	//as traversable points
-	@Test
-	public void testPointEdgeRoom() {
-		String input = "[ { \"type\" : \"room\",\n"
-				+ "    \"origin\" : [0, 0],\n"
-				+ "    \"bounds\" : { \"rows\" : 7,\n"
-				+ "                 \"columns\" : 4 },\n"
-				+ "    \"layout\" : [ [0, 0, 0, 0],\n"
-				+ "                 [0, 1, 1, 0],\n"
-				+ "                 [0, 1, 1, 0],\n"
-				+ "                 [2, 1, 1, 2],\n"
-				+ "                 [0, 1, 1, 0],\n"
-				+ "                 [0, 1, 1, 0],\n"
-				+ "                 [0, 0, 0, 0],\n"
-				+ "               ]\n"
-				+ "  },\n"
-				+ "  [2, 1]\n"
-				+ "]\n";
-		
-		String expectedOutput = "[\"Success: Traversable points from \",[2,1],"
-				+ "\" in room at \",[0,0],\" are \",[[1,1],[3,1],[2,2]]]";
-		
-		System.setIn(new ByteArrayInputStream(input.getBytes()));
-		
-		ByteArrayOutputStream output = new ByteArrayOutputStream();
-		PrintStream print = new PrintStream(output);
-		System.setOut(print);
-		
-		TestRoom.main(new String[] {});
-		
-		assertEquals(expectedOutput, output.toString());
-	}
-	
-
 	//Tests that a wall on the edge of the room returns traversable spaces 
 	//within the room
 	@Test
@@ -201,9 +166,42 @@ public class TestRoomTest {
 		assertEquals(expectedOutput, output.toString());
 	}
 	
-	//TODO
-	//This test is not working as expected, the current output includes points outside
-	//of the room and points that are not spaces
+	//Tests that a point on the edge of the room does not include adjacent walls 
+	//as traversable points
+	@Test
+	public void testPointEdgeRoom() {
+		String input = "[ { \"type\" : \"room\",\n"
+				+ "    \"origin\" : [0, 0],\n"
+				+ "    \"bounds\" : { \"rows\" : 7,\n"
+				+ "                 \"columns\" : 4 },\n"
+				+ "    \"layout\" : [ [0, 0, 0, 0],\n"
+				+ "                 [0, 1, 1, 0],\n"
+				+ "                 [0, 1, 1, 0],\n"
+				+ "                 [2, 1, 1, 2],\n"
+				+ "                 [0, 1, 1, 0],\n"
+				+ "                 [0, 1, 1, 0],\n"
+				+ "                 [0, 0, 0, 0],\n"
+				+ "               ]\n"
+				+ "  },\n"
+				+ "  [2, 1]\n"
+				+ "]\n";
+		
+		String expectedOutput = "[\"Success: Traversable points from \",[2,1],"
+				+ "\" in room at \",[0,0],\" are \",[[1,1],[3,1],[2,2]]]";
+		
+		System.setIn(new ByteArrayInputStream(input.getBytes()));
+		
+		ByteArrayOutputStream output = new ByteArrayOutputStream();
+		PrintStream print = new PrintStream(output);
+		System.setOut(print);
+		
+		TestRoom.main(new String[] {});
+		
+		assertEquals(expectedOutput, output.toString());
+	}
+
+
+	//This tests a corner point with no adjacent traversable spaces
 	@Test
 	public void testCornerPoint() {
 		String input = "[ { \"type\" : \"room\",\n"
@@ -216,11 +214,11 @@ public class TestRoomTest {
 				+ "                 [0, 0, 0, 0],\n"
 				+ "               ]\n"
 				+ "  },\n"
-				+ "  [0, 3]\n"
+				+ "  [3, 0]\n"
 				+ "]\n";
 		
 		String expectedOutput = "[\"Success: Traversable points from \",[3,0],"
-				+ "\" in room at \",[0,0],\" are \",[[1,3]]";
+				+ "\" in room at \",[0,0],\" are \",[]]";
 		
 		System.setIn(new ByteArrayInputStream(input.getBytes()));
 		

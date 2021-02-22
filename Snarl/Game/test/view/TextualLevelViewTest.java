@@ -301,11 +301,7 @@ public class TextualLevelViewTest {
 
 	private void testDrawLevel(List<LevelComponent> map, String expectedOut) {
 		//Initialize ModelView and View
-		LevelModelView modelView = new LevelImpl(
-				new ArrayList<>(Arrays.asList(player)),
-				new ArrayList<>(Arrays.asList(ghost, zombie)),
-				map
-		);
+		LevelModelView modelView = new LevelImpl(map);
 		LevelView view = new TextualLevelView(modelView);
 
 		//Assign output of STDOUT to new Stream
@@ -355,7 +351,7 @@ public class TextualLevelViewTest {
 		initializeLevelMapSmall();
 
 		String expectedOut = ""
-				+ "XPXX         \n"
+				+ "X.XX         \n"
 				+ "X..X         \n"
 				+ "X..X         \n"
 				+ "X..X    XXXXX\n"

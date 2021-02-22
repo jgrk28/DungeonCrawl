@@ -23,7 +23,7 @@ public class LevelComponentTest {
     //Create a new ModelView containing just the room that was passed in
     ArrayList<LevelComponent> levelMap = new ArrayList<LevelComponent>();
     levelMap.add(component);
-    LevelModelView modelView = new LevelImpl(new ArrayList<>(Arrays.asList(new Player())), new ArrayList<>(), levelMap);
+    LevelModelView modelView = new LevelImpl(levelMap);
     LevelView view = new TextualLevelView(modelView);
 
     //Get output string from STDOUT

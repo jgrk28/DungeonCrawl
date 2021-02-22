@@ -77,10 +77,15 @@ public class TestRoom {
 				switch (cellValue) {
 				case 0:
 					componentRow.add(wall);
+					break;
 				case 1:
 					componentRow.add(space);
+					break;
 				case 2:
 					componentRow.add(space);
+					break;
+				default:
+					throw new IllegalArgumentException("Invalid entity type in JSON");
 				}
 				
 			}
