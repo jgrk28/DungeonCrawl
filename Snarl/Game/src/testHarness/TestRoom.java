@@ -97,13 +97,15 @@ public class TestRoom {
 		Point leftMove = new Point(this.point.x - 1, this.point.y);
 		
 		List<Point> moves = new ArrayList<>(Arrays.asList(upMove, downMove, rightMove, leftMove));
+		List<Point> invalidMoves = new ArrayList<>();
 		
 		for (Point destination : moves) {
 			if (!this.room.inComponent(destination)
 				|| !(this.room.getDestinationEntity(destination) instanceof Space)) {
-				moves.remove(destination);				
+				invalidMoves.add(destination);				
 			}
 		}
+		moves.removeAll(invalidMoves);
 		
 		return moves;
 	}
