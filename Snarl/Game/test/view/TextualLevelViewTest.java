@@ -24,6 +24,9 @@ public class TextualLevelViewTest {
 	private Entity wall = new Wall();
 	private Entity key = new Key();
 	private Entity exit = new Exit();
+	private Player player = new Player();
+	private Adversary ghost = new Ghost();
+	private Adversary zombie = new Zombie();
 
 	private Room room1;
 	private Room room2;
@@ -41,7 +44,7 @@ public class TextualLevelViewTest {
 		//Simple 4x4 room with one space for a possible door
 		List<List<Entity>> componentMap = new ArrayList<List<Entity>>();
 		componentMap.add(Arrays.asList(wall, wall, wall, wall));
-		componentMap.add(Arrays.asList(wall, key, space, wall));
+		componentMap.add(Arrays.asList(wall, player, space, wall));
 		componentMap.add(Arrays.asList(wall, space, space, space));
 		componentMap.add(Arrays.asList(wall, wall, wall, wall));
 
@@ -67,7 +70,7 @@ public class TextualLevelViewTest {
 		componentMap.add(Arrays.asList(wall, wall, space, wall, wall, wall));
 		componentMap.add(Arrays.asList(wall, space, space, space, space, wall));
 		componentMap.add(Arrays.asList(wall, space, space, space, space, wall));
-		componentMap.add(Arrays.asList(wall, space, space, space, space, wall));
+		componentMap.add(Arrays.asList(wall, space, space, space, key, wall));
 		componentMap.add(Arrays.asList(wall, wall, wall, wall, wall, wall));
 		
 		room3 = new Room(new Point(0,14), componentMap);
@@ -77,7 +80,7 @@ public class TextualLevelViewTest {
 		//5x6 room with one space for a possible door
 		List<List<Entity>> componentMap = new ArrayList<List<Entity>>();
 		componentMap.add(Arrays.asList(wall, wall, wall, wall, wall));
-		componentMap.add(Arrays.asList(space, space, space, space, wall));
+		componentMap.add(Arrays.asList(ghost, zombie, space, space, wall));
 		componentMap.add(Arrays.asList(wall, space, space, space, wall));
 		componentMap.add(Arrays.asList(wall, space, space, space, wall));
 		componentMap.add(Arrays.asList(wall, space, space, space, wall));
@@ -298,7 +301,11 @@ public class TextualLevelViewTest {
 
 	private void testDrawLevel(List<LevelComponent> map, String expectedOut) {
 		//Initialize ModelView and View
-		LevelModelView modelView = new LevelImpl(map);
+		LevelModelView modelView = new LevelImpl(
+				new ArrayList<>(Arrays.asList(player)),
+				new ArrayList<>(Arrays.asList(ghost, zombie)),
+				map
+		);
 		LevelView view = new TextualLevelView(modelView);
 
 		//Assign output of STDOUT to new Stream
@@ -320,7 +327,7 @@ public class TextualLevelViewTest {
 
 		String expectedOut = ""
 				+ "XXXX              \n"
-				+ "X!.X              \n"
+				+ "XP.X              \n"
 				+ "X...***           \n"
 				+ "XXXX  *           \n"
 				+ "      *           \n"
@@ -330,13 +337,13 @@ public class TextualLevelViewTest {
 				+ "     X..X         \n"
 				+ "     X..X         \n"
 				+ "     X..X    XXXXX\n"
-				+ "  ***..@.****....X\n"
+				+ "  ***..@.****GZ..X\n"
 				+ "  *  XXXX    X...X\n"
 				+ "  *          X...X\n"
 				+ "XX.XXX       X...X\n"
 				+ "X....X       XXXXX\n"
 				+ "X....X            \n"
-				+ "X....X            \n"
+				+ "X...!X            \n"
 				+ "XXXXXX            \n";
 
 		testDrawLevel(this.levelMap, expectedOut);
@@ -348,11 +355,11 @@ public class TextualLevelViewTest {
 		initializeLevelMapSmall();
 
 		String expectedOut = ""
-				+ "X.XX         \n"
+				+ "XPXX         \n"
 				+ "X..X         \n"
 				+ "X..X         \n"
 				+ "X..X    XXXXX\n"
-				+ "..@.****....X\n"
+				+ "..@.****GZ..X\n"
 				+ "XXXX    X...X\n"
 				+ "        X...X\n"
 				+ "        X...X\n"
@@ -369,7 +376,7 @@ public class TextualLevelViewTest {
 
 		String expectedOut = ""
 				+ "XXXX              \n"
-				+ "X!.X              \n"
+				+ "XP.X              \n"
 				+ "X...******        \n"
 				+ "XXXX     *        \n"
 				+ "      ****        \n"
@@ -379,13 +386,13 @@ public class TextualLevelViewTest {
 				+ "     X..X         \n"
 				+ "     X..X         \n"
 				+ "     X..X    XXXXX\n"
-				+ "  ***..@.****....X\n"
+				+ "  ***..@.****GZ..X\n"
 				+ "  *  XXXX    X...X\n"
 				+ "  *          X...X\n"
 				+ "XX.XXX       X...X\n"
 				+ "X....X       XXXXX\n"
 				+ "X....X            \n"
-				+ "X....X            \n"
+				+ "X...!X            \n"
 				+ "XXXXXX            \n";
 
 		testDrawLevel(this.levelMap, expectedOut);
@@ -398,7 +405,7 @@ public class TextualLevelViewTest {
 
 		String expectedOut = ""
 				+ "XXXX              \n"
-				+ "X!.X              \n"
+				+ "XP.X              \n"
 				+ "X...******        \n"
 				+ "XXXX     *        \n"
 				+ "         *        \n"
@@ -408,13 +415,13 @@ public class TextualLevelViewTest {
 				+ "     X..X         \n"
 				+ "     X..X         \n"
 				+ "     X..X    XXXXX\n"
-				+ "  ***..@.****....X\n"
+				+ "  ***..@.****GZ..X\n"
 				+ "  *  XXXX    X...X\n"
 				+ "  *          X...X\n"
 				+ "XX.XXX       X...X\n"
 				+ "X....X       XXXXX\n"
 				+ "X....X            \n"
-				+ "X....X            \n"
+				+ "X...!X            \n"
 				+ "XXXXXX            \n";
 
 		testDrawLevel(this.levelMap, expectedOut);
@@ -427,7 +434,7 @@ public class TextualLevelViewTest {
 		
 		String expectedOut = ""
 				+ "XXXX              \n"
-				+ "X!.X              \n"
+				+ "XP.X              \n"
 				+ "X...*********     \n"
 				+ "XXXX  ****  *     \n"
 				+ "      *  *  *     \n"
@@ -437,13 +444,13 @@ public class TextualLevelViewTest {
 				+ "     X..X*  *     \n"
 				+ "     X..X*  *     \n"
 				+ "     X..X****XXXXX\n"
-				+ "  ***..@.****....X\n"
+				+ "  ***..@.****GZ..X\n"
 				+ "  *  XXXX    X...X\n"
 				+ "  *          X...X\n"
 				+ "XX.XXX       X...X\n"
 				+ "X....X       XXXXX\n"
 				+ "X....X            \n"
-				+ "X....X            \n"
+				+ "X...!X            \n"
 				+ "XXXXXX            \n";
 
 		testDrawLevel(this.levelMap, expectedOut);

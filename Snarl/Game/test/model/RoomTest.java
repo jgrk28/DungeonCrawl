@@ -12,6 +12,11 @@ public class RoomTest {
   Room room3;
   Wall wall = new Wall();
   Space space = new Space();
+  Key key = new Key();
+  Exit exit = new Exit();
+  Player player = new Player();
+  Ghost ghost = new Ghost();
+  Zombie zombie = new Zombie();
 
   //Once we make the real constructors we will need to change how the rooms are
   //initialized here
@@ -19,7 +24,7 @@ public class RoomTest {
     //Simple 3x3 room
     List<List<Entity>> componentMap = new ArrayList<List<Entity>>();
     componentMap.add(Arrays.asList(wall, wall, wall));
-    componentMap.add(Arrays.asList(wall, space, space));
+    componentMap.add(Arrays.asList(wall, player, space));
     componentMap.add(Arrays.asList(wall, wall, wall));
 
     this.room1 = new Room(new Point(0,0), componentMap);
@@ -29,8 +34,8 @@ public class RoomTest {
     //Weird 4x5 room with discontinuous space
     List<List<Entity>> componentMap = new ArrayList<List<Entity>>();
     componentMap.add(Arrays.asList(wall, space, wall, wall, wall));
-    componentMap.add(Arrays.asList(wall, space, space, wall, wall));
-    componentMap.add(Arrays.asList(wall, space, space, space, space));
+    componentMap.add(Arrays.asList(wall, ghost, zombie, wall, wall));
+    componentMap.add(Arrays.asList(wall, space, exit, space, space));
     componentMap.add(Arrays.asList(space, wall, wall, wall, wall));
 
     this.room2 = new Room(new Point(15,7), componentMap);
@@ -41,7 +46,7 @@ public class RoomTest {
     List<List<Entity>> componentMap = new ArrayList<List<Entity>>();
     componentMap.add(Arrays.asList(wall, wall, wall, wall));
     componentMap.add(Arrays.asList(wall, space, space, wall));
-    componentMap.add(Arrays.asList(wall, space, space, wall));
+    componentMap.add(Arrays.asList(wall, key, space, wall));
     componentMap.add(Arrays.asList(wall, wall, wall, wall));
 
     this.room3 = new Room(new Point(-2,-1), componentMap);
@@ -53,7 +58,7 @@ public class RoomTest {
 
     String expectedOut = ""
         + "XXX\n"
-        + "X..\n"
+        + "XP.\n"
         + "XXX\n";
 
     LevelComponentTest.checkLevelComponentLooksLike(this.room1, expectedOut);
@@ -65,8 +70,8 @@ public class RoomTest {
 
     String expectedOut = ""
         + "X.XXX\n"
-        + "X..XX\n"
-        + "X....\n"
+        + "XGZXX\n"
+        + "X.@..\n"
         + ".XXXX\n";
 
     LevelComponentTest.checkLevelComponentLooksLike(this.room2, expectedOut);
@@ -80,7 +85,7 @@ public class RoomTest {
     String expectedOut = ""
         + "XXXX\n"
         + "X..X\n"
-        + "X..X\n"
+        + "X!.X\n"
         + "XXXX\n";
 
     LevelComponentTest.checkLevelComponentLooksLike(this.room3, expectedOut);

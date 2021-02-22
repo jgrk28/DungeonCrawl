@@ -10,6 +10,7 @@ import model.Entity;
 import model.Hall;
 import model.LevelComponent;
 import model.LevelImpl;
+import model.Player;
 import model.Room;
 import model.Space;
 import model.Wall;
@@ -174,7 +175,11 @@ public class LevelModelViewTest {
     EntityType e = EntityType.EMPTY;
 
     //Initialize ModelView
-    LevelModelView modelView = new LevelImpl(this.levelMap);
+    LevelModelView modelView = new LevelImpl(
+        new ArrayList<>(Arrays.asList(new Player())),
+        new ArrayList<>(),
+        this.levelMap
+    );
 
     List<List<EntityType>> expectedMap = Arrays.asList(
         Arrays.asList(w, w, w, w, e, e, e, e, e, e, e, e, e, e, e, e, e, e),

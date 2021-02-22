@@ -23,7 +23,7 @@ public class LevelComponentTest {
     //Create a new ModelView containing just the room that was passed in
     ArrayList<LevelComponent> levelMap = new ArrayList<LevelComponent>();
     levelMap.add(component);
-    LevelModelView modelView = new LevelImpl(levelMap);
+    LevelModelView modelView = new LevelImpl(new ArrayList<>(Arrays.asList(new Player())), new ArrayList<>(), levelMap);
     LevelView view = new TextualLevelView(modelView);
 
     //Get output string from STDOUT
@@ -48,14 +48,17 @@ public class LevelComponentTest {
   private Space space = new Space();
   private Key key = new Key();
   private Exit exit = new Exit();
+  private Player player = new Player();
+  private Zombie zombie = new Zombie();
+  private Ghost ghost = new Ghost();
 
   private void initRoom1() {
     //Simple 4x4 room
     List<List<Entity>> componentMap = new ArrayList<List<Entity>>();
     componentMap.add(Arrays.asList(wall, wall, wall, wall));
-    componentMap.add(Arrays.asList(wall, key, space, wall));
+    componentMap.add(Arrays.asList(wall, key, player, wall));
     componentMap.add(Arrays.asList(wall, space, space, wall));
-    componentMap.add(Arrays.asList(wall, wall, wall, wall));
+    componentMap.add(Arrays.asList(wall, ghost, wall, wall));
 
     this.room1 = new Room(new Point(0,0), componentMap);
   }
@@ -74,14 +77,14 @@ public class LevelComponentTest {
     List<List<Entity>> componentMap = new ArrayList<List<Entity>>();
     componentMap.add(Arrays.asList(wall, wall, wall));
     componentMap.add(Arrays.asList(wall, space, wall));
-    componentMap.add(Arrays.asList(wall, space, wall));
+    componentMap.add(Arrays.asList(wall, zombie, wall));
 
     this.room3 = new Room(new Point(-5,-1), componentMap);
   }
 
   private void initHall1() {
     //Hall goes (2,11) -> (5,11) -> (5,8)
-    List<Entity> componentMap = Arrays.asList(space, space, space, space, space, space, space);
+    List<Entity> componentMap = Arrays.asList(space, space, player, space, space, space, space);
     List<Point> waypoints = new ArrayList<Point>();
     waypoints.add(new Point(5,11));
 
@@ -93,7 +96,7 @@ public class LevelComponentTest {
 
   private void initHall2() {
     //Hall goes (4,3) -> (5,3) -> (5,6) -> (2,6) -> (2,10)
-    List<Entity> componentMap = Arrays.asList(space, space, space, space, space, space, space,
+    List<Entity> componentMap = Arrays.asList(zombie, ghost, space, space, space, space, space,
         space, space, space, space, space);
     List<Point> waypoints = new ArrayList<Point>();
     waypoints.add(new Point(5,3));
@@ -148,10 +151,16 @@ public class LevelComponentTest {
     assertEquals(wall, this.room1.getDestinationEntity(new Point(0,0)));
     assertEquals(space, this.room1.getDestinationEntity(new Point(1,2)));
     assertEquals(key, this.room1.getDestinationEntity(new Point(1,1)));
+    assertEquals(player, this.room1.getDestinationEntity(new Point(2,1)));
+    assertEquals(ghost, this.room1.getDestinationEntity(new Point(1,3)));
     assertEquals(exit, this.room2.getDestinationEntity(new Point(16,8)));
-    //Halls right now only give spaces but when other entities get added we can test here
+    assertEquals(zombie, this.room3.getDestinationEntity(new Point(-4,1)));
+
     assertEquals(space, this.hall1.getDestinationEntity(new Point(5,11)));
-    assertEquals(space, this.hall1.getDestinationEntity(new Point(5,9)));
+    assertEquals(player, this.hall1.getDestinationEntity(new Point(4,11)));
+    assertEquals(space, this.hall2.getDestinationEntity(new Point(5,5)));
+    assertEquals(zombie, this.hall2.getDestinationEntity(new Point(4,3)));
+    assertEquals(ghost, this.hall2.getDestinationEntity(new Point(5,3)));
   }
 
   @Test(expected = IllegalArgumentException.class)
@@ -186,14 +195,27 @@ public class LevelComponentTest {
     this.hall2.getDestinationEntity(new Point(4,4));
   }
 
+  //TODO TestInComponent
+
   @Test
   public void testGetEntityType() {
     assertEquals(EntityType.WALL, this.room1.getEntityType(new Wall()));
     assertEquals(EntityType.SPACE, this.room1.getEntityType(new Space()));
     assertEquals(EntityType.KEY, this.room1.getEntityType(new Key()));
     assertEquals(EntityType.EXIT, this.room1.getEntityType(new Exit()));
+    assertEquals(EntityType.PLAYER, this.room1.getEntityType(new Player()));
+    assertEquals(EntityType.GHOST, this.room1.getEntityType(new Ghost()));
+    assertEquals(EntityType.ZOMBIE, this.room1.getEntityType(new Zombie()));
+
     assertEquals(EntityType.WALL, this.hall1.getEntityType(new Wall()));
+    assertEquals(EntityType.PLAYER, this.hall1.getEntityType(new Player()));
+    assertEquals(EntityType.GHOST, this.hall1.getEntityType(new Ghost()));
+    assertEquals(EntityType.ZOMBIE, this.hall1.getEntityType(new Zombie()));
     //Hall space is a special type as it will be displayed differently
     assertEquals(EntityType.HALL_SPACE, this.hall1.getEntityType(new Space()));
   }
+
+  //TODO testPlaceActor
+  //TODO testRemoveActor
+  //TODO testMoveActor (maybe)
 }
