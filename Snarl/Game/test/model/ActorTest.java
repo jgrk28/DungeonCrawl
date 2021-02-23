@@ -36,13 +36,27 @@ public class ActorTest {
   }
   
   //Testing invalid interactions for ghosts
-	//TODO split into 4
   @Test (expected = IllegalArgumentException.class)
-  public void testInvalidGhostInteractionResult() {
+  public void testInvalidGhostInteractionResultKey() {
 	  Adversary ghost = new Ghost();
 	  ghost.getInteractionResult(EntityType.KEY);
+  }
+  
+  @Test (expected = IllegalArgumentException.class)
+  public void testInvalidGhostInteractionResultExit() {
+	  Adversary ghost = new Ghost();
 	  ghost.getInteractionResult(EntityType.EXIT);
+  }
+  
+  @Test (expected = IllegalArgumentException.class)
+  public void testInvalidGhostInteractionResultGhost() {
+	  Adversary ghost = new Ghost();
 	  ghost.getInteractionResult(EntityType.GHOST);
+  }
+  
+  @Test (expected = IllegalArgumentException.class)
+  public void testInvalidGhostInteractionResultZombie() {
+	  Adversary ghost = new Ghost();
 	  ghost.getInteractionResult(EntityType.ZOMBIE);
   }
   
@@ -56,16 +70,29 @@ public class ActorTest {
   }
   
   //Testing invalid interaction for zombies
-	//TODO split into 4
   @Test (expected = IllegalArgumentException.class)
-  public void testInvalidZombieInteractionResult() {
+  public void testInvalidZombieInteractionResultKey() {
 	  Adversary zombie = new Zombie();
 	  zombie.getInteractionResult(EntityType.KEY);
-	  zombie.getInteractionResult(EntityType.EXIT);
-	  zombie.getInteractionResult(EntityType.GHOST);
-	  zombie.getInteractionResult(EntityType.ZOMBIE);
   }
   
+  @Test (expected = IllegalArgumentException.class)
+  public void testInvalidZombieInteractionResultExit() {
+	  Adversary zombie = new Zombie();
+	  zombie.getInteractionResult(EntityType.EXIT);
+  }
   
+  @Test (expected = IllegalArgumentException.class)
+  public void testInvalidZombieInteractionResultGhost() {
+	  Adversary zombie = new Zombie();
+	  zombie.getInteractionResult(EntityType.GHOST);
+  }
+  
+  @Test (expected = IllegalArgumentException.class)
+  public void testInvalidZombieInteractionResultZombie() {
+	  Adversary zombie = new Zombie();
+	  zombie.getInteractionResult(EntityType.ZOMBIE);
+  }
+    
 }
 
