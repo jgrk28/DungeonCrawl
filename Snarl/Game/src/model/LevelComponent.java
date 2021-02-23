@@ -34,7 +34,7 @@ public interface LevelComponent {
   /**
    * Checks if a given coordinate is located within the Room
    * @param point - the coordinate to check
-   * @return True if the point is located within the LevelComponent, false otherwise
+   * @return true if the point is located within the LevelComponent, false otherwise
    */
   boolean inComponent(Point point);
 
