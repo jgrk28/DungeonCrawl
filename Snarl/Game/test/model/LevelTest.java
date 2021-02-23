@@ -462,7 +462,7 @@ public class LevelTest {
 
   /**
    * These tests will be used when we implement the rule checker
-   * for player's movements 
+   * for players movements 
    */
   /*
   @Test(expected = IllegalArgumentException.class)
@@ -632,7 +632,7 @@ public class LevelTest {
 
   /**
    * These tests will be used when we implement the rule checker
-   * for player's movements 
+   * for adversaries movements 
    */
   /*
   @Test(expected = IllegalArgumentException.class)
