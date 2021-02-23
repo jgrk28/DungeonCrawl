@@ -13,7 +13,11 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import view.TextualLevelViewTest;
 
+/**
+ * Tests that the methods and constructors for LevelImpl work as expected
+ */
 public class LevelTest {
+	
   private List<LevelComponent> levelMap;
   private Entity space = new Space();
   private Entity wall = new Wall();
@@ -35,8 +39,8 @@ public class LevelTest {
   private Hall hall2;
   private Hall hall3;
 
+  //Simple 4x4 room with one space for a possible door
   private void initializeRoom1() {
-    //Simple 4x4 room with one space for a possible door
     List<List<Entity>> componentMap = new ArrayList<List<Entity>>();
     componentMap.add(Arrays.asList(wall, wall, wall, wall));
     componentMap.add(Arrays.asList(wall, space, space, wall));
@@ -46,8 +50,8 @@ public class LevelTest {
     room1 = new Room(new Point(0,0), componentMap);
   }
 
+  //4x6 room with three spaces for possible doors
   private void initializeRoom2() {
-    //4x6 room with three spaces for possible doors
     List<List<Entity>> componentMap = new ArrayList<List<Entity>>();
     componentMap.add(Arrays.asList(wall, space, wall, wall));
     componentMap.add(Arrays.asList(wall, space, space, wall));
@@ -71,8 +75,8 @@ public class LevelTest {
     room3 = new Room(new Point(0,14), componentMap);
   }
 
+  //5x6 room with one space for a possible door
   private void initializeRoom4() {
-    //5x6 room with one space for a possible door
     List<List<Entity>> componentMap = new ArrayList<List<Entity>>();
     componentMap.add(Arrays.asList(wall, wall, wall, wall, wall));
     componentMap.add(Arrays.asList(space, space, space, space, wall));
@@ -84,17 +88,17 @@ public class LevelTest {
     room4 = new Room(new Point(13,10), componentMap);
   }
 
+  //Hall that can connect room1 to room2
   private void initializeHall1() {
-    //Hall that can connect room1 to room2
     List<Entity> componentMap = Arrays.asList(space, space, space, space, space, space, space);
     List<Point> waypoints = new ArrayList<Point>();
     waypoints.add(new Point(6,2));
 
     hall1 = new Hall(componentMap, waypoints);
   }
-
+  
+  //Hall that can connect room2 to room3
   private void initializeHall2() {
-    //Hall that can connect room2 to room3
     List<Entity> componentMap = Arrays.asList(space, space, space, space, space);
     List<Point> waypoints = new ArrayList<Point>();
     waypoints.add(new Point(2,11));
@@ -102,37 +106,37 @@ public class LevelTest {
     hall2 = new Hall(componentMap, waypoints);
   }
 
+  //Hall that can connect room2 to room4
   private void initializeHall3() {
-    //Hall that can connect room2 to room4
     List<Entity> componentMap = Arrays.asList(space, space, space, space);
     List<Point> waypoints = new ArrayList<Point>();
 
     hall3 = new Hall(componentMap, waypoints);
   }
 
+  //Doors for hall1
   private void initializeDoorsHall1() {
-    //Doors for hall1
     room1.connectHall(new Point(4,2), hall1);
     room2.connectHall(new Point(6,6), hall1);
     hall1.connectRooms(new Point(3,2), room1, new Point(6,7), room2);
   }
-
+  
+  //Doors for hall2
   private void initializeDoorsHall2() {
-    //Doors for hall2
     room2.connectHall(new Point(4,11), hall2);
     room3.connectHall(new Point(2,13), hall2);
     hall2.connectRooms(new Point(2,14), room3, new Point(5,11), room2);
   }
 
+  //Doors for hall3
   private void initializeDoorsHall3() {
-    //Doors for hall3
     room2.connectHall(new Point(9,11), hall3);
     room4.connectHall(new Point(12,11), hall3);
     hall3.connectRooms(new Point(8,11), room2, new Point(13,11), room4);
   }
-
+  
+  //Connects hall1, hall2, and hall3 to the normal 4 rooms
   private void initializeLevelMap() {
-    //Connects hall1, hall2, and hall3 to the normal 4 rooms
     initializeDoorsHall1();
     initializeDoorsHall2();
     initializeDoorsHall3();
@@ -149,6 +153,13 @@ public class LevelTest {
     levelMap.add(hall3);
   }
 
+  /**
+   * Creates a test level by initializing the levelMap, creating
+   * a map of players and their positions, creating a map of 
+   * adversaries and their positions, and initializing exitUnlocked
+   * and levelExited
+   * @return a new Level 
+   */
   private Level makeTestLevel() {
     initializeLevelMap();
     Map<Player, Point> playersPos = new HashMap<>();
@@ -164,10 +175,10 @@ public class LevelTest {
     return new LevelImpl(playersPos, adversariesPos, this.levelMap, exitUnlocked, levelExited);
   }
 
+  //Initialize all components for use
+  //They have not been added to a level but they are available for use
   @Before
   public void initLevelComponents() {
-    //Initialize all components for use
-    //They have not been added to a level but they are available for use
     initializeRoom1();
     initializeRoom1();
     initializeRoom2();
@@ -179,6 +190,11 @@ public class LevelTest {
     initializeHall3();
   }
 
+  /**
+   * Creates an initial game state with a given level, players, and adversaries.
+   * Players are placed in the top left-most room of the level, and adversaries 
+   * are placed in the bottom right-most room of the level
+   */
   @Test
   public void testLevelStartConstructor() {
     initializeLevelMap();
@@ -210,6 +226,7 @@ public class LevelTest {
     TextualLevelViewTest.testDrawLevel(level, expectedOut);
   }
 
+  //Creates an intermediate game state with given player and adversary locations 
   @Test
   public void testLevelMidConstructor() {
     Level level = makeTestLevel();
@@ -238,6 +255,10 @@ public class LevelTest {
     TextualLevelViewTest.testDrawLevel(level, expectedOut);
   }
 
+  /**
+   * Tests that the level has been won when there are no players in the level,
+   * the exit is unlocked, and the level has been exited
+   */
   @Test
   public void testIsLevelOverWon() {
     initializeLevelMap();
@@ -251,6 +272,10 @@ public class LevelTest {
     assertEquals(GameState.WON, level.isLevelOver());
   }
 
+  /**
+   * Tests that the level has been lost when there are no players in the level,
+   * the exit is unlocked, and the level has not been exited
+   */
   @Test
   public void testIsLevelOverLost() {
     initializeLevelMap();
@@ -263,6 +288,10 @@ public class LevelTest {
     assertEquals(GameState.LOST, level.isLevelOver());
   }
 
+  /**
+   * Tests that the level is active when there is at least one player in the level,
+   * the exit is unlocked, and the level has been exited
+   */
   @Test
   public void testIsLevelOverActive() {
     initializeLevelMap();
@@ -277,6 +306,7 @@ public class LevelTest {
     assertEquals(GameState.ACTIVE, level.isLevelOver());
   }
 
+  //Tests that moving a player is updated in the level
   @Test
   public void testPlayerActionNormalMove() {
     Level level = makeTestLevel();
@@ -308,6 +338,8 @@ public class LevelTest {
     TextualLevelViewTest.testDrawLevel(level, expectedOut);
   }
 
+  //Tests that a player can correctly move between LevelComponents 
+  //during an action
   @Test
   public void testPlayerActionChangeComponent() {
     Level level = makeTestLevel();
@@ -342,6 +374,10 @@ public class LevelTest {
     TextualLevelViewTest.testDrawLevel(level, expectedOut);
   }
 
+  /**
+   * Tests that a player can eliminate themselves by moving into an adversary
+   * and that eliminating all players ends the level with the LOST GameState
+   */
   @Test
   public void testPlayerActionSelfElim() {
     Level level = makeTestLevel();
@@ -380,6 +416,11 @@ public class LevelTest {
     assertEquals(GameState.LOST, level.isLevelOver());
   }
 
+  /**
+   * Tests that players can find the key, exit the level,
+   * and that the GameState is WON once all players have
+   * been removed from the level
+   */
   @Test
   public void testPlayerActionGetKeyAndExit() {
     Level level = makeTestLevel();
@@ -419,7 +460,10 @@ public class LevelTest {
     assertEquals(GameState.WON, level.isLevelOver());
   }
 
-  //These tests will be useful when we are checking movement
+  /**
+   * These tests will be used when we implement the rule checker
+   * for player's movements 
+   */
   /*
   @Test(expected = IllegalArgumentException.class)
   public void testPlayerActionBadTooLong() {
@@ -498,6 +542,7 @@ public class LevelTest {
   }
    */
 
+  //Tests that an adversary can move and travel between LevelComponents
   @Test
   public void testAdversaryActionNormalAndChangeComponent() {
     Level level = makeTestLevel();
@@ -535,8 +580,13 @@ public class LevelTest {
     TextualLevelViewTest.testDrawLevel(level, expectedOut);
   }
 
+  /**
+   * Tests that adversaries can remove players from the level
+   * during an interaction, and that the GameState is LOST 
+   * once all players have been removed
+   */
   @Test
-  public void testAdversaryActionKill() {
+  public void testAdversaryActionRemovePlayer() {
     Level level = makeTestLevel();
     level.adversaryAction(this.ghost1, new Point(7, 9));
     level.adversaryAction(this.ghost1, new Point(7, 10));
@@ -565,7 +615,7 @@ public class LevelTest {
 
     TextualLevelViewTest.testDrawLevel(level, expectedOut);
 
-    //Go kill last player
+    //Remove last player
     level.adversaryAction(this.ghost1, new Point(6, 10));
     level.adversaryAction(this.ghost1, new Point(6, 9));
     level.adversaryAction(this.ghost1, new Point(6, 8));
@@ -580,6 +630,10 @@ public class LevelTest {
     assertEquals(GameState.LOST, level.isLevelOver());
   }
 
+  /**
+   * These tests will be used when we implement the rule checker
+   * for player's movements 
+   */
   /*
   @Test(expected = IllegalArgumentException.class)
   public void testAdversaryActionBadTooLong() {

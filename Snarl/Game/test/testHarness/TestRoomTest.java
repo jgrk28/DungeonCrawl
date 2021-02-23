@@ -13,6 +13,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 import org.apache.commons.io.FileUtils;
 
+// Tests that the methods for TestRoom work as expected
 public class TestRoomTest {
 	
 	//Check that an exception is thrown when invalid input is provided
@@ -95,6 +96,7 @@ public class TestRoomTest {
 		
 		System.setIn(new ByteArrayInputStream(input.getBytes()));
 		
+		//Assign output of STDOUT to new Stream
 		ByteArrayOutputStream output = new ByteArrayOutputStream();
 		PrintStream print = new PrintStream(output);
 		System.setOut(print);
@@ -123,6 +125,7 @@ public class TestRoomTest {
 		
 		System.setIn(new ByteArrayInputStream(input.getBytes()));
 		
+		//Assign output of STDOUT to new Stream
 		ByteArrayOutputStream output = new ByteArrayOutputStream();
 		PrintStream print = new PrintStream(output);
 		System.setOut(print);
@@ -157,6 +160,7 @@ public class TestRoomTest {
 		
 		System.setIn(new ByteArrayInputStream(input.getBytes()));
 		
+		//Assign output of STDOUT to new Stream
 		ByteArrayOutputStream output = new ByteArrayOutputStream();
 		PrintStream print = new PrintStream(output);
 		System.setOut(print);
@@ -191,6 +195,7 @@ public class TestRoomTest {
 		
 		System.setIn(new ByteArrayInputStream(input.getBytes()));
 		
+		//Assign output of STDOUT to new Stream
 		ByteArrayOutputStream output = new ByteArrayOutputStream();
 		PrintStream print = new PrintStream(output);
 		System.setOut(print);
@@ -222,6 +227,7 @@ public class TestRoomTest {
 		
 		System.setIn(new ByteArrayInputStream(input.getBytes()));
 		
+		//Assign output of STDOUT to new Stream
 		ByteArrayOutputStream output = new ByteArrayOutputStream();
 		PrintStream print = new PrintStream(output);
 		System.setOut(print);
