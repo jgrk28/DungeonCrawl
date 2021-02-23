@@ -206,7 +206,7 @@ public class TestRoomTest {
 	}
 
 
-	//This tests a corner point with no adjacent traversable spaces
+	//Tests a corner point with no adjacent traversable spaces
 	@Test
 	public void testCornerPoint() {
 		String input = "[ { \"type\" : \"room\",\n"
