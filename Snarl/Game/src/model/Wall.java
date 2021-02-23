@@ -1,11 +1,13 @@
 package model;
 
-import java.util.Objects;
 import modelView.EntityType;
 
 /**
  * Represents a wall within a LevelComponent
  * The ASCII representation of a Space is "X"
+ * 
+ * An instance of a Wall is considered to be the
+ * same as any other Wall
  */
 public class Wall implements Entity {
 

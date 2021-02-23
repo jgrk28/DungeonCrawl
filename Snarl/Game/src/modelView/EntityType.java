@@ -3,9 +3,9 @@ package modelView;
 /**
  * Represents the type of an Entity
  * This includes:
- * - Walls (X)
- * - Spaces (.)
- * - Hall Spaces (*)
+ * - Wall (X)
+ * - Space (.)
+ * - Hall Space (*)
  * - Key (!)
  * - Exit (@)
  * - Player (P)

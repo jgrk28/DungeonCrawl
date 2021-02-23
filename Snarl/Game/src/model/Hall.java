@@ -278,6 +278,12 @@ public class Hall implements LevelComponent {
 		componentMap.set(actorIndex, new Space());			
 	}
 	
+	/**
+	 * Finds the location of the actor within the componentMap
+	 * @param actor - the actor to be found
+	 * @return the point that the actor is located at 
+	 * @throws IllegalArgumentException if the actor is not in the hall
+	 */
 	private int findActor(Actor actor) {
 		for (int i = 0; i < componentMap.size(); i++) {
 			if (componentMap.get(i).equals(actor)) {

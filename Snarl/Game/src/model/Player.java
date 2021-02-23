@@ -2,6 +2,9 @@ package model;
 
 import modelView.EntityType;
 
+/**
+ * Represents a player within a game of Snarl
+ */
 public class Player implements Actor {
 
 	@Override
@@ -9,7 +12,6 @@ public class Player implements Actor {
 		return EntityType.PLAYER;
 	}
 
-	//A player cannot move into another player or a wall
 	@Override
 	public InteractionResult getInteractionResult(EntityType entityType) {
 		switch (entityType) {

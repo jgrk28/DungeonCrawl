@@ -5,6 +5,9 @@ import modelView.EntityType;
 /**
  * Represents a space within a LevelComponent
  * The ASCII representation of a Space is "."
+ * 
+ * An instance of a Space is considered to be the
+ * same as any other Space
  */
 public class Space implements Entity {
 

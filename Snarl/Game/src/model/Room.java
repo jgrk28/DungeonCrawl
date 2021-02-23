@@ -42,8 +42,11 @@ public class Room implements LevelComponent {
 	 * @param componentMap - the map of all entities in the Room
 	 */
 	public Room(Point position, List<List<Entity>> componentMap) {
+		//Ensure component map is not empty
+		if (componentMap.isEmpty()) {
+			throw new IllegalArgumentException("The component map is empty");
+		}
 		this.position = position;
-		//TO-DO Ensure component map is not empty
 		this.componentMap = componentMap;
 		this.doors = new HashMap<Point, Hall>();
 	}
@@ -134,7 +137,15 @@ public class Room implements LevelComponent {
 		actorRow.set(actorLocation.x, new Space());
 	}
 	
+	/**
+	 * Finds the location of the actor within the componentMap
+	 * @param actor - the actor to be found
+	 * @return the point that the actor is located at 
+	 * @throws IllegalArgumentException if the actor is not in the room
+	 */
 	private Point findActor(Actor actor) {
+		//Iterate through the Room and check if the current Entity
+		//is the given actor
 		for (int i = 0; i < componentMap.size(); i++) {
 			List<Entity> entityRow = componentMap.get(i);
 			for (int j = 0; j < entityRow.size(); j++) {
@@ -149,6 +160,7 @@ public class Room implements LevelComponent {
 
 	@Override
 	public void placeActor(Actor actor, Point destination) {
+		//Find the relative position of the actor in the room
 		Point relativePos = new Point(destination.x - this.position.x,
 				destination.y - this.position.y);
 		List<Entity> row = this.componentMap.get(relativePos.y);

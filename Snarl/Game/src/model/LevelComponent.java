@@ -47,10 +47,25 @@ public interface LevelComponent {
    */
   Entity getDestinationEntity(Point point);
   
+  /**
+   * Moves the actor to the specified destination by removing them from
+   * their current location and placing them at the destination
+   * @param actor - the actor being moved
+   * @param destination - the destination point
+   */
   void moveActor(Actor actor, Point destination);
   
+  /**
+   * Removes the actor from the map of the LevelComponent
+   * @param actor - the actor being removed from the LevelComponent
+   */
   void removeActor(Actor actor);
   
+  /**
+   * Places the actor at the specified destination within the LevelComponent
+   * @param actor - the actor being placed
+   * @param destination - the destination within the LevelComponent
+   */
   void placeActor(Actor actor, Point destination);  
 
 }
