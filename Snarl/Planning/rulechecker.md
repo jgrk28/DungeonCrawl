@@ -14,9 +14,12 @@ The purpose of this interface is to check the rules for our GameState. We initia
   * If any player exited the level, the level was won. Otherwise, the level was lost  
   * GameState can be Active, Won, or Lost  
 * Boolean checkValidMove(Actor actor, Point destination)
-  * Checks that the move is valid for the given actor and if the interaction at the destination is valid
-   A move is valid if it is within the movement bounds of the given actor, and if the actor can interact with the destination entity
+  * Checks if the move is valid for the given actor and if the interaction at the destination is valid
+  * A move is valid if it is within the movement bounds of the given actor, and if the actor can interact with the destination entity
   * An actor can be a player or an adversary
+* Boolean checkValidGameState()
+  * Checks if the current state of the Dungeon is valid by checking if each level is valid
+  * A level is invalid if the level has been exited while the exit is locked, if there is not exactly one key and exit, or if unknown players or adversaries are in the level  
 
 
 ## Class Dungeon implements RuleChecker ##
@@ -28,11 +31,14 @@ The purpose of this interface is to check the rules for our GameState. We initia
   * Checks if the level is over. If so, if it was won or lost  
   * GameState can be Active, Won, or Lost  
 * Boolean checkValidMove(Actor actor, Point destination)
-  * Checks that the move is valid for the given actor and if the interaction at the destination is valid
+  * Checks if the move is valid for the given actor and if the interaction at the destination is valid
+* Boolean checkValidLevelState(List\<Player\> players, List\<Adversary\> adversaries)
+  * Checks if the level is in a valid state
+  * The level is invalid if the level has been exited while the exit is locked, if there is not exactly one key and exit, or if unknown players or adversaries are in the level  
 
 ## Interface LevelComponent ##
 
 ### Methods ###
 * Boolean checkValidMove(Actor actor, Point destination)
-  * Checks that the move is valid for the given actor and if the interaction at the destination is valid
+  * Checks if the move is valid for the given actor and if the interaction at the destination is valid
 
