@@ -79,7 +79,7 @@ public class Hall implements LevelComponent {
 	 * Checks if the Rooms being connected to the Hall are valid connections 
 	 * @param positionRoomStart - the position in the StartRoom that connects through the door to the Hall
 	 * @param positionRoomEnd - the position in the EndRoom that connects through the door to the Hall
-	 * @return
+	 * @return True if both connections are valid, false otherwise
 	 */
 	private boolean validHallConnection(Point positionRoomStart, Point positionRoomEnd) {
 		
@@ -102,7 +102,7 @@ public class Hall implements LevelComponent {
 	}
 
 	@Override
-	//Top right left includes the door that the hall is connected to 
+	//Top left includes the door that the hall is connected to
 	public Point getTopLeftBound() {
 		
 		Integer minX = startRoomPosition.x;
@@ -179,20 +179,18 @@ public class Hall implements LevelComponent {
 		}
 	}
 
-	/**
-	 * Walk through each location in the hall to determine if it matches the given
-	 * point. If so, return the Entity at that location
-	 */
 	@Override
 	public Entity getDestinationEntity(Point point) {
 		int hallIndex = getHallwayIndex(point);
 		return componentMap.get(hallIndex);
 	}
 
-		/**
-     * Walk through each location in the hall to determine if it matches the given
-     * point. If so, return the index of the hallway at that point.
-     */
+	/**
+	 * Walk through each location in the hall to determine if it matches the given
+	 * point. If so, return the index of the hallway at that point.
+	 * @param point - the point in cartesian space to find the hall index for
+	 * @throws IllegalArgumentException if the point is nowhere in the hall
+	 */
 	private int getHallwayIndex(Point point) {
 		//Start at StartRoom
 		Point currentPosition = this.startRoomPosition;
@@ -281,7 +279,7 @@ public class Hall implements LevelComponent {
 	/**
 	 * Finds the location of the actor within the componentMap
 	 * @param actor - the actor to be found
-	 * @return the point that the actor is located at 
+	 * @return the index in the hall that the actor is located at 
 	 * @throws IllegalArgumentException if the actor is not in the hall
 	 */
 	private int findActor(Actor actor) {
