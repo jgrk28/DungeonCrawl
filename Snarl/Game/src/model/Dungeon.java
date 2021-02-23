@@ -29,22 +29,6 @@ public class Dungeon {
 		this.currLevel = currLevel;	
 		this.levels = levels;
 	}
-
-	//This method will be used when we start to randomly generate games states
-	public Dungeon(List<Player> players, List<Adversary> adversaries, long seed) {
-		this.players = players;
-		this.adversaries = adversaries;
-		this.currLevel = 1;	
-		this.levels = new ArrayList<Level>();
-		
-		//The total number of levels in the Dungeon
-		int numLevels = 3;
-		Random rand = new Random(seed);
-		
-		for (int i = 0; i < numLevels; i++) {
-			this.levels.add(new LevelImpl(this.players, this.adversaries, rand.nextLong()));
-		}		
-	}
 	
 	public Level getNextLevel() {
 		Level nextLevel = levels.get(currLevel - 1); 

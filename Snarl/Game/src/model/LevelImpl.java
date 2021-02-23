@@ -59,21 +59,10 @@ public class LevelImpl implements Level {
 	private Boolean levelExited;
 	
 	/** 
-	 * Initializes a new level
-	 * This constructor is used primarily for testing 
+	 * Initializes a new level. This constructor is used primarily for testing 
 	 * @param levelMap - the map of all LevelComponents within the level
 	 */
 	public LevelImpl(List<LevelComponent> levelMap) {
-		this.levelMap = levelMap;
-	}
-	
-	/** 
-	 * Initializes a new level and places actors in starting positions
-	 * @param players - list of all players in the level
-	 * @param adversaries - list of all adversaries in the level
-	 * @param levelMap - the map of all LevelComponents within the level
-	 */
-	public LevelImpl(List<Player> players, List<Adversary> adversaries, List<LevelComponent> levelMap) {
 		/**
 		 * A level is comprised of a series of rooms connected by hallways.
 		 * A level is valid if no two rooms overlap, no two hallways overlap,
@@ -82,16 +71,30 @@ public class LevelImpl implements Level {
 		 * This validation will be implemented when levels are generated 
 		 * automatically
 		 */
-
+		this.levelMap = levelMap;
+	}
+	
+	/** 
+	 * Initializes a new level and places actors in starting positions
+	 * All players are placed in the top left-most room of the level
+	 * All adversaries are placed in the bottom right-most room of the level
+	 * @param players - list of all players in the level
+	 * @param adversaries - list of all adversaries in the level
+	 * @param levelMap - the map of all LevelComponents within the level
+	 */
+	public LevelImpl(List<Player> players, List<Adversary> adversaries, List<LevelComponent> levelMap) {
 		if (levelMap.isEmpty()) {
 			throw new IllegalArgumentException("Level map does not have any components");
 		}
+		
+		//Initialize fields
 		this.levelMap = levelMap;
 		this.exitUnlocked = false;
 		this.levelExited = false;
 		this.playerLocations = new LinkedHashMap<>();
 		this.adversaryLocations = new LinkedHashMap<>();
 
+		//Identify the top left-most and bottom right-most rooms in the level
 		Room topLeftRoom = getBoundaryRoom(true);
 		Room bottomRightRoom = getBoundaryRoom(false);
 
@@ -100,6 +103,7 @@ public class LevelImpl implements Level {
 			playerLocations.put(player, topLeftRoom);
 			placeActorValidly(player, topLeftRoom);
 		}
+		
 		//Add adversaries to bottom right room
 		for (Adversary adversary : adversaries) {
 			adversaryLocations.put(adversary, bottomRightRoom);
@@ -108,10 +112,12 @@ public class LevelImpl implements Level {
 	}
 
 	/**
-	 * Initializes a new level and places actors in specified positions
-	 * @param players - list of all players in the level
-	 * @param adversaries - list of all adversaries in the level
+	 * Initializes a level and places actors in specified positions
+	 * @param players - list of all players in the level and their location
+	 * @param adversaries - list of all adversaries in the level and their location
 	 * @param levelMap - the map of all LevelComponents within the level
+	 * @param exitUnlocked - true if the exit has been unlocked
+	 * @param levelExited - true if a player has exited the level
 	 */
 	public LevelImpl(
 			Map<Player, Point> players,
@@ -124,16 +130,24 @@ public class LevelImpl implements Level {
 		if (levelMap.isEmpty()) {
 			throw new IllegalArgumentException("Level map does not have any components");
 		}
+		
+		//Initialize fields
 		this.levelMap = levelMap;
 		this.exitUnlocked = exitUnlocked;
 		this.levelExited = levelExited;
 		this.playerLocations = new LinkedHashMap<>();
 		this.adversaryLocations = new LinkedHashMap<>();
 
-		//Add players to corresponding LevelComponent
+		//Add players to the corresponding LevelComponent
 		for (Map.Entry<Player, Point> entry : players.entrySet()) {
+			//Find the component based on the position of the player
 			LevelComponent component = findComponent(entry.getValue());
+			
+			//Track the player and the LevelComponent they are located in
 			playerLocations.put(entry.getKey(), component);
+			
+			//Check that the destination of the player is a space and place the actor
+			//If the location is not a space, throw the corresponding error
 			Entity destinationEntity = component.getDestinationEntity(entry.getValue());
 			if (!(destinationEntity instanceof Space)) {
 				throw new IllegalArgumentException("Cannot place player, destination is not a space"); 
@@ -142,8 +156,14 @@ public class LevelImpl implements Level {
 		}
 		//Add adversaries to corresponding LevelComponent
 		for (Map.Entry<Adversary, Point> entry : adversaries.entrySet()) {
+			//Find the component based on the position of the adversary
 			LevelComponent component = findComponent(entry.getValue());
+			
+			//Track the adversary and the LevelComponent they are located in
 			adversaryLocations.put(entry.getKey(), component);
+			
+			//Check that the destination of the adversary is a space and place the actor
+			//If the location is not a space, throw the corresponding error
 			Entity destinationEntity = component.getDestinationEntity(entry.getValue());
 			if (!(destinationEntity instanceof Space)) {
 				throw new IllegalArgumentException("Cannot place adversary, destination is not a space"); 
@@ -152,29 +172,49 @@ public class LevelImpl implements Level {
 		}
 	}
 
+	/**
+	 * Finds the top left-most or bottom right-most room in the level map
+	 * @param closeToOriginFlag - true if we would like the top left-most room,
+	 * false if we would like the bottom right-most room
+	 * @return the boundary room
+	 */
 	private Room getBoundaryRoom(boolean closeToOriginFlag) {
 		Room boundaryRoom = null;
 		Point boundaryPos = null;
 		Point origin = new Point(0, 0);
 
+		//Iterate through all components in the level
 		for (LevelComponent component : levelMap) {
+			//Only process the component if it is a room
 			if (!(component instanceof Room)) {
 				continue;
 			}
+			
 			Point topLeft = component.getTopLeftBound();
 
+			//Initialize fields on first iteration
 			if (boundaryPos == null) {
 				boundaryRoom = (Room)component;
 				boundaryPos = topLeft;
 			}
-
+			
+			//Calculate the distance to the origin for boundary room
+			//and the current component
 			double boundaryDistToOrigin = boundaryPos.distance(origin);
 			double newDistToOrigin = topLeft.distance(origin);
 
+			//When trying to find the top left-most room, replace the boundary room
+			//if the current room is closer to the origin than the boundary room,
+			//or if the rooms are the same distance from the origin and the current 
+			//room has a smaller row index
 			boolean replaceRoomMin = closeToOriginFlag
 					&& (newDistToOrigin < boundaryDistToOrigin
 					|| (newDistToOrigin == boundaryDistToOrigin && topLeft.y < boundaryPos.y));
 
+			//When trying to find the bottom right-most room, replace the boundary room
+			//if the current room is further from the origin than the boundary room,
+			//or if the rooms are the same distance from the origin and the current 
+			//room has a bigger row index
 			boolean replaceRoomMax = !closeToOriginFlag
 					&& (newDistToOrigin > boundaryDistToOrigin
 					|| (newDistToOrigin == boundaryDistToOrigin && topLeft.y > boundaryPos.y));
@@ -192,14 +232,21 @@ public class LevelImpl implements Level {
 		return boundaryRoom;
 	}
 
+	/**
+	 * Places the actor at the first valid position in the given room
+	 * @param actor - the actor to be placed
+	 * @param room - the room to place the actor in
+	 */
 	private void placeActorValidly(Actor actor, Room room) {
 		Point roomTopLeft = room.getTopLeftBound();
 		Point roomBottomRight = room.getBottomRightBound();
 
+		//Iterate through each position in the room
 		for (int row = roomTopLeft.y; row <= roomBottomRight.y; row++) {
 			for (int col = roomTopLeft.x; col <= roomBottomRight.x; col++) {
 				Point currPoint = new Point(col, row);
 				try {
+					//If the position contains a space, place the actor here
 					Entity destEntity = room.getDestinationEntity(currPoint);
 					if (destEntity instanceof Space) {
 						room.placeActor(actor, currPoint);
@@ -213,6 +260,11 @@ public class LevelImpl implements Level {
 		throw new IllegalArgumentException("Room has no empty spaces to place a new actor");
 	}
 
+	/**
+	 * Finds the LevelComponent that contains the given point
+	 * @param point - the point used to locate the LevelComponent
+	 * @return the LevelComponent that the point is located in
+	 */
 	private LevelComponent findComponent(Point point) {
 		for (LevelComponent component : this.levelMap) {
 			if (component.inComponent(point)) {
@@ -221,65 +273,7 @@ public class LevelImpl implements Level {
 		}
 		throw new IllegalArgumentException("Point is not anywhere within the level");
 	}
-
-	//This method will be implemented at a later milestone as we realized this was not asked for
-	//Initialize a random level from the given seed. Level will place the given players 
-	//and adversaries
-	public LevelImpl(List<Player> players, List<Adversary> adversaries, long seed) {
-		//Create all the rooms, then connect with halls
-		//Make sure the room does not overlap with existing rooms
-		//Randomize dimensions of room
-		//Helper function that takes in a list of level components and the random num, gives
-		//us a size and location for a new room that is valid
-		//Pass this to the level component and add to the levelMap
-		//Set bounds for min and max number of rooms in a level
-	}
-
-	//This method will be implemented at a later milestone as we realized this was not asked for
-	//Create a new random LevelComponent 
-	private LevelComponent generateRandomRoom(Random generator) {
-		//Generate a random size and position
-		//Check if valid
-		//Loop until valid values are found
-		//Create the room
-		return null;
-	}
-
-	//This method will be useful when we start to build the random level generator
-	private Boolean validRoomPlacement(Point topLeftPos, Point bottomRightPos) {
-		//Loop through all things in the LevelMap
-		for (LevelComponent component : levelMap) {
-			Point topRightPos = new Point(bottomRightPos.x, topLeftPos.y);
-			Point bottomLeftPos = new Point(topLeftPos.x, bottomRightPos.y);
-
-			Point componentTopLeft = component.getTopLeftBound();
-			Point componentBottomRight = component.getBottomRightBound();
-
-			//Check if rooms overlap, return false if this is the case
-			//Conditions that rooms overlap:
-			// - any corner of new room is in old room
-			// - old room TopLeft or old room BotRight is in new room
-			if (component.inComponent(topLeftPos)
-					|| component.inComponent(topRightPos)
-					|| component.inComponent(bottomLeftPos)
-					|| component.inComponent(bottomRightPos)
-				  || isPointWithinBounds(componentTopLeft, topLeftPos, bottomRightPos)
-				  || isPointWithinBounds(componentBottomRight, topLeftPos, bottomRightPos))
-			{
-				return false;
-			}
-		}
-		return true;
-	}
-
-	private boolean isPointWithinBounds(Point pointToCheck, Point topLeftBound, Point bottomRightBound) {
-		return pointToCheck.x <= bottomRightBound.x
-				&& pointToCheck.x >= topLeftBound.x
-				&& pointToCheck.y <= bottomRightBound.y
-				&& pointToCheck.y >= topLeftBound.y;
-	}
 	
-
 	@Override
 	public ArrayList<ArrayList<EntityType>> getMap() {
 		Point topLeftBound = getTopLeft();
@@ -402,37 +396,38 @@ public class LevelImpl implements Level {
 		}
 	}
 
-	/**
-	 * Check if the actor is leaving the room that they are currently in
-	 * If so, we want to try to place them in the new room and remove them from the old room
-	 * Otherwise, we want to move them within the current room 
-	 */
 	@Override
 	public void playerAction(Player player, Point destination) {
 		LevelComponent sourceComponent = this.playerLocations.get(player);
 		LevelComponent destinationComponent;
 		
+		//If the player is not moving within the same LevelComponent, 
+		//find the destination LevelComponent
 		if (sourceComponent.inComponent(destination)) {
 			destinationComponent = sourceComponent;		
 		} else {
 			destinationComponent = findComponent(destination);
 		}
 		
+		//Determine the EntityType at the destination and the resulting interaction
 		Entity destinationEntity = destinationComponent.getDestinationEntity(destination);
 		EntityType destinationType = destinationComponent.getEntityType(destinationEntity);
 		InteractionResult interaction = player.getInteractionResult(destinationType);
 		
-		//If player runs into a exit or adversary, we are removing instead of moving
+		//If player runs into a exit or adversary, we are removing the player
+		//instead of moving them
 		boolean removePlayer = interaction.equals(InteractionResult.EXIT)
 				|| interaction.equals(InteractionResult.REMOVE_PLAYER);
 			
-		//If player is moving to a new room, we need to check that we can place them in this room
+		//If player is moving to a new room, remove them from the source room
+		//Otherwise, remove them from their current position
 		if (!destinationComponent.equals(sourceComponent)) {
 			sourceComponent.removeActor(player);
 		} else {
 			destinationComponent.removeActor(player);
 		}
 		
+		//If the player is not removed from the level, place them at the destination
 		if (!removePlayer) {
 			destinationComponent.placeActor(player, destination);
 			this.playerLocations.replace(player, destinationComponent);	
@@ -450,53 +445,49 @@ public class LevelImpl implements Level {
 	}
 	
 	@Override
-	public void adversaryAction(Adversary adversary, Point destination) {
-		
+	public void adversaryAction(Adversary adversary, Point destination) {	
 		LevelComponent sourceComponent = this.adversaryLocations.get(adversary);
 		LevelComponent destinationComponent;
 		
+		//If the adversary is not moving within the same LevelComponent, 
+		//find the destination LevelComponent
 		if (sourceComponent.inComponent(destination)) {
 			destinationComponent = sourceComponent;		
 		} else {
 			destinationComponent = findComponent(destination);
 		}
 		
+		//Determine the EntityType at the destination and the resulting interaction
 		Entity destinationEntity = destinationComponent.getDestinationEntity(destination);
 		EntityType destinationType = destinationComponent.getEntityType(destinationEntity);
 		InteractionResult interaction = adversary.getInteractionResult(destinationType);
 			
-		//If player is moving to a new room, we need to check that we can place them in this room
+		//If adversary is moving to a new room, remove them from the source room
+		//Otherwise, remove them from their current position
 		if (!destinationComponent.equals(sourceComponent)) {
 			sourceComponent.removeActor(adversary);
 		} else {
 			destinationComponent.removeActor(adversary);
 		}
 		
+		//Place the adversary and update their location
 		destinationComponent.placeActor(adversary, destination);
 		this.adversaryLocations.replace(adversary, destinationComponent);	
 	
+		//If the adversary interacts with a player, remove the player from the level
 		if (interaction.equals(InteractionResult.REMOVE_PLAYER)) {
 			this.playerLocations.remove(destinationEntity);
 		}		
 	}
 	
-	/**
-	 * 		case SPACE: 
-				return InteractionResult.NONE;
-			case HALL_SPACE: 
-				return InteractionResult.NONE;
-			case PLAYER:
-				return InteractionResult.REMOVE_PLAYER;
-			default:
-				throw new IllegalArgumentException("Illegal interaction entity for adversary");
-	 */
-	
-
 	@Override
 	public GameState isLevelOver() {
+		//If all players have not been removed from the level,
+		//the level is still active
 		if (!playerLocations.isEmpty()) {
 			return GameState.ACTIVE;
 		}
+		//If any player exited the level, the level has been won
 		if (levelExited) {
 			return GameState.WON;
 		}
