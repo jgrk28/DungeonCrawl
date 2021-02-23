@@ -89,6 +89,8 @@ public class LevelImpl implements Level {
 		this.levelMap = levelMap;
 		this.exitUnlocked = false;
 		this.levelExited = false;
+		this.playerLocations = new LinkedHashMap<>();
+		this.adversaryLocations = new LinkedHashMap<>();
 
 		Room topLeftRoom = getBoundaryRoom(true);
 		Room bottomRightRoom = getBoundaryRoom(false);
@@ -125,6 +127,8 @@ public class LevelImpl implements Level {
 		this.levelMap = levelMap;
 		this.exitUnlocked = exitUnlocked;
 		this.levelExited = levelExited;
+		this.playerLocations = new LinkedHashMap<>();
+		this.adversaryLocations = new LinkedHashMap<>();
 
 		//Add players to corresponding LevelComponent
 		for (Map.Entry<Player, Point> entry : players.entrySet()) {
@@ -150,26 +154,37 @@ public class LevelImpl implements Level {
 
 	private Room getBoundaryRoom(boolean closeToOriginFlag) {
 		Room boundaryRoom = null;
-		LevelComponent firstComponent = levelMap.get(0);
-		Point firstTopLeft = firstComponent.getTopLeftBound();
+		Point boundaryPos = null;
 		Point origin = new Point(0, 0);
-		double distToOrigin = firstTopLeft.distance(origin);
+
 		for (LevelComponent component : levelMap) {
 			if (!(component instanceof Room)) {
 				continue;
 			}
 			Point topLeft = component.getTopLeftBound();
 
-			double newDistToOrigin = topLeft.distance(origin);
-			if (closeToOriginFlag && newDistToOrigin < distToOrigin) {
-				distToOrigin = newDistToOrigin;
-				boundaryRoom = (Room)firstComponent;
+			if (boundaryPos == null) {
+				boundaryRoom = (Room)component;
+				boundaryPos = topLeft;
 			}
-			if (!closeToOriginFlag && newDistToOrigin > distToOrigin) {
-				distToOrigin = newDistToOrigin;
-				boundaryRoom = (Room)firstComponent;
+
+			double boundaryDistToOrigin = boundaryPos.distance(origin);
+			double newDistToOrigin = topLeft.distance(origin);
+
+			boolean replaceRoomMin = closeToOriginFlag
+					&& (newDistToOrigin < boundaryDistToOrigin
+					|| (newDistToOrigin == boundaryDistToOrigin && topLeft.y < boundaryPos.y));
+
+			boolean replaceRoomMax = !closeToOriginFlag
+					&& (newDistToOrigin > boundaryDistToOrigin
+					|| (newDistToOrigin == boundaryDistToOrigin && topLeft.y > boundaryPos.y));
+
+			if (replaceRoomMin || replaceRoomMax) {
+				boundaryRoom = (Room)component;
+				boundaryPos = topLeft;
 			}
 		}
+
 		if (boundaryRoom == null) {
 			throw new IllegalArgumentException("No rooms in level");
 		}
@@ -185,8 +200,11 @@ public class LevelImpl implements Level {
 			for (int col = roomTopLeft.x; col <= roomBottomRight.x; col++) {
 				Point currPoint = new Point(col, row);
 				try {
-					room.placeActor(actor, currPoint);
-					return;
+					Entity destEntity = room.getDestinationEntity(currPoint);
+					if (destEntity instanceof Space) {
+						room.placeActor(actor, currPoint);
+						return;
+					}
 				} catch (IllegalArgumentException e) {
 					//Do nothing
 				}
@@ -405,8 +423,8 @@ public class LevelImpl implements Level {
 		InteractionResult interaction = player.getInteractionResult(destinationType);
 		
 		//If player runs into a exit or adversary, we are removing instead of moving
-		boolean placePlayer = !interaction.equals(InteractionResult.EXIT) 
-				|| !interaction.equals(InteractionResult.REMOVE_PLAYER);
+		boolean removePlayer = interaction.equals(InteractionResult.EXIT)
+				|| interaction.equals(InteractionResult.REMOVE_PLAYER);
 			
 		//If player is moving to a new room, we need to check that we can place them in this room
 		if (!destinationComponent.equals(sourceComponent)) {
@@ -415,7 +433,7 @@ public class LevelImpl implements Level {
 			destinationComponent.removeActor(player);
 		}
 		
-		if (placePlayer) {
+		if (!removePlayer) {
 			destinationComponent.placeActor(player, destination);
 			this.playerLocations.replace(player, destinationComponent);	
 		} else {

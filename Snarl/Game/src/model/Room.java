@@ -149,8 +149,10 @@ public class Room implements LevelComponent {
 
 	@Override
 	public void placeActor(Actor actor, Point destination) {
-		List<Entity> row = this.componentMap.get(destination.y);
-		row.set(destination.x, actor);
+		Point relativePos = new Point(destination.x - this.position.x,
+				destination.y - this.position.y);
+		List<Entity> row = this.componentMap.get(relativePos.y);
+		row.set(relativePos.x, actor);
 	}
 
 }

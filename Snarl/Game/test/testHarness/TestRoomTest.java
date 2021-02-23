@@ -27,17 +27,17 @@ public class TestRoomTest {
 	//the corresponding result populates the output file
 	@Test
 	public void testInputFileOne() throws IOException {
-		System.setIn(new FileInputStream("test/testHarness/1-in.json"));
-		PrintStream fileOut = new PrintStream("test/testHarness/1-out.json");
+		System.setIn(new FileInputStream("Game/test/testHarness/1-in.json"));
+		PrintStream fileOut = new PrintStream("Game/test/testHarness/1-out.json");
 		System.setOut(fileOut);
 		
 		TestRoom.main(new String[] {});
 		
 		String expectedOutput = "[\"Success: Traversable points "
 				+ "from \",[1,3],\" in room at \",[0,1],\" are \","
-				+ "[[0,3],[2,3],[1,4],[1,2]]]";
+				+ "[[0,3],[1,2],[1,4],[2,3]]]";
 		
-		List<String> fileContent = FileUtils.readLines(new File("test/testHarness/1-out.json"), Charset.defaultCharset());
+		List<String> fileContent = FileUtils.readLines(new File("Game/test/testHarness/1-out.json"), Charset.defaultCharset());
 		assertEquals(expectedOutput, fileContent.get(0));	
 	}
 	
@@ -45,15 +45,15 @@ public class TestRoomTest {
 	//the corresponding result populates the output file
 	@Test
 	public void testInputFileTwo() throws IOException  {
-		System.setIn(new FileInputStream("test/testHarness/2-in.json"));
-		PrintStream fileOut = new PrintStream("test/testHarness/2-out.json");
+		System.setIn(new FileInputStream("Game/test/testHarness/2-in.json"));
+		PrintStream fileOut = new PrintStream("Game/test/testHarness/2-out.json");
 		System.setOut(fileOut);
 		
 		TestRoom.main(new String[] {});
 		
 		String expectedOutput = "[\"Failure: Point \",[5,4],\" is not in room at \",[0,1]]";
 		
-		List<String> fileContent = FileUtils.readLines(new File("test/testHarness/2-out.json"), Charset.defaultCharset());
+		List<String> fileContent = FileUtils.readLines(new File("Game/test/testHarness/2-out.json"), Charset.defaultCharset());
 		assertEquals(expectedOutput, fileContent.get(0));
 	}
 	
@@ -61,16 +61,16 @@ public class TestRoomTest {
 	//the corresponding result populates the output file
 	@Test
 	public void testInputFileThree() throws IOException  {
-		System.setIn(new FileInputStream("test/testHarness/3-in.json"));
-		PrintStream fileOut = new PrintStream("test/testHarness/3-out.json");
+		System.setIn(new FileInputStream("Game/test/testHarness/3-in.json"));
+		PrintStream fileOut = new PrintStream("Game/test/testHarness/3-out.json");
 		System.setOut(fileOut);
 		
 		TestRoom.main(new String[] {});
 		
 		String expectedOutput = "[\"Success: Traversable points from \",[3,1],"
-				+ "\" in room at \",[1,1],\" are \",[[4,1],[3,2]]]";
+				+ "\" in room at \",[1,1],\" are \",[[3,2],[4,1]]]";
 		
-		List<String> fileContent = FileUtils.readLines(new File("test/testHarness/3-out.json"), Charset.defaultCharset());
+		List<String> fileContent = FileUtils.readLines(new File("Game/test/testHarness/3-out.json"), Charset.defaultCharset());
 		assertEquals(expectedOutput, fileContent.get(0));
 	}
 	
@@ -91,7 +91,7 @@ public class TestRoomTest {
 		
 		String expectedOutput = "[\"Success: Traversable points "
 				+ "from \",[1,3],\" in room at \",[0,1],\" are \","
-				+ "[[0,3],[2,3],[1,4],[1,2]]]";
+				+ "[[0,3],[1,2],[1,4],[2,3]]]";
 		
 		System.setIn(new ByteArrayInputStream(input.getBytes()));
 		
@@ -153,7 +153,7 @@ public class TestRoomTest {
 				+ "]\n";
 		
 		String expectedOutput = "[\"Success: Traversable points from \",[3,1],"
-				+ "\" in room at \",[1,1],\" are \",[[4,1],[3,2]]]";
+				+ "\" in room at \",[1,1],\" are \",[[3,2],[4,1]]]";
 		
 		System.setIn(new ByteArrayInputStream(input.getBytes()));
 		
@@ -187,7 +187,7 @@ public class TestRoomTest {
 				+ "]\n";
 		
 		String expectedOutput = "[\"Success: Traversable points from \",[2,1],"
-				+ "\" in room at \",[0,0],\" are \",[[1,1],[3,1],[2,2]]]";
+				+ "\" in room at \",[0,0],\" are \",[[1,1],[2,2],[3,1]]]";
 		
 		System.setIn(new ByteArrayInputStream(input.getBytes()));
 		

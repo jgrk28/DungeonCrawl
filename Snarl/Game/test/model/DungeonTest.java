@@ -24,9 +24,6 @@ public class DungeonTest {
 	private Entity wall = new Wall();
 	private Entity key = new Key();
 	private Entity exit = new Exit();
-	private Player player = new Player();
-	private Adversary ghost = new Ghost();
-	private Adversary zombie = new Zombie();
 
 	private Room room1;
 	private Room room2;
@@ -100,7 +97,7 @@ public class DungeonTest {
 		//Simple 4x4 room with one space for a possible door
 		List<List<Entity>> componentMap = new ArrayList<List<Entity>>();
 		componentMap.add(Arrays.asList(wall, wall, wall, wall));
-		componentMap.add(Arrays.asList(wall, player, space, wall));
+		componentMap.add(Arrays.asList(wall, space, space, wall));
 		componentMap.add(Arrays.asList(wall, space, space, space));
 		componentMap.add(Arrays.asList(wall, wall, wall, wall));
 
@@ -136,7 +133,7 @@ public class DungeonTest {
 		//5x6 room with one space for a possible door
 		List<List<Entity>> componentMap = new ArrayList<List<Entity>>();
 		componentMap.add(Arrays.asList(wall, wall, wall, wall, wall));
-		componentMap.add(Arrays.asList(ghost, zombie, space, space, wall));
+		componentMap.add(Arrays.asList(space, space, space, space, wall));
 		componentMap.add(Arrays.asList(wall, space, space, space, wall));
 		componentMap.add(Arrays.asList(wall, space, space, space, wall));
 		componentMap.add(Arrays.asList(wall, space, space, space, wall));

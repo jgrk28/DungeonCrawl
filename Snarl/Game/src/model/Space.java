@@ -12,4 +12,14 @@ public class Space implements Entity {
   public EntityType getEntityType() {
     return EntityType.SPACE;
   }
+
+  @Override
+  public int hashCode() {
+    return 1;
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    return obj instanceof Space;
+  }
 }

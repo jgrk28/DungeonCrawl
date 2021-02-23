@@ -154,7 +154,7 @@ public class LevelTest {
     Map<Player, Point> playersPos = new HashMap<>();
     playersPos.put(this.player1, new Point(4, 2));
     playersPos.put(this.player2, new Point(7, 10));
-    playersPos.put(this.player2, new Point(3, 17));
+    playersPos.put(this.player3, new Point(3, 17));
     Map<Adversary, Point> adversariesPos = new HashMap<>();
     adversariesPos.put(this.ghost1, new Point(7, 8));
     adversariesPos.put(this.zombie, new Point(2, 17));
@@ -419,6 +419,8 @@ public class LevelTest {
     assertEquals(GameState.WON, level.isLevelOver());
   }
 
+  //These tests will be useful when we are checking movement
+  /*
   @Test(expected = IllegalArgumentException.class)
   public void testPlayerActionBadTooLong() {
     Level level = makeTestLevel();
@@ -494,6 +496,7 @@ public class LevelTest {
     level.playerAction(this.player2, new Point(9, 11));
     level.playerAction(this.player2, new Point(7, 11));
   }
+   */
 
   @Test
   public void testAdversaryActionNormalAndChangeComponent() {
@@ -577,6 +580,7 @@ public class LevelTest {
     assertEquals(GameState.LOST, level.isLevelOver());
   }
 
+  /*
   @Test(expected = IllegalArgumentException.class)
   public void testAdversaryActionBadTooLong() {
     Level level = makeTestLevel();
@@ -638,4 +642,5 @@ public class LevelTest {
 
     level.adversaryAction(this.ghost2, new Point(2, 14));
   }
+   */
 }

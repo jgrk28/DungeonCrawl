@@ -97,11 +97,12 @@ public class TestRoom {
 	private List<Point> getValidMoves() {
 		//use the point to get all points next to it
 		Point upMove = new Point(this.point.x, this.point.y - 1);
-		Point downMove = new Point(this.point.x, this.point.y + 1);
-		Point rightMove = new Point(this.point.x + 1, this.point.y);
 		Point leftMove = new Point(this.point.x - 1, this.point.y);
+		Point rightMove = new Point(this.point.x + 1, this.point.y);
+		Point downMove = new Point(this.point.x, this.point.y + 1);
+
 		
-		List<Point> moves = new ArrayList<>(Arrays.asList(upMove, downMove, rightMove, leftMove));
+		List<Point> moves = new ArrayList<>(Arrays.asList(upMove, leftMove, rightMove, downMove));
 		List<Point> invalidMoves = new ArrayList<>();
 		
 		for (Point destination : moves) {

@@ -36,6 +36,7 @@ public class ActorTest {
   }
   
   //Testing invalid interactions for ghosts
+	//TODO split into 4
   @Test (expected = IllegalArgumentException.class)
   public void testInvalidGhostInteractionResult() {
 	  Adversary ghost = new Ghost();
@@ -55,6 +56,7 @@ public class ActorTest {
   }
   
   //Testing invalid interaction for zombies
+	//TODO split into 4
   @Test (expected = IllegalArgumentException.class)
   public void testInvalidZombieInteractionResult() {
 	  Adversary zombie = new Zombie();
