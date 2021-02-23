@@ -17,8 +17,7 @@ import model.Entity;
 /**
  * Tests that rooms can be created based on the 
  * corresponding JSON input, and returns the 
- * traversable tiles adjacent to a given point in
- * the room
+ * traversable tiles adjacent to a given point
  */
 public class TestRoom {
 	
@@ -28,8 +27,8 @@ public class TestRoom {
 	private JSONArray JSONOriginPoint;
 
 	/**
-	 * Parse the input to create a corresponding testRoom.
-	 * Identify valid moves from a given point in this room,
+	 * Parses the input to create a corresponding testRoom.
+	 * Identifies valid moves from a given point in this room,
 	 * and output in JSON format
 	 * @param args - command line arguments
 	 */
