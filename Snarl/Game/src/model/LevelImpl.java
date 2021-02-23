@@ -115,8 +115,8 @@ public class LevelImpl implements Level {
 			Map<Player, Point> players,
 			Map<Adversary, Point> adversaries,
 			List<LevelComponent> levelMap,
-			boolean levelExited,
-			boolean exitUnlocked
+			boolean exitUnlocked,
+			boolean levelExited
 	)
 	{
 		if (levelMap.isEmpty()) {

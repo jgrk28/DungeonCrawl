@@ -18,6 +18,21 @@ import java.util.List;
 //Tests for the TextualLevelView class. This class displays a level in ascii art with
 //X for wall, . for space, * for hallways.
 public class TextualLevelViewTest {
+	public static void testDrawLevel(LevelModelView modelView, String expectedOut) {
+		//Initialize view
+		LevelView view = new TextualLevelView(modelView);
+
+		//Assign output of STDOUT to new Stream
+		ByteArrayOutputStream output = new ByteArrayOutputStream();
+		PrintStream print = new PrintStream(output);
+		System.setOut(print);
+
+		//Draw level to STDOUT
+		view.drawLevel();
+
+		//Check that level was drawn as expected
+		assertEquals(expectedOut, output.toString());
+	}
 	
 	private List<LevelComponent> levelMap;
 	private Entity space = new Space();
@@ -299,23 +314,6 @@ public class TextualLevelViewTest {
 		initializeHall3();
 	}
 
-	private void testDrawLevel(List<LevelComponent> map, String expectedOut) {
-		//Initialize ModelView and View
-		LevelModelView modelView = new LevelImpl(map);
-		LevelView view = new TextualLevelView(modelView);
-
-		//Assign output of STDOUT to new Stream
-		ByteArrayOutputStream output = new ByteArrayOutputStream();
-		PrintStream print = new PrintStream(output);
-		System.setOut(print);
-
-		//Draw level to STDOUT
-		view.drawLevel();
-
-		//Check that level was drawn as expected
-		assertEquals(expectedOut, output.toString());
-	}
-
 	//Tests drawing a normal room
 	@Test
 	public void testDrawLevelNormal() {
@@ -342,7 +340,7 @@ public class TextualLevelViewTest {
 				+ "X...!X            \n"
 				+ "XXXXXX            \n";
 
-		testDrawLevel(this.levelMap, expectedOut);
+		testDrawLevel(new LevelImpl(this.levelMap), expectedOut);
 	}
 
 	//Check drawing when right and top do not line up with 0
@@ -361,7 +359,7 @@ public class TextualLevelViewTest {
 				+ "        X...X\n"
 				+ "        XXXXX\n";
 
-		testDrawLevel(this.levelMap, expectedOut);
+		testDrawLevel(new LevelImpl(this.levelMap), expectedOut);
 
 	}
 
@@ -391,7 +389,7 @@ public class TextualLevelViewTest {
 				+ "X...!X            \n"
 				+ "XXXXXX            \n";
 
-		testDrawLevel(this.levelMap, expectedOut);
+		testDrawLevel(new LevelImpl(this.levelMap), expectedOut);
 	}
 
 	//Tests drawing with hall directly next to a room
@@ -420,7 +418,7 @@ public class TextualLevelViewTest {
 				+ "X...!X            \n"
 				+ "XXXXXX            \n";
 
-		testDrawLevel(this.levelMap, expectedOut);
+		testDrawLevel(new LevelImpl(this.levelMap), expectedOut);
 	}
 
 	//Tests drawing with hall directly next to another hall or itself
@@ -449,7 +447,7 @@ public class TextualLevelViewTest {
 				+ "X...!X            \n"
 				+ "XXXXXX            \n";
 
-		testDrawLevel(this.levelMap, expectedOut);
+		testDrawLevel(new LevelImpl(this.levelMap), expectedOut);
 	}
 
 }
