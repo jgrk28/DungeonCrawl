@@ -1,4 +1,4 @@
-package testHarness;
+package Level;
 
 import java.awt.Point;
 import java.util.ArrayList;

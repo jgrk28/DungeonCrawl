@@ -160,6 +160,10 @@ public class Room implements LevelComponent {
 
 	@Override
 	public void placeActor(Actor actor, Point destination) {
+		if (!inComponent(destination)) {
+			throw new IllegalArgumentException("Point not in component");
+		}
+
 		//Find the relative position of the actor in the room
 		Point relativePos = new Point(destination.x - this.position.x,
 				destination.y - this.position.y);

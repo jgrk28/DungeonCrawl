@@ -176,18 +176,15 @@ public class LevelModelViewTest {
     EntityType s = EntityType.SPACE;
     EntityType h = EntityType.HALL_SPACE;
     EntityType e = EntityType.EMPTY;
-    EntityType p = EntityType.PLAYER;
 
     //Initialize ModelView
     LevelModelView modelView = new LevelImpl(
-        new ArrayList<>(Arrays.asList(new Player())),
-        new ArrayList<>(),
         this.levelMap
     );
 
     List<List<EntityType>> expectedMap = Arrays.asList(
         Arrays.asList(w, w, w, w, e, e, e, e, e, e, e, e, e, e, e, e, e, e),
-        Arrays.asList(w, p, s, w, e, e, e, e, e, e, e, e, e, e, e, e, e, e),
+        Arrays.asList(w, s, s, w, e, e, e, e, e, e, e, e, e, e, e, e, e, e),
         Arrays.asList(w, s, s, s, h, h, h, e, e, e, e, e, e, e, e, e, e, e),
         Arrays.asList(w, w, w, w, e, e, h, e, e, e, e, e, e, e, e, e, e, e),
         Arrays.asList(e, e, e, e, e, e, h, e, e, e, e, e, e, e, e, e, e, e),

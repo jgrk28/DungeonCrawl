@@ -1,5 +1,6 @@
 package testHarness;
 
+import Level.TestRoom;
 import java.util.List;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -28,8 +29,8 @@ public class TestRoomTest {
 	//the corresponding result populates the output file
 	@Test
 	public void testInputFileOne() throws IOException {
-		System.setIn(new FileInputStream("Game/test/testHarness/1-in.json"));
-		PrintStream fileOut = new PrintStream("Game/test/testHarness/1-out.json");
+		System.setIn(new FileInputStream("tests/Level/1-in.json"));
+		PrintStream fileOut = new PrintStream("tests/Level/1-out.json");
 		System.setOut(fileOut);
 		
 		TestRoom.main(new String[] {});
@@ -38,7 +39,7 @@ public class TestRoomTest {
 				+ "from \",[1,3],\" in room at \",[0,1],\" are \","
 				+ "[[0,3],[1,2],[1,4],[2,3]]]";
 		
-		List<String> fileContent = FileUtils.readLines(new File("Game/test/testHarness/1-out.json"), Charset.defaultCharset());
+		List<String> fileContent = FileUtils.readLines(new File("tests/Level/1-out.json"), Charset.defaultCharset());
 		assertEquals(expectedOutput, fileContent.get(0));	
 	}
 	
@@ -46,15 +47,15 @@ public class TestRoomTest {
 	//the corresponding result populates the output file
 	@Test
 	public void testInputFileTwo() throws IOException  {
-		System.setIn(new FileInputStream("Game/test/testHarness/2-in.json"));
-		PrintStream fileOut = new PrintStream("Game/test/testHarness/2-out.json");
+		System.setIn(new FileInputStream("tests/Level/2-in.json"));
+		PrintStream fileOut = new PrintStream("tests/Level/2-out.json");
 		System.setOut(fileOut);
 		
 		TestRoom.main(new String[] {});
 		
 		String expectedOutput = "[\"Failure: Point \",[5,4],\" is not in room at \",[0,1]]";
 		
-		List<String> fileContent = FileUtils.readLines(new File("Game/test/testHarness/2-out.json"), Charset.defaultCharset());
+		List<String> fileContent = FileUtils.readLines(new File("tests/Level/2-out.json"), Charset.defaultCharset());
 		assertEquals(expectedOutput, fileContent.get(0));
 	}
 	
@@ -62,8 +63,8 @@ public class TestRoomTest {
 	//the corresponding result populates the output file
 	@Test
 	public void testInputFileThree() throws IOException  {
-		System.setIn(new FileInputStream("Game/test/testHarness/3-in.json"));
-		PrintStream fileOut = new PrintStream("Game/test/testHarness/3-out.json");
+		System.setIn(new FileInputStream("tests/Level/3-in.json"));
+		PrintStream fileOut = new PrintStream("tests/Level/3-out.json");
 		System.setOut(fileOut);
 		
 		TestRoom.main(new String[] {});
@@ -71,7 +72,41 @@ public class TestRoomTest {
 		String expectedOutput = "[\"Success: Traversable points from \",[3,1],"
 				+ "\" in room at \",[1,1],\" are \",[[3,2],[4,1]]]";
 		
-		List<String> fileContent = FileUtils.readLines(new File("Game/test/testHarness/3-out.json"), Charset.defaultCharset());
+		List<String> fileContent = FileUtils.readLines(new File("tests/Level/3-out.json"), Charset.defaultCharset());
+		assertEquals(expectedOutput, fileContent.get(0));
+	}
+
+	//Test that the fourth test file can be read in correctly, and that
+	//the corresponding result populates the output file
+	@Test
+	public void testInputFileFour() throws IOException  {
+		System.setIn(new FileInputStream("tests/Level/4-in.json"));
+		PrintStream fileOut = new PrintStream("tests/Level/4-out.json");
+		System.setOut(fileOut);
+
+		TestRoom.main(new String[] {});
+
+		String expectedOutput = "[\"Success: Traversable points from \",[2,1],"
+				+ "\" in room at \",[0,0],\" are \",[[1,1],[2,2],[3,1]]]";
+
+		List<String> fileContent = FileUtils.readLines(new File("tests/Level/4-out.json"), Charset.defaultCharset());
+		assertEquals(expectedOutput, fileContent.get(0));
+	}
+
+	//Test that the fifth test file can be read in correctly, and that
+	//the corresponding result populates the output file
+	@Test
+	public void testInputFileFive() throws IOException  {
+		System.setIn(new FileInputStream("tests/Level/5-in.json"));
+		PrintStream fileOut = new PrintStream("tests/Level/5-out.json");
+		System.setOut(fileOut);
+
+		TestRoom.main(new String[] {});
+
+		String expectedOutput = "[\"Success: Traversable points from \",[3,0],"
+				+ "\" in room at \",[0,0],\" are \",[]]";
+
+		List<String> fileContent = FileUtils.readLines(new File("tests/Level/5-out.json"), Charset.defaultCharset());
 		assertEquals(expectedOutput, fileContent.get(0));
 	}
 	
