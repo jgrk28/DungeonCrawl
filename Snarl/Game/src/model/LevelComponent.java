@@ -53,6 +53,8 @@ public interface LevelComponent {
    * @param actor - the actor being moved
    * @param destination - the destination point
    */
+  //This may not be needed as we are currently just individually calling remove and place
+  //when moving an actor.
   void moveActor(Actor actor, Point destination);
   
   /**

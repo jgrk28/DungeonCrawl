@@ -15,16 +15,16 @@ public class Player implements Actor {
 	@Override
 	public InteractionResult getInteractionResult(EntityType entityType) {
 		switch (entityType) {
-			case SPACE: 
-				return InteractionResult.NONE;
-			case HALL_SPACE: 
+			case HALL_SPACE:
+				//Same as SPACE
+			case SPACE:
 				return InteractionResult.NONE;
 			case KEY:
 				return InteractionResult.FOUND_KEY;
 			case EXIT:
 				return InteractionResult.EXIT;		
 			case GHOST:
-				return InteractionResult.REMOVE_PLAYER;
+				//Same as ZOMBIE
 			case ZOMBIE:
 				return InteractionResult.REMOVE_PLAYER;
 			default:

@@ -195,7 +195,22 @@ public class LevelComponentTest {
     this.hall2.getDestinationEntity(new Point(4,4));
   }
 
-  //TODO TestInComponent
+  @Test
+  public void testInComponent() {
+    assertEquals(true, this.room1.inComponent(new Point(0,0)));
+    assertEquals(true, this.room1.inComponent(new Point(1,2)));
+    assertEquals(true, this.room1.inComponent(new Point(3,0)));
+    assertEquals(false, this.room1.inComponent(new Point(4,2)));
+    assertEquals(false, this.room1.inComponent(new Point(-1,0)));
+    assertEquals(true, this.room2.inComponent(new Point(16,7)));
+    assertEquals(false, this.room2.inComponent(new Point(15,6)));
+    assertEquals(false, this.room2.inComponent(new Point(16,10)));
+
+    assertEquals(true, this.hall1.inComponent(new Point(4,11)));
+    assertEquals(true, this.hall1.inComponent(new Point(5,11)));
+    assertEquals(false, this.hall1.inComponent(new Point(4,10)));
+    assertEquals(false, this.hall1.inComponent(new Point(4,12)));
+  }
 
   @Test
   public void testGetEntityType() {
@@ -215,7 +230,60 @@ public class LevelComponentTest {
     assertEquals(EntityType.HALL_SPACE, this.hall1.getEntityType(new Space()));
   }
 
-  //TODO testPlaceActor
-  //TODO testRemoveActor
-  //TODO testMoveActor (maybe)
+  //PlaceActor does not check which entity is being overridden as long as it is in a room
+  @Test
+  public void testPlaceActor() {
+    Player player2 = new Player();
+    assertEquals(space, this.room1.getDestinationEntity(new Point(1, 2)));
+    this.room1.placeActor(player2, new Point(1,2));
+    assertEquals(player2, this.room1.getDestinationEntity(new Point(1, 2)));
+
+    assertEquals(wall, this.room1.getDestinationEntity(new Point(0, 0)));
+    this.room1.placeActor(player2, new Point(1,2));
+    assertEquals(player2, this.room1.getDestinationEntity(new Point(1, 2)));
+
+    assertEquals(space, this.hall1.getDestinationEntity(new Point(5,11)));
+    this.hall1.placeActor(player2, new Point(5,11));
+    assertEquals(player2, this.hall1.getDestinationEntity(new Point(5,11)));
+  }
+
+  //PlaceActor outside bounds of room
+  @Test(expected = IllegalArgumentException.class)
+  public void testPlaceActorOutOfRoom() {
+    this.room1.placeActor(player, new Point(4,3));
+  }
+
+  //PlaceActor outside bounds of hall
+  @Test(expected = IllegalArgumentException.class)
+  public void testPlaceActorOutOfHall() {
+    this.hall1.placeActor(player, new Point(4,10));
+  }
+
+  //Check that player exists then remove and check that they are replaced with a space
+  @Test
+  public void testRemoveActor() {
+    assertEquals(player, this.room1.getDestinationEntity(new Point(2, 1)));
+    this.room1.removeActor(player);
+    assertEquals(space, this.room1.getDestinationEntity(new Point(2, 1)));
+
+    assertEquals(player, this.hall1.getDestinationEntity(new Point(4, 11)));
+    this.hall1.removeActor(player);
+    assertEquals(space, this.hall1.getDestinationEntity(new Point(4, 11)));
+  }
+
+  //Remove a player that is no longer in the room
+  @Test(expected = IllegalArgumentException.class)
+  public void testRemoveActorNoActorRoom() {
+    this.room1.removeActor(player);
+    this.room1.removeActor(player);
+  }
+
+  //Remove a player that is no longer in the hall
+  @Test(expected = IllegalArgumentException.class)
+  public void testRemoveActorNoActorHall() {
+    this.hall1.removeActor(player);
+    this.hall1.removeActor(player);
+  }
+
+  //We can test MoveActor if it is used
 }

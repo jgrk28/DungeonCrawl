@@ -37,18 +37,21 @@ public class EntityTest {
     assertEquals(EntityType.PLAYER, player.getEntityType());
   }
 
+  //A Wall should be equal to any object of the Wall class
   @Test
   public void testWallEqual() {
     assertEquals(true, wall.equals(wall));
     assertEquals(true, wall.equals(new Wall()));
   }
 
+  //A Space should be equal to any object of the Space class
   @Test
   public void testSpaceEqual() {
     assertEquals(true, space.equals(space));
     assertEquals(true, space.equals(new Space()));
   }
 
+  //All other entities should be only equal to an object if it is the same exact object
   @Test
   public void testKeyEqual() {
     assertEquals(true, key.equals(key));

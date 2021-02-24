@@ -18,7 +18,7 @@ public class DungeonTest {
 	private List<Adversary> adversaries;
 	private List<Level> levels;
 	
-	//Fields for the level
+	//Fields for a level
 	private List<LevelComponent> levelMap;
 	private Entity space = new Space();
 	private Entity wall = new Wall();
