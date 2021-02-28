@@ -9,7 +9,7 @@ The PlayerClient is a class that runs on the user's side of the TCP connection. 
   * Current overall location in the dungeon
 * String name
   * Unique identifying name
-* List<List<EntityType>> viewableMap
+* List\<List\<EntityType\>\> viewableMap
   * A subsection of the level where a player can see 2 grid units away in any cardinal or diagonal direction
 * Boolean inLevel
   * True if the player is still active in the level. False if the player has been killed or has exited the level
