@@ -171,5 +171,21 @@ public class Room implements LevelComponent {
 		row.set(relativePos.x, actor);
 	}
 
+	@Override
+	public void placeKey(Key key) {
+		if (this.getDestinationEntity(key.location).equals(new Space())) {
+			List<Entity> keyRow = this.componentMap.get(key.location.y);
+			keyRow.set(key.location.x, key);			
+		}
+	}
+
+	@Override
+	public void placeExit(Exit exit) {
+		if (this.getDestinationEntity(exit.location).equals(new Space())) {
+			List<Entity> exitRow = this.componentMap.get(exit.location.y);
+			exitRow.set(exit.location.x, exit);			
+		}	
+	}
+
 }
 

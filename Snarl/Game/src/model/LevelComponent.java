@@ -69,5 +69,15 @@ public interface LevelComponent {
    * @param destination - the destination within the LevelComponent
    */
   void placeActor(Actor actor, Point destination);  
+  
+  /**
+   * TODO Add comment here
+   */
+  void placeKey(Key key);
+  
+  /**
+   * TODO Add comment here
+   */
+  void placeExit(Exit exit);
 
 }

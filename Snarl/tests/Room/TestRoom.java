@@ -1,4 +1,4 @@
-package Level;
+package Room;
 
 import java.awt.Point;
 import java.util.ArrayList;
@@ -62,6 +62,11 @@ public class TestRoom {
 		this.JSONPoint = JSONInput.getJSONArray(1);
 		this.point = parsePoint(this.JSONPoint);
 		
+		this.room = parseRoom(JSONRoom);
+		
+	}
+	
+	public Room parseRoom(JSONObject JSONRoom) {
 		//Top-left corner of the room
 		this.JSONOriginPoint = JSONRoom.getJSONArray("origin");
 		Point origin = parsePoint(this.JSONOriginPoint);
@@ -74,8 +79,7 @@ public class TestRoom {
 		//Layout of the room
 		JSONArray layout = JSONRoom.getJSONArray("layout");	
 		
-		this.room = generateRoom(origin, rows, columns, layout);
-		
+		return generateRoom(origin, rows, columns, layout);
 	}
 	
 	/**

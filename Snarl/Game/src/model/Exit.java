@@ -1,5 +1,7 @@
 package model;
 
+import java.awt.Point;
+
 import modelView.EntityType;
 
 /**
@@ -7,6 +9,12 @@ import modelView.EntityType;
  * The ASCII representation of an Exit is "@"
  */
 public class Exit implements Entity {
+	
+	public Point location;
+	
+	public Exit(Point location) {
+		this.location = location;
+	}
 
   @Override
   public EntityType getEntityType() {

@@ -1,6 +1,7 @@
 package model;
 
 import java.awt.Point;
+import java.util.ArrayList;
 import java.util.List;
 import modelView.EntityType;
 
@@ -48,6 +49,32 @@ public class Hall implements LevelComponent {
 		this.waypoints = waypoints;
 		this.startRoom = null;
 		this.endRoom = null;
+	}
+	
+	/**
+	 * TODO Add comment here
+	 */
+	public Hall(Point positionStart, Room startRoom, Point positionEnd, Room endRoom, List<Point> waypoints) {
+		this.waypoints = waypoints;
+		this.startRoom = null;
+		this.endRoom = null;
+		connectRooms(positionStart, startRoom, positionEnd, endRoom);
+		this.componentMap = createComponentMap();		
+	}
+	
+	/**
+	 * TODO Add comment here
+	 */
+	private List<Entity> createComponentMap() {
+		
+		int hallLength = getHallwayIndex(this.endRoomPosition);
+		List<Entity> hallMap = new ArrayList<>();
+		
+		for (int i = 0; i < hallLength; i++) {
+			hallMap.add(new Space());
+		}
+		
+		return hallMap;
 	}
 
 	/**
@@ -295,6 +322,22 @@ public class Hall implements LevelComponent {
 	public void placeActor(Actor actor, Point destination) {
 		int hallIndex = getHallwayIndex(destination);
 		componentMap.set(hallIndex, actor);
+	}
+
+	@Override
+	public void placeKey(Key key) {
+		if (this.getDestinationEntity(key.location).equals(new Space())) {
+			int hallIndex = getHallwayIndex(key.location);
+			componentMap.set(hallIndex, key);		
+		}	
+	}
+
+	@Override
+	public void placeExit(Exit exit) {
+		if (this.getDestinationEntity(exit.location).equals(new Space())) {
+			int hallIndex = getHallwayIndex(exit.location);
+			componentMap.set(hallIndex, exit);		
+		}	
 	}
 
 }

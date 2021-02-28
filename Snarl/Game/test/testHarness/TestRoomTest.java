@@ -1,6 +1,5 @@
 package testHarness;
 
-import Level.TestRoom;
 import java.util.List;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -11,6 +10,9 @@ import java.io.PrintStream;
 import java.nio.charset.Charset;
 
 import org.junit.Test;
+
+import Room.TestRoom;
+
 import static org.junit.Assert.assertEquals;
 import org.apache.commons.io.FileUtils;
 

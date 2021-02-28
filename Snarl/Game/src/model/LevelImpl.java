@@ -58,11 +58,21 @@ public class LevelImpl implements Level {
 	//True if at least one player has exited the level
 	private Boolean levelExited;
 	
+	//Key within the level, stores its own position
+	private Key key;
+	private LevelComponent keyRoom;
+	
+	//Exit within the level, stores its own position
+	private Exit exit;
+	private LevelComponent exitRoom;
+	
 	/** 
 	 * Initializes a new level. This constructor is used primarily for testing 
 	 * @param levelMap - the map of all LevelComponents within the level
+	 * @param key - the key within the level
+	 * @param exit - the exit within the level
 	 */
-	public LevelImpl(List<LevelComponent> levelMap) {
+	public LevelImpl(List<LevelComponent> levelMap, Key key, Exit exit) {
 		/**
 		 * A level is comprised of a series of rooms connected by hallways.
 		 * A level is valid if no two rooms overlap, no two hallways overlap,
@@ -72,6 +82,19 @@ public class LevelImpl implements Level {
 		 * automatically
 		 */
 		this.levelMap = levelMap;
+		this.exitUnlocked = false;
+		this.levelExited = false;
+		this.playerLocations = new LinkedHashMap<>();
+		this.adversaryLocations = new LinkedHashMap<>();
+		this.key = key;
+		this.keyRoom = findComponent(this.key.location);
+		this.exit = exit;
+		this.exitRoom = findComponent(this.exit.location);
+		
+		
+		//Place the key and exit
+		placeKey();
+		placeExit();
 	}
 	
 	/** 
@@ -81,8 +104,10 @@ public class LevelImpl implements Level {
 	 * @param players - list of all players in the level
 	 * @param adversaries - list of all adversaries in the level
 	 * @param levelMap - the map of all LevelComponents within the level
+	 * @param key - the key within the level
+	 * @param exit - the exit within the level
 	 */
-	public LevelImpl(List<Player> players, List<Adversary> adversaries, List<LevelComponent> levelMap) {
+	public LevelImpl(List<Player> players, List<Adversary> adversaries, List<LevelComponent> levelMap, Key key, Exit exit) {
 		if (levelMap.isEmpty()) {
 			throw new IllegalArgumentException("Level map does not have any components");
 		}
@@ -93,6 +118,14 @@ public class LevelImpl implements Level {
 		this.levelExited = false;
 		this.playerLocations = new LinkedHashMap<>();
 		this.adversaryLocations = new LinkedHashMap<>();
+		this.key = key;
+		this.keyRoom = findComponent(this.key.location);
+		this.exit = exit;
+		this.exitRoom = findComponent(this.exit.location);
+		
+		//Place the key and exit
+		placeKey();
+		placeExit();
 
 		//Identify the top left-most and bottom right-most rooms in the level
 		Room topLeftRoom = getBoundaryRoom(true);
@@ -118,13 +151,17 @@ public class LevelImpl implements Level {
 	 * @param levelMap - the map of all LevelComponents within the level
 	 * @param exitUnlocked - true if the exit has been unlocked
 	 * @param levelExited - true if a player has exited the level
+	 * @param key - the key within the level
+	 * @param exit - the exit within the level
 	 */
 	public LevelImpl(
 			Map<Player, Point> players,
 			Map<Adversary, Point> adversaries,
 			List<LevelComponent> levelMap,
 			boolean exitUnlocked,
-			boolean levelExited
+			boolean levelExited,
+			Key key, 
+			Exit exit
 	)
 	{
 		if (levelMap.isEmpty()) {
@@ -137,6 +174,14 @@ public class LevelImpl implements Level {
 		this.levelExited = levelExited;
 		this.playerLocations = new LinkedHashMap<>();
 		this.adversaryLocations = new LinkedHashMap<>();
+		this.key = key;
+		this.keyRoom = findComponent(this.key.location);
+		this.exit = exit;
+		this.exitRoom = findComponent(this.exit.location);
+		
+		//Place the key and exit
+		placeKey();
+		placeExit();
 
 		//Add players to the corresponding LevelComponent
 		for (Map.Entry<Player, Point> entry : players.entrySet()) {
@@ -170,6 +215,22 @@ public class LevelImpl implements Level {
 			}
 			component.placeActor(entry.getKey(), entry.getValue());
 		}
+	}
+	
+	/**
+	 * TODO Add comment here
+	 */
+	private void placeKey() {
+		LevelComponent component = findComponent(this.key.location);
+		component.placeKey(this.key);
+	}
+	
+	/**
+	 * TODO Add comment here
+	 */
+	private void placeExit() {
+		LevelComponent component = findComponent(this.exit.location);
+		component.placeExit(this.exit);	
 	}
 
 	/**
@@ -477,7 +538,14 @@ public class LevelImpl implements Level {
 		//If the adversary interacts with a player, remove the player from the level
 		if (interaction.equals(InteractionResult.REMOVE_PLAYER)) {
 			this.playerLocations.remove(destinationEntity);
-		}		
+		}	
+		
+		if (sourceComponent.equals(keyRoom)) {
+			sourceComponent.placeKey(this.key);
+			
+		} else if (sourceComponent.equals(exitRoom)) {
+			sourceComponent.placeExit(this.exit);			
+		}
 	}
 	
 	@Override
