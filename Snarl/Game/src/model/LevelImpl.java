@@ -321,12 +321,8 @@ public class LevelImpl implements Level {
 		throw new IllegalArgumentException("Room has no empty spaces to place a new actor");
 	}
 
-	/**
-	 * Finds the LevelComponent that contains the given point
-	 * @param point - the point used to locate the LevelComponent
-	 * @return the LevelComponent that the point is located in
-	 */
-	private LevelComponent findComponent(Point point) {
+	@Override
+	public LevelComponent findComponent(Point point) {
 		for (LevelComponent component : this.levelMap) {
 			if (component.inComponent(point)) {
 				return component;

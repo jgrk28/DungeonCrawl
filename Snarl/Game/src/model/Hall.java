@@ -59,7 +59,9 @@ public class Hall implements LevelComponent {
 		this.startRoom = null;
 		this.endRoom = null;
 		connectRooms(positionStart, startRoom, positionEnd, endRoom);
-		this.componentMap = createComponentMap();		
+		this.componentMap = createComponentMap();
+		startRoom.connectHall(positionStart, this);
+		endRoom.connectHall(positionEnd, this);
 	}
 	
 	/**
@@ -338,6 +340,20 @@ public class Hall implements LevelComponent {
 			int hallIndex = getHallwayIndex(exit.location);
 			componentMap.set(hallIndex, exit);		
 		}	
+	}
+
+	/**
+	 * TODO add comment
+	 */
+	public Room getStartRoom() {
+		return this.startRoom;
+	}
+
+	/**
+	 * TODO add comment
+	 */
+	public Room getEndRoom() {
+		return this.endRoom;
 	}
 
 }

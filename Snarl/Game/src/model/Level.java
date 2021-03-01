@@ -39,4 +39,11 @@ public interface Level extends LevelModelView {
 	 */
 	GameState isLevelOver();
 
+	/**
+	 * Finds the LevelComponent that contains the given point
+	 * @param point - the point used to locate the LevelComponent
+	 * @return the LevelComponent that the point is located in
+	 */
+	LevelComponent findComponent(Point point);
+
 }

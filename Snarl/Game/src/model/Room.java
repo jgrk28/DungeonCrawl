@@ -187,5 +187,19 @@ public class Room implements LevelComponent {
 		}	
 	}
 
+	/**
+	 * TODO add comment
+	 */
+	public Point getOrigin() {
+		return this.position;
+	}
+
+	/**
+	 * TODO add comment
+	 */
+	public Map<Point, Hall> getDoors() {
+		return this.doors;
+	}
+
 }
 
