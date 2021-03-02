@@ -7,10 +7,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import model.Entity;
+import model.Exit;
 import model.Hall;
+import model.Key;
 import model.LevelComponent;
 import model.LevelImpl;
-import model.Player;
 import model.Room;
 import model.Space;
 import model.Wall;
@@ -27,6 +28,9 @@ public class LevelModelViewTest {
   private List<LevelComponent> levelMap;
   private Entity space = new Space();
   private Entity wall = new Wall();
+
+  private Key key;
+  private Exit exit;
 
   private Room room1;
   private Room room2;
@@ -155,6 +159,8 @@ public class LevelModelViewTest {
   //They have not been added to a level but they are available for use
   @Before
   public void initLevelComponents() {
+    this.key = new Key(new Point(4, 16));
+    this.exit = new Exit(new Point(7, 11));
     initializeRoom1();
     initializeRoom1();
     initializeRoom2();
@@ -176,10 +182,14 @@ public class LevelModelViewTest {
     EntityType s = EntityType.SPACE;
     EntityType h = EntityType.HALL_SPACE;
     EntityType e = EntityType.EMPTY;
+    EntityType k = EntityType.KEY;
+    EntityType x = EntityType.EXIT;
 
     //Initialize ModelView
     LevelModelView modelView = new LevelImpl(
-        this.levelMap
+        this.levelMap,
+        this.key,
+        this.exit
     );
 
     List<List<EntityType>> expectedMap = Arrays.asList(
@@ -194,13 +204,13 @@ public class LevelModelViewTest {
         Arrays.asList(e, e, e, e, e, w, s, s, w, e, e, e, e, e, e, e, e, e),
         Arrays.asList(e, e, e, e, e, w, s, s, w, e, e, e, e, e, e, e, e, e),
         Arrays.asList(e, e, e, e, e, w, s, s, w, e, e, e, e, w, w, w, w, w),
-        Arrays.asList(e, e, h, h, h, s, s, s, s, h, h, h, h, s, s, s, s, w),
+        Arrays.asList(e, e, h, h, h, s, s, x, s, h, h, h, h, s, s, s, s, w),
         Arrays.asList(e, e, h, e, e, w, w, w, w, e, e, e, e, w, s, s, s, w),
         Arrays.asList(e, e, h, e, e, e, e, e, e, e, e, e, e, w, s, s, s, w),
         Arrays.asList(w, w, s, w, w, w, e, e, e, e, e, e, e, w, s, s, s, w),
         Arrays.asList(w, s, s, s, s, w, e, e, e, e, e, e, e, w, w, w, w, w),
         Arrays.asList(w, s, s, s, s, w, e, e, e, e, e, e, e, e, e, e, e, e),
-        Arrays.asList(w, s, s, s, s, w, e, e, e, e, e, e, e, e, e, e, e, e),
+        Arrays.asList(w, s, s, s, k, w, e, e, e, e, e, e, e, e, e, e, e, e),
         Arrays.asList(w, w, w, w, w, w, e, e, e, e, e, e, e, e, e, e, e, e)
     );
 

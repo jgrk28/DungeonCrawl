@@ -37,8 +37,8 @@ public class TextualLevelViewTest {
 	private List<LevelComponent> levelMap;
 	private Entity space = new Space();
 	private Entity wall = new Wall();
-	private Entity key = new Key();
-	private Entity exit = new Exit();
+	private Key key;
+	private Exit exit;
 	private Player player = new Player();
 	private Adversary ghost = new Ghost();
 	private Adversary zombie = new Zombie();
@@ -73,7 +73,7 @@ public class TextualLevelViewTest {
 		componentMap.add(Arrays.asList(wall, space, space, wall));
 		componentMap.add(Arrays.asList(wall, space, space, wall));
 		componentMap.add(Arrays.asList(wall, space, space, wall));
-		componentMap.add(Arrays.asList(space, space, exit, space));
+		componentMap.add(Arrays.asList(space, space, space, space));
 		componentMap.add(Arrays.asList(wall, wall, wall, wall));
 		
 		room2 = new Room(new Point(5,7), componentMap);
@@ -85,7 +85,7 @@ public class TextualLevelViewTest {
 		componentMap.add(Arrays.asList(wall, wall, space, wall, wall, wall));
 		componentMap.add(Arrays.asList(wall, space, space, space, space, wall));
 		componentMap.add(Arrays.asList(wall, space, space, space, space, wall));
-		componentMap.add(Arrays.asList(wall, space, space, space, key, wall));
+		componentMap.add(Arrays.asList(wall, space, space, space, space, wall));
 		componentMap.add(Arrays.asList(wall, wall, wall, wall, wall, wall));
 		
 		room3 = new Room(new Point(0,14), componentMap);
@@ -300,6 +300,8 @@ public class TextualLevelViewTest {
 	//They have not been added to a level but they are available for use
 	@Before
 	public void initLevelComponents() {
+		this.key = new Key(new Point(4, 16));
+		this.exit = new Exit(new Point(7, 11));
 		initializeRoom1();
 		initializeRoom1();
 		initializeRoom2();
@@ -340,7 +342,7 @@ public class TextualLevelViewTest {
 				+ "X...!X            \n"
 				+ "XXXXXX            \n";
 
-		testDrawLevel(new LevelImpl(this.levelMap), expectedOut);
+		testDrawLevel(new LevelImpl(this.levelMap, this.key, this.exit), expectedOut);
 	}
 
 	//Check drawing when right and top do not line up with 0
@@ -359,7 +361,9 @@ public class TextualLevelViewTest {
 				+ "        X...X\n"
 				+ "        XXXXX\n";
 
-		testDrawLevel(new LevelImpl(this.levelMap), expectedOut);
+		//Room with key is not in this level
+		//TODO cant put in no key
+		testDrawLevel(new LevelImpl(this.levelMap, null, this.exit), expectedOut);
 
 	}
 
@@ -389,7 +393,7 @@ public class TextualLevelViewTest {
 				+ "X...!X            \n"
 				+ "XXXXXX            \n";
 
-		testDrawLevel(new LevelImpl(this.levelMap), expectedOut);
+		testDrawLevel(new LevelImpl(this.levelMap, this.key, this.exit), expectedOut);
 	}
 
 	//Tests drawing with hall directly next to a room
@@ -418,7 +422,7 @@ public class TextualLevelViewTest {
 				+ "X...!X            \n"
 				+ "XXXXXX            \n";
 
-		testDrawLevel(new LevelImpl(this.levelMap), expectedOut);
+		testDrawLevel(new LevelImpl(this.levelMap, this.key, this.exit), expectedOut);
 	}
 
 	//Tests drawing with hall directly next to another hall or itself
@@ -447,7 +451,7 @@ public class TextualLevelViewTest {
 				+ "X...!X            \n"
 				+ "XXXXXX            \n";
 
-		testDrawLevel(new LevelImpl(this.levelMap), expectedOut);
+		testDrawLevel(new LevelImpl(this.levelMap, this.key, this.exit), expectedOut);
 	}
 
 }

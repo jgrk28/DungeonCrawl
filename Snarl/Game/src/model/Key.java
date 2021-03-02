@@ -9,8 +9,9 @@ import modelView.EntityType;
  * The ASCII representation of a Key is "!"
  */
 public class Key implements Entity {
-	
-	public Point location;
+  //TODO make this extend an abstract object class
+
+  public Point location;
 	
 	public Key(Point location) {
 		this.location = location;

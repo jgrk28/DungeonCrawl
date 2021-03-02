@@ -2,6 +2,7 @@ package model;
 
 import static org.junit.Assert.*;
 
+import java.awt.Point;
 import modelView.EntityType;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,8 +20,8 @@ public class EntityTest {
   public void initEntities() {
     this.wall = new Wall();
     this.space = new Space();
-    this.key = new Key();
-    this.exit = new Exit();
+    this.key = new Key(new Point(0, 0));
+    this.exit = new Exit(new Point(0, 0));
     this.zombie = new Zombie();
     this.ghost = new Ghost();
     this.player = new Player();
@@ -55,13 +56,13 @@ public class EntityTest {
   @Test
   public void testKeyEqual() {
     assertEquals(true, key.equals(key));
-    assertEquals(false, key.equals(new Key()));
+    assertEquals(false, key.equals(new Key(new Point(0, 0))));
   }
 
   @Test
   public void testExitEqual() {
     assertEquals(true, exit.equals(exit));
-    assertEquals(false, exit.equals(new Exit()));
+    assertEquals(false, exit.equals(new Exit(new Point(0, 0))));
   }
 
   @Test

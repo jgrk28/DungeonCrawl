@@ -22,8 +22,8 @@ public class DungeonTest {
 	private List<LevelComponent> levelMap;
 	private Entity space = new Space();
 	private Entity wall = new Wall();
-	private Entity key = new Key();
-	private Entity exit = new Exit();
+	private Key key;
+	private Exit exit;
 
 	private Room room1;
 	private Room room2;
@@ -78,6 +78,8 @@ public class DungeonTest {
 	public void initializeLevelComponents() {
 		//Initialize all components for use
 		//They have not been added to a level but they are available for use
+		this.key = new Key(new Point(4, 16));
+		this.exit = new Exit(new Point(7, 11));
 		initializeRoomOne();
 		initializeRoomTwo();
 		initializeRoomThree();
@@ -111,7 +113,7 @@ public class DungeonTest {
 		componentMap.add(Arrays.asList(wall, space, space, wall));
 		componentMap.add(Arrays.asList(wall, space, space, wall));
 		componentMap.add(Arrays.asList(wall, space, space, wall));
-		componentMap.add(Arrays.asList(space, space, exit, space));
+		componentMap.add(Arrays.asList(space, space, space, space));
 		componentMap.add(Arrays.asList(wall, wall, wall, wall));
 		
 		room2 = new Room(new Point(5,7), componentMap);
@@ -123,7 +125,7 @@ public class DungeonTest {
 		componentMap.add(Arrays.asList(wall, wall, space, wall, wall, wall));
 		componentMap.add(Arrays.asList(wall, space, space, space, space, wall));
 		componentMap.add(Arrays.asList(wall, space, space, space, space, wall));
-		componentMap.add(Arrays.asList(wall, space, space, space, key, wall));
+		componentMap.add(Arrays.asList(wall, space, space, space, space, wall));
 		componentMap.add(Arrays.asList(wall, wall, wall, wall, wall, wall));
 		
 		room3 = new Room(new Point(0,14), componentMap);
@@ -207,9 +209,9 @@ public class DungeonTest {
 		this.adversaries = new ArrayList<>(Arrays.asList(ghost1, ghost2, zombie1, zombie2));
 		
 		//List of levels in the Dungeon
-		Level level1 = new LevelImpl(initializeLevelMapOne());
-		Level level2 = new LevelImpl(initializeLevelMapTwo());
-		Level level3 = new LevelImpl(initializeLevelMapThree());
+		Level level1 = new LevelImpl(initializeLevelMapOne(), this.key, this.exit);
+		Level level2 = new LevelImpl(initializeLevelMapTwo(), this.key, this.exit);
+		Level level3 = new LevelImpl(initializeLevelMapThree(), this.key, this.exit);
 		this.levels = new ArrayList<>(Arrays.asList(level1, level2, level3));	
 	}
 	

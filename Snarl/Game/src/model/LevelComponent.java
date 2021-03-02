@@ -68,15 +68,22 @@ public interface LevelComponent {
    * @param actor - the actor being placed
    * @param destination - the destination within the LevelComponent
    */
-  void placeActor(Actor actor, Point destination);  
-  
+  void placeActor(Actor actor, Point destination);
+
+
+
+  //TODO combine these to just placeObject
   /**
-   * TODO Add comment here
+   * Places the given key for this level in its position as determined by its field. If the
+   * position is occupied it will simply not place the key. This function will be called when the
+   * level is created.
    */
   void placeKey(Key key);
-  
+
   /**
-   * TODO Add comment here
+   * Places the given exit for this level in its position as determined by its field. If the
+   * position is occupied it will simply not place the exit. This function will be called when the
+   * level is created and also any time an actor moves off the exit.
    */
   void placeExit(Exit exit);
 

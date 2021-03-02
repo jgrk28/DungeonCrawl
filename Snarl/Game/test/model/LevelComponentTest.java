@@ -23,7 +23,9 @@ public class LevelComponentTest {
     //Create a new ModelView containing just the room that was passed in
     ArrayList<LevelComponent> levelMap = new ArrayList<LevelComponent>();
     levelMap.add(component);
-    LevelModelView modelView = new LevelImpl(levelMap);
+    Key key = null;
+    Exit exit = null;
+    LevelModelView modelView = new LevelImpl(levelMap, key, exit);
     LevelView view = new TextualLevelView(modelView);
 
     //Get output string from STDOUT
@@ -46,8 +48,8 @@ public class LevelComponentTest {
   private Hall hall2;
   private Wall wall = new Wall();
   private Space space = new Space();
-  private Key key = new Key();
-  private Exit exit = new Exit();
+  private Key key = new Key(new Point(1, 1));
+  private Exit exit = new Exit(new Point(16, 8));
   private Player player = new Player();
   private Zombie zombie = new Zombie();
   private Ghost ghost = new Ghost();
@@ -216,8 +218,8 @@ public class LevelComponentTest {
   public void testGetEntityType() {
     assertEquals(EntityType.WALL, this.room1.getEntityType(new Wall()));
     assertEquals(EntityType.SPACE, this.room1.getEntityType(new Space()));
-    assertEquals(EntityType.KEY, this.room1.getEntityType(new Key()));
-    assertEquals(EntityType.EXIT, this.room1.getEntityType(new Exit()));
+    assertEquals(EntityType.KEY, this.room1.getEntityType(new Key(new Point(1, 1))));
+    assertEquals(EntityType.EXIT, this.room1.getEntityType(new Exit(new Point(16, 8))));
     assertEquals(EntityType.PLAYER, this.room1.getEntityType(new Player()));
     assertEquals(EntityType.GHOST, this.room1.getEntityType(new Ghost()));
     assertEquals(EntityType.ZOMBIE, this.room1.getEntityType(new Zombie()));
@@ -286,4 +288,39 @@ public class LevelComponentTest {
   }
 
   //We can test MoveActor if it is used
+
+  //Tests that a key can be placed. If the keys location is a space the key should be placed.
+  //If not this function should have no effect.
+  @Test
+  public void testPlaceKey() {
+    Key newKey1 = new Key(new Point(15, 8));
+    Key newKey2 = new Key(new Point(2, 2));
+
+    assertEquals(wall, this.room2.getDestinationEntity(new Point(15, 8)));
+    this.room2.placeKey(newKey1);
+    assertEquals(wall, this.room2.getDestinationEntity(new Point(15, 8)));
+
+    assertEquals(space, this.room1.getDestinationEntity(new Point(2, 2)));
+    this.room1.placeKey(newKey2);
+    assertEquals(newKey2, this.room1.getDestinationEntity(new Point(2, 2)));
+  }
+
+  //Tests that a exit can be placed. If the exits location is a space the exit should be placed.
+  //If not this function should have no effect.
+  @Test
+  public void testPlaceExit() {
+    Exit newExit1 = new Exit(new Point(0, 0));
+    Exit newExit2 = new Exit(new Point(15, 7));
+
+
+
+    assertEquals(wall, this.room1.getDestinationEntity(new Point(0, 0)));
+    this.room1.placeExit(newExit1);
+    assertEquals(wall, this.room1.getDestinationEntity(new Point(0, 0)));
+
+    assertEquals(space, this.room2.getDestinationEntity(new Point(15, 7)));
+    this.room2.placeExit(newExit2);
+    assertEquals(newExit2, this.room2.getDestinationEntity(new Point(15, 7)));
+
+  }
 }

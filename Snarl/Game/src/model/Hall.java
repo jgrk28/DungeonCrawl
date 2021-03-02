@@ -39,7 +39,8 @@ public class Hall implements LevelComponent {
 
 	/**
 	 * Initializes a new Hall with the componentMap and waypoints
-	 * Both the start and end room are null during initialization 
+	 * Both the start and end room are null during initialization
+	 * This constructor is mostly used for testing
 	 * @param componentMap - the map of all entities in the hall
 	 * @param waypoints - a list of points that represent corners in the hall. 
 	 * If there are no corners in the hall, this list will be empty
@@ -50,24 +51,35 @@ public class Hall implements LevelComponent {
 		this.startRoom = null;
 		this.endRoom = null;
 	}
-	
+
 	/**
-	 * TODO Add comment here
+	 * Initializes a new Hall using a starting and ending room/door position and a list of waypoints.
+	 * The Hall will start with only spaces as objects and actors do not start in a hall. This will
+	 * also initialize the connections from the hall to the rooms and vice versa.
+	 * This constructor is mostly used when constructing the actual level
+	 * @param positionStart - the door position in the start room
+	 * @param startRoom - the room connected to the start of the hallway
+	 * @param positionEnd - the door position in the end room
+	 * @param endRoom - the room connected to the end of the hallway
+	 * @param waypoints - a list of points that represent corners in the hall.
+	 * If there are no corners in the hall, this list will be empty
 	 */
 	public Hall(Point positionStart, Room startRoom, Point positionEnd, Room endRoom, List<Point> waypoints) {
 		this.waypoints = waypoints;
 		this.startRoom = null;
 		this.endRoom = null;
 		connectRooms(positionStart, startRoom, positionEnd, endRoom);
-		this.componentMap = createComponentMap();
+		this.componentMap = createEmptyComponentMap();
 		startRoom.connectHall(positionStart, this);
 		endRoom.connectHall(positionEnd, this);
 	}
 	
 	/**
-	 * TODO Add comment here
+	 * Creates an empty component map for this hallway. By finding the length of the hallway and
+	 * filling it with spaces.
+	 * @return List of Entities that represents the tiles in the hallway
 	 */
-	private List<Entity> createComponentMap() {
+	private List<Entity> createEmptyComponentMap() {
 		
 		//We need to figure out how to find the length of the hall, 
 		//without using the component map
@@ -345,28 +357,36 @@ public class Hall implements LevelComponent {
 	}
 
 	/**
-	 * TODO add comment
+	 * Getter for the room connected to the start of this hallway. This room will be set at
+	 * construction but this getter will allow easy traversal of the level map.
+	 * @return the room connected to the start of the hallway
 	 */
 	public Room getStartRoom() {
 		return this.startRoom;
 	}
 
 	/**
-	 * TODO add comment
+	 * Getter for the room connected to the end of this hallway. This room will be set at
+	 * construction but this getter will allow easy traversal of the level map.
+	 * @return the room connected to the end of the hallway
 	 */
 	public Room getEndRoom() {
 		return this.endRoom;
 	}
-	
+
 	/**
-	 * TODO add comment
+	 * Getter for the position of the connection (door) to the room at the start of this hallway.
+	 * @return the position of the connection (door).
+	 * //TODO do we need this?
 	 */
 	public Point getStartRoomPosition() {
 		return this.startRoomPosition;
 	}
 
 	/**
-	 * TODO add comment
+	 * Getter for the position of the connection (door) to the room at the end of this hallway.
+	 * @return the position of the connection (door).
+	 * //TODO do we need this?
 	 */
 	public Point getEndRoomPosition() {
 		return this.endRoomPosition;
@@ -374,6 +394,7 @@ public class Hall implements LevelComponent {
 	
 	/**
 	 * TODO add comment
+	 * //TODO do we need this?
 	 */
 	public List<Entity> getComponentMap() {
 		return this.componentMap;
@@ -381,6 +402,7 @@ public class Hall implements LevelComponent {
 	
 	/**
 	 * TODO add comment
+	 * //TODO do we need this?
 	 */
 	public List<Point> getWaypoints() {
 		return this.waypoints;
@@ -396,6 +418,7 @@ public class Hall implements LevelComponent {
 			  * this.endRoomPosition.hashCode();
 	}
 
+	//TODO I feel like we can just use == bc we only ever have 1 hall
 	@Override
 	public boolean equals(Object obj) { 
         if (obj == this) { 

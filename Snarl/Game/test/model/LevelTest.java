@@ -21,8 +21,8 @@ public class LevelTest {
   private List<LevelComponent> levelMap;
   private Entity space = new Space();
   private Entity wall = new Wall();
-  private Entity key = new Key();
-  private Entity exit = new Exit();
+  private Key key;
+  private Exit exit;
   private Player player1 = new Player();
   private Player player2 = new Player();
   private Player player3 = new Player();
@@ -57,7 +57,7 @@ public class LevelTest {
     componentMap.add(Arrays.asList(wall, space, space, wall));
     componentMap.add(Arrays.asList(wall, space, space, wall));
     componentMap.add(Arrays.asList(wall, space, space, wall));
-    componentMap.add(Arrays.asList(space, space, exit, space));
+    componentMap.add(Arrays.asList(space, space, space, space));
     componentMap.add(Arrays.asList(wall, wall, wall, wall));
 
     room2 = new Room(new Point(5,7), componentMap);
@@ -69,7 +69,7 @@ public class LevelTest {
     componentMap.add(Arrays.asList(wall, wall, space, wall, wall, wall));
     componentMap.add(Arrays.asList(wall, space, space, space, space, wall));
     componentMap.add(Arrays.asList(wall, space, space, space, space, wall));
-    componentMap.add(Arrays.asList(wall, space, space, space, key, wall));
+    componentMap.add(Arrays.asList(wall, space, space, space, space, wall));
     componentMap.add(Arrays.asList(wall, wall, wall, wall, wall, wall));
 
     room3 = new Room(new Point(0,14), componentMap);
@@ -172,13 +172,23 @@ public class LevelTest {
     adversariesPos.put(this.ghost2, new Point(2, 14));
     boolean exitUnlocked = false;
     boolean levelExited = false;
-    return new LevelImpl(playersPos, adversariesPos, this.levelMap, exitUnlocked, levelExited);
+    return new LevelImpl(
+        playersPos,
+        adversariesPos,
+        this.levelMap,
+        exitUnlocked,
+        levelExited,
+        this.key,
+        this.exit
+    );
   }
 
   //Initialize all components for use
   //They have not been added to a level but they are available for use
   @Before
   public void initLevelComponents() {
+    this.key = new Key(new Point(4, 16));
+    this.exit = new Exit(new Point(7, 11));
     initializeRoom1();
     initializeRoom1();
     initializeRoom2();
@@ -200,7 +210,7 @@ public class LevelTest {
     initializeLevelMap();
     List<Player> players = new ArrayList<>(Arrays.asList(this.player1, this.player2, this.player3));
     List<Adversary> adversaries = new ArrayList<>(Arrays.asList(this.ghost1, this.zombie, this.ghost2));
-    Level level = new LevelImpl(players, adversaries, this.levelMap);
+    Level level = new LevelImpl(players, adversaries, this.levelMap, this.key, this.exit);
 
     String expectedOut = ""
         + "XXXX              \n"
@@ -267,7 +277,15 @@ public class LevelTest {
     adversariesPos.put(this.ghost1, new Point(7, 8));
     boolean exitUnlocked = true;
     boolean levelExited = true;
-    Level level = new LevelImpl(playersPos, adversariesPos, this.levelMap, exitUnlocked, levelExited);
+    Level level = new LevelImpl(
+        playersPos,
+        adversariesPos,
+        this.levelMap,
+        exitUnlocked,
+        levelExited,
+        this.key,
+        this.exit
+    );
 
     assertEquals(GameState.WON, level.isLevelOver());
   }
@@ -284,7 +302,15 @@ public class LevelTest {
     adversariesPos.put(this.ghost1, new Point(7, 8));
     boolean exitUnlocked = true;
     boolean levelExited = false;
-    Level level = new LevelImpl(playersPos, adversariesPos, this.levelMap, exitUnlocked, levelExited);
+    Level level = new LevelImpl(
+        playersPos,
+        adversariesPos,
+        this.levelMap,
+        exitUnlocked,
+        levelExited,
+        this.key,
+        this.exit
+    );
     assertEquals(GameState.LOST, level.isLevelOver());
   }
 
@@ -301,7 +327,15 @@ public class LevelTest {
     adversariesPos.put(this.ghost1, new Point(7, 8));
     boolean exitUnlocked = true;
     boolean levelExited = true;
-    Level level = new LevelImpl(playersPos, adversariesPos, this.levelMap, exitUnlocked, levelExited);
+    Level level = new LevelImpl(
+        playersPos,
+        adversariesPos,
+        this.levelMap,
+        exitUnlocked,
+        levelExited,
+        this.key,
+        this.exit
+    );
 
     assertEquals(GameState.ACTIVE, level.isLevelOver());
   }

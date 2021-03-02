@@ -171,6 +171,7 @@ public class Room implements LevelComponent {
 		row.set(relativePos.x, actor);
 	}
 
+	//TODO combine these
 	@Override
 	public void placeKey(Key key) {
 		if (this.getDestinationEntity(key.location).equals(new Space())) {
@@ -188,19 +189,23 @@ public class Room implements LevelComponent {
 	}
 
 	/**
-	 * TODO add comment
+	 * Getter for the origin position of this room.
+	 * @return this room's origin point
 	 */
 	public Point getOrigin() {
 		return this.position;
 	}
 
 	/**
-	 * TODO add comment
+	 * Getter for the doors and connected hallways of this room. This field will be set at
+	 * construction but this getter will allow easy traversal of the level map.
+	 * @return the map of Points to hallways that represents the doors of this room
 	 */
 	public Map<Point, Hall> getDoors() {
 		return this.doors;
 	}
-	
+
+	//TODO Dont think we need anything after this
 	/**
 	 * TODO add comment
 	 */

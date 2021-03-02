@@ -216,17 +216,23 @@ public class LevelImpl implements Level {
 			component.placeActor(entry.getKey(), entry.getValue());
 		}
 	}
-	
+
+
+	//TODO combine these to just placeObject
 	/**
-	 * TODO Add comment here
+	 * Places the key for this level in its position as determined by its field. If the position is
+	 * occupied it will simply not place the key. This function will be called when the level is
+	 * created.
 	 */
 	private void placeKey() {
 		LevelComponent component = findComponent(this.key.location);
 		component.placeKey(this.key);
 	}
-	
+
 	/**
-	 * TODO Add comment here
+	 * Places the exit for this level in its position as determined by its field. If the position is
+	 * occupied it will simply not place the exit. This function will be called when the level is
+	 * created and also any time an actor moves off the exit.
 	 */
 	private void placeExit() {
 		LevelComponent component = findComponent(this.exit.location);

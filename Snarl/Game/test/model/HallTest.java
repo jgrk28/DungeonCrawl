@@ -1,5 +1,7 @@
 package model;
 
+import static org.junit.Assert.assertEquals;
+
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -9,7 +11,8 @@ import org.junit.Test;
 public class HallTest {
   Hall hall1;
   Hall hall2;
-  Room fakeRoom; //Needed for adding endpoints but does not need to contain anything now
+  Room fakeRoom1;
+  Room fakeRoom2;
   Space space = new Space();
   Player player = new Player();
   Zombie zombie = new Zombie();
@@ -24,7 +27,7 @@ public class HallTest {
     this.hall1 = new Hall(componentMap, waypoints);
 
     //Doors for hall1
-    hall1.connectRooms(new Point(1,11), fakeRoom, new Point(5,7), fakeRoom);
+    hall1.connectRooms(new Point(1,11), fakeRoom1, new Point(5,7), fakeRoom2);
   }
 
   private void initHall2() {
@@ -39,7 +42,7 @@ public class HallTest {
     this.hall2 = new Hall(componentMap, waypoints);
 
     //Doors for hall1
-    hall2.connectRooms(new Point(3,3), fakeRoom, new Point(2,11), fakeRoom);
+    hall2.connectRooms(new Point(3,3), fakeRoom2, new Point(2,11), fakeRoom1);
   }
 
   //Constructor and connectRooms tested by initializing hallways
@@ -76,6 +79,26 @@ public class HallTest {
         + "    \n";
 
     LevelComponentTest.checkLevelComponentLooksLike(this.hall2, expectedOut);
+  }
+
+  //Tests that the starting rooms are initialized properly. This is done in the constructor
+  //and the returned room should be pointing to the same thing that we passed into the constructor.
+  @Test
+  public void testGetStartRoom() {
+    initHall1();
+    initHall2();
+    assertEquals(this.fakeRoom1, this.hall1.getStartRoom());
+    assertEquals(this.fakeRoom2, this.hall2.getStartRoom());
+  }
+
+  //Tests that the ending rooms are initialized properly. This is done in the constructor
+  //and the returned room should be pointing to the same thing that we passed into the constructor.
+  @Test
+  public void testGetEndRoom() {
+    initHall1();
+    initHall2();
+    assertEquals(this.fakeRoom2, this.hall1.getEndRoom());
+    assertEquals(this.fakeRoom1, this.hall2.getEndRoom());
   }
 
 }
