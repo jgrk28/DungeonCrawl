@@ -200,6 +200,32 @@ public class Room implements LevelComponent {
 	public Map<Point, Hall> getDoors() {
 		return this.doors;
 	}
+	
+	/**
+	 * TODO add comment
+	 */
+	public List<List<Entity>> getComponentMap() {
+		return this.componentMap;
+	}
+	
+	@Override
+	public int hashCode() {
+	  return this.position.hashCode() * this.componentMap.hashCode();
+	}
+
+	@Override
+	public boolean equals(Object obj) { 
+        if (obj == this) { 
+            return true; 
+        } 
+        if (!(obj instanceof Room)) { 
+            return false; 
+        } 
+        
+        Room room = (Room) obj;       
+        return  this.position.equals(room.getOrigin())
+        		&& this.componentMap.equals(room.getComponentMap());
+	}
 
 }
 

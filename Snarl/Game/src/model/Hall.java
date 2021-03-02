@@ -357,5 +357,61 @@ public class Hall implements LevelComponent {
 	public Room getEndRoom() {
 		return this.endRoom;
 	}
+	
+	/**
+	 * TODO add comment
+	 */
+	public Point getStartRoomPosition() {
+		return this.startRoomPosition;
+	}
+
+	/**
+	 * TODO add comment
+	 */
+	public Point getEndRoomPosition() {
+		return this.endRoomPosition;
+	}
+	
+	/**
+	 * TODO add comment
+	 */
+	public List<Entity> getComponentMap() {
+		return this.componentMap;
+	}
+	
+	/**
+	 * TODO add comment
+	 */
+	public List<Point> getWaypoints() {
+		return this.waypoints;
+	}
+	
+	@Override
+	public int hashCode() {
+	  return this.waypoints.hashCode() 
+			  * this.componentMap.hashCode()
+			  * this.startRoom.hashCode()
+			  * this.endRoom.hashCode()
+			  * this.startRoomPosition.hashCode()
+			  * this.endRoomPosition.hashCode();
+	}
+
+	@Override
+	public boolean equals(Object obj) { 
+        if (obj == this) { 
+            return true; 
+        } 
+        if (!(obj instanceof Hall)) { 
+            return false; 
+        } 
+        
+        Hall hall = (Hall) obj;       
+        return  this.waypoints.equals(hall.getWaypoints())
+        		&& this.componentMap.equals(hall.getComponentMap())
+        		&& this.startRoom.equals(hall.getStartRoom())
+        		&& this.endRoom.equals(hall.getEndRoom())
+        		&& this.startRoomPosition.equals(hall.getStartRoomPosition())
+        		&& this.endRoomPosition.equals(hall.getEndRoomPosition());
+	}
 
 }
