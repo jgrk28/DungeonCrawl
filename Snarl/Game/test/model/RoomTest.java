@@ -121,20 +121,13 @@ public class RoomTest {
     Point door1 = new  Point(16, 6);
     Point door2 = new  Point(20, 10);
 
-    //Map<Point, Hall> doors = new HashMap<>();
-    //doors.put(door1, fakeHall1);
-    //doors.put(door2, fakeHall2);
+    Map<Point, Hall> doors = new HashMap<>();
+    doors.put(door1, fakeHall1);
+    doors.put(door2, fakeHall2);
 
     this.room2.connectHall(door1, fakeHall1);
     this.room2.connectHall(door2, fakeHall2);
 
-    //assertEquals(doors, this.roo2.getDoors());
-
-    Map<Point, Hall> actualDoors = this.room2.getDoors();
-    Hall actualHall1 = actualDoors.get(door1);
-    Hall actualHall2 = actualDoors.get(door2);
-
-    assertEquals(fakeHall1, actualHall1);
-    assertEquals(fakeHall2, actualHall2);
+    assertEquals(doors, this.room2.getDoors());
   }
 }

@@ -300,7 +300,7 @@ public class TextualLevelViewTest {
 	//They have not been added to a level but they are available for use
 	@Before
 	public void initLevelComponents() {
-		this.key = new Key(new Point(4, 16));
+		this.key = new Key(new Point(4, 17));
 		this.exit = new Exit(new Point(7, 11));
 		initializeRoom1();
 		initializeRoom1();

@@ -312,8 +312,6 @@ public class LevelComponentTest {
     Exit newExit1 = new Exit(new Point(0, 0));
     Exit newExit2 = new Exit(new Point(15, 7));
 
-
-
     assertEquals(wall, this.room1.getDestinationEntity(new Point(0, 0)));
     this.room1.placeExit(newExit1);
     assertEquals(wall, this.room1.getDestinationEntity(new Point(0, 0)));

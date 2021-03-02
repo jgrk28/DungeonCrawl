@@ -60,7 +60,7 @@ public class Room implements LevelComponent {
 	public void connectHall(Point doorPosition, Hall adjHall) {
 		Point bottomRightPosition = getBottomRightBound();
 		if (validDoor(doorPosition, bottomRightPosition)) {
-			doors.put(position, adjHall);
+			doors.put(doorPosition, adjHall);
 		} else {
 			throw new IllegalArgumentException("Door is not on the boundary of the room");
 		}
@@ -68,15 +68,15 @@ public class Room implements LevelComponent {
 
 	/**
 	 * Checks if the placement of a door in a Room is valid
-	 * @param doorPosition - the position in the Hall that connects through the door to the Room
+	 * @param doorPosition - the position in the Room that connects through the door to the Hall
 	 * @param bottomRightPosition - the lower right boundary of the Room
 	 * @return True if the door placement is valid, false otherwise
 	 */
 	private boolean validDoor(Point doorPosition, Point bottomRightPosition) {
-		return doorPosition.x == (this.position.x - 1) ||
-				doorPosition.x == (bottomRightPosition.x + 1) ||
-				doorPosition.y == (this.position.y - 1)||
-				doorPosition.y == (bottomRightPosition.y + 1);
+		return doorPosition.x == this.position.x ||
+				doorPosition.x == bottomRightPosition.x ||
+				doorPosition.y == this.position.y ||
+				doorPosition.y == bottomRightPosition.y;
 	}
 
 	@Override
@@ -175,16 +175,20 @@ public class Room implements LevelComponent {
 	@Override
 	public void placeKey(Key key) {
 		if (this.getDestinationEntity(key.location).equals(new Space())) {
-			List<Entity> keyRow = this.componentMap.get(key.location.y);
-			keyRow.set(key.location.x, key);			
+			Point relativePos = new Point(key.location.x - this.position.x,
+					key.location.y - this.position.y);
+			List<Entity> keyRow = this.componentMap.get(relativePos.y);
+			keyRow.set(relativePos.x, key);
 		}
 	}
 
 	@Override
 	public void placeExit(Exit exit) {
 		if (this.getDestinationEntity(exit.location).equals(new Space())) {
-			List<Entity> exitRow = this.componentMap.get(exit.location.y);
-			exitRow.set(exit.location.x, exit);			
+			Point relativePos = new Point(exit.location.x - this.position.x,
+					exit.location.y - this.position.y);
+			List<Entity> exitRow = this.componentMap.get(relativePos.y);
+			exitRow.set(relativePos.x, exit);
 		}	
 	}
 

@@ -87,14 +87,19 @@ public class LevelImpl implements Level {
 		this.playerLocations = new LinkedHashMap<>();
 		this.adversaryLocations = new LinkedHashMap<>();
 		this.key = key;
-		this.keyRoom = findComponent(this.key.location);
+		if (this.key == null) {
+			this.keyRoom = null;
+		} else {
+			this.keyRoom = findComponent(this.key.location);
+			placeKey();
+		}
 		this.exit = exit;
-		this.exitRoom = findComponent(this.exit.location);
-		
-		
-		//Place the key and exit
-		placeKey();
-		placeExit();
+		if (this.exit == null) {
+			this.exitRoom = null;
+		} else {
+			this.exitRoom = findComponent(this.exit.location);
+			placeExit();
+		}
 	}
 	
 	/** 

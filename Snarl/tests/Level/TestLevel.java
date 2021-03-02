@@ -258,7 +258,7 @@ public class TestLevel {
 		Map<Point, Hall> doors = room.getDoors();
 		for (Hall hall : doors.values()) {
 			Room startRoom = hall.getStartRoom();
-			Room endRoom = hall.getStartRoom();
+			Room endRoom = hall.getEndRoom();
 			if (!startRoom.equals(room)) {
 				Point startOrigin = startRoom.getOrigin();
 				reachableRooms.add(startOrigin);
@@ -289,7 +289,11 @@ public class TestLevel {
 		}
 
 		outputObject.put("traversable", this.traversable);
-		outputObject.put("object", this.objectType);
+		if (this.objectType == null) {
+			outputObject.put("object", JSONObject.NULL);
+		} else {
+			outputObject.put("object", this.objectType);
+		}
 		outputObject.put("type", this.componentType);
 		outputObject.put("reachable", JSONReachable);
 

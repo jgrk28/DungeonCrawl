@@ -80,17 +80,26 @@ public class Hall implements LevelComponent {
 	 * @return List of Entities that represents the tiles in the hallway
 	 */
 	private List<Entity> createEmptyComponentMap() {
-		
-		//We need to figure out how to find the length of the hall, 
-		//without using the component map
-		int hallLength = getHallwayIndex(this.endRoomPosition);
 		List<Entity> hallMap = new ArrayList<>();
-		
+		int hallLength = getLengthByWaypoint();
 		for (int i = 0; i < hallLength; i++) {
 			hallMap.add(new Space());
 		}
 		
 		return hallMap;
+	}
+
+	private int getLengthByWaypoint() {
+		//Start at negative two to account for extra space in start and end position as those
+		//positions are in their respective rooms.
+		int length = -2;
+		Point currPos = this.startRoomPosition;
+		for (Point waypoint : this.waypoints) {
+			length += currPos.distance(waypoint);
+			currPos = waypoint;
+		}
+		length += currPos.distance(this.endRoomPosition);
+		return length;
 	}
 
 	/**
