@@ -1,6 +1,9 @@
 package testHarness;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.awt.Point;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -12,12 +15,21 @@ import java.nio.charset.Charset;
 import org.junit.Test;
 
 import Room.TestRoom;
+import model.Entity;
+import model.Room;
+import model.Space;
+import model.Wall;
 
 import static org.junit.Assert.assertEquals;
 import org.apache.commons.io.FileUtils;
+import org.json.JSONObject;
+import org.json.JSONTokener;
 
 // Tests that the methods for TestRoom work as expected
 public class TestRoomTest {
+	
+	Space space = new Space();
+	Wall wall = new Wall();
 	
 	//Check that an exception is thrown when invalid input is provided
 	@Test(expected = IllegalArgumentException.class)
@@ -31,8 +43,8 @@ public class TestRoomTest {
 	//the corresponding result populates the output file
 	@Test
 	public void testInputFileOne() throws IOException {
-		System.setIn(new FileInputStream("tests/Level/1-in.json"));
-		PrintStream fileOut = new PrintStream("tests/Level/1-out.json");
+		System.setIn(new FileInputStream("tests/Room/1-in.json"));
+		PrintStream fileOut = new PrintStream("tests/Room/1-out.json");
 		System.setOut(fileOut);
 		
 		TestRoom.main(new String[] {});
@@ -41,7 +53,7 @@ public class TestRoomTest {
 				+ "from \",[1,3],\" in room at \",[0,1],\" are \","
 				+ "[[0,3],[1,2],[1,4],[2,3]]]";
 		
-		List<String> fileContent = FileUtils.readLines(new File("tests/Level/1-out.json"), Charset.defaultCharset());
+		List<String> fileContent = FileUtils.readLines(new File("tests/Room/1-out.json"), Charset.defaultCharset());
 		assertEquals(expectedOutput, fileContent.get(0));	
 	}
 	
@@ -49,15 +61,15 @@ public class TestRoomTest {
 	//the corresponding result populates the output file
 	@Test
 	public void testInputFileTwo() throws IOException  {
-		System.setIn(new FileInputStream("tests/Level/2-in.json"));
-		PrintStream fileOut = new PrintStream("tests/Level/2-out.json");
+		System.setIn(new FileInputStream("tests/Room/2-in.json"));
+		PrintStream fileOut = new PrintStream("tests/Room/2-out.json");
 		System.setOut(fileOut);
 		
 		TestRoom.main(new String[] {});
 		
 		String expectedOutput = "[\"Failure: Point \",[5,4],\" is not in room at \",[0,1]]";
 		
-		List<String> fileContent = FileUtils.readLines(new File("tests/Level/2-out.json"), Charset.defaultCharset());
+		List<String> fileContent = FileUtils.readLines(new File("tests/Room/2-out.json"), Charset.defaultCharset());
 		assertEquals(expectedOutput, fileContent.get(0));
 	}
 	
@@ -65,8 +77,8 @@ public class TestRoomTest {
 	//the corresponding result populates the output file
 	@Test
 	public void testInputFileThree() throws IOException  {
-		System.setIn(new FileInputStream("tests/Level/3-in.json"));
-		PrintStream fileOut = new PrintStream("tests/Level/3-out.json");
+		System.setIn(new FileInputStream("tests/Room/3-in.json"));
+		PrintStream fileOut = new PrintStream("tests/Room/3-out.json");
 		System.setOut(fileOut);
 		
 		TestRoom.main(new String[] {});
@@ -74,7 +86,7 @@ public class TestRoomTest {
 		String expectedOutput = "[\"Success: Traversable points from \",[3,1],"
 				+ "\" in room at \",[1,1],\" are \",[[3,2],[4,1]]]";
 		
-		List<String> fileContent = FileUtils.readLines(new File("tests/Level/3-out.json"), Charset.defaultCharset());
+		List<String> fileContent = FileUtils.readLines(new File("tests/Room/3-out.json"), Charset.defaultCharset());
 		assertEquals(expectedOutput, fileContent.get(0));
 	}
 
@@ -82,8 +94,8 @@ public class TestRoomTest {
 	//the corresponding result populates the output file
 	@Test
 	public void testInputFileFour() throws IOException  {
-		System.setIn(new FileInputStream("tests/Level/4-in.json"));
-		PrintStream fileOut = new PrintStream("tests/Level/4-out.json");
+		System.setIn(new FileInputStream("tests/Room/4-in.json"));
+		PrintStream fileOut = new PrintStream("tests/Room/4-out.json");
 		System.setOut(fileOut);
 
 		TestRoom.main(new String[] {});
@@ -91,7 +103,7 @@ public class TestRoomTest {
 		String expectedOutput = "[\"Success: Traversable points from \",[2,1],"
 				+ "\" in room at \",[0,0],\" are \",[[1,1],[2,2],[3,1]]]";
 
-		List<String> fileContent = FileUtils.readLines(new File("tests/Level/4-out.json"), Charset.defaultCharset());
+		List<String> fileContent = FileUtils.readLines(new File("tests/Room/4-out.json"), Charset.defaultCharset());
 		assertEquals(expectedOutput, fileContent.get(0));
 	}
 
@@ -99,8 +111,8 @@ public class TestRoomTest {
 	//the corresponding result populates the output file
 	@Test
 	public void testInputFileFive() throws IOException  {
-		System.setIn(new FileInputStream("tests/Level/5-in.json"));
-		PrintStream fileOut = new PrintStream("tests/Level/5-out.json");
+		System.setIn(new FileInputStream("tests/Room/5-in.json"));
+		PrintStream fileOut = new PrintStream("tests/Room/5-out.json");
 		System.setOut(fileOut);
 
 		TestRoom.main(new String[] {});
@@ -108,7 +120,7 @@ public class TestRoomTest {
 		String expectedOutput = "[\"Success: Traversable points from \",[3,0],"
 				+ "\" in room at \",[0,0],\" are \",[]]";
 
-		List<String> fileContent = FileUtils.readLines(new File("tests/Level/5-out.json"), Charset.defaultCharset());
+		List<String> fileContent = FileUtils.readLines(new File("tests/Room/5-out.json"), Charset.defaultCharset());
 		assertEquals(expectedOutput, fileContent.get(0));
 	}
 	
@@ -272,6 +284,96 @@ public class TestRoomTest {
 		TestRoom.main(new String[] {});
 		
 		assertEquals(expectedOutput, output.toString());
+	}
+
+	
+	//Tests the generateRoom method
+	@Test
+	public void testGenerateRoom1() {
+		String roomInput = "{ \"type\": \"room\",\n"
+				+ "               \"origin\": [ 3, 1 ],\n"
+				+ "               \"bounds\": { \"rows\": 4, \"columns\": 4 },\n"
+				+ "               \"layout\": [ [ 0, 0, 2, 0 ],\n"
+				+ "                           [ 0, 1, 1, 0 ],\n"
+				+ "                           [ 0, 1, 1, 0 ],\n"
+				+ "                           [ 0, 2, 0, 0 ] ] }";
+		
+		JSONTokener inputTokens = new JSONTokener(roomInput);
+		Object value = inputTokens.nextValue();
+		JSONObject JSONInput = (JSONObject) value;
+		
+		TestRoom testRoom = new TestRoom();
+		Room room = testRoom.parseRoom(JSONInput);
+		
+		
+		List<Entity> row1 = new ArrayList<>(Arrays.asList(wall, wall, space, wall));
+		List<Entity> row2 = new ArrayList<>(Arrays.asList(wall, space, space, wall));
+		List<Entity> row3 = new ArrayList<>(Arrays.asList(wall, space, space, wall));
+		List<Entity> row4 = new ArrayList<>(Arrays.asList(wall, space, wall, wall));
+		List<List<Entity>> componentMap = new ArrayList<>(Arrays.asList(row1, row2, row3, row4));
+		Room expectedRoom = new Room(new Point(1,3), componentMap);
+		
+		assertEquals(expectedRoom, room);
+	}
+	
+	//Tests the generateRoom method
+	@Test
+	public void testGenerateRoom2() {
+		String roomInput = "{ \"type\": \"room\",\n"
+				+ "           \"origin\": [ 10, 5 ],\n"
+				+ "           \"bounds\": { \"rows\": 5, \"columns\": 5 },\n"
+				+ "           \"layout\": [ [ 0, 0, 0, 0, 0 ],\n"
+				+ "                         [ 0, 1, 1, 1, 0 ],\n"
+				+ "                         [ 2, 1, 1, 1, 0 ],\n"
+				+ "                         [ 0, 1, 1, 1, 0 ],\n"
+				+ "                         [ 0, 0, 0, 0, 0 ] ] }";
+		
+		JSONTokener inputTokens = new JSONTokener(roomInput);
+		Object value = inputTokens.nextValue();
+		JSONObject JSONInput = (JSONObject) value;
+		
+		TestRoom testRoom = new TestRoom();
+		Room room = testRoom.parseRoom(JSONInput);
+		
+		List<Entity> row1 = new ArrayList<>(Arrays.asList(wall, wall, wall, wall, wall));
+		List<Entity> row2 = new ArrayList<>(Arrays.asList(wall, space, space, space, wall));
+		List<Entity> row3 = new ArrayList<>(Arrays.asList(space, space, space, space, wall));
+		List<Entity> row4 = new ArrayList<>(Arrays.asList(wall, space, space, space, wall));
+		List<Entity> row5 = new ArrayList<>(Arrays.asList(wall, wall, wall, wall, wall));
+		List<List<Entity>> componentMap = new ArrayList<>(Arrays.asList(row1, row2, row3, row4, row5));
+		Room expectedRoom = new Room(new Point(5,10), componentMap);
+		
+		assertEquals(expectedRoom, room);
+	}
+	
+	//Tests the generateRoom method
+	@Test
+	public void testGenerateRoom3() {
+		String roomInput = "{ \"type\": \"room\",\n"
+				+ "           \"origin\": [ 4, 14 ],\n"
+				+ "           \"bounds\": { \"rows\": 5, \"columns\": 5 },\n"
+				+ "           \"layout\": [ [ 0, 0, 2, 0, 0 ],\n"
+				+ "                         [ 0, 1, 1, 1, 0 ],\n"
+				+ "                         [ 0, 1, 1, 1, 0 ],\n"
+				+ "                         [ 0, 1, 1, 1, 0 ],\n"
+				+ "                         [ 0, 0, 0, 0, 0 ] ] }";
+		
+		JSONTokener inputTokens = new JSONTokener(roomInput);
+		Object value = inputTokens.nextValue();
+		JSONObject JSONInput = (JSONObject) value;
+		
+		TestRoom testRoom = new TestRoom();
+		Room room = testRoom.parseRoom(JSONInput);
+		
+		List<Entity> row1 = new ArrayList<>(Arrays.asList(wall, wall, space, wall, wall));
+		List<Entity> row2 = new ArrayList<>(Arrays.asList(wall, space, space, space, wall));
+		List<Entity> row3 = new ArrayList<>(Arrays.asList(wall, space, space, space, wall));
+		List<Entity> row4 = new ArrayList<>(Arrays.asList(wall, space, space, space, wall));
+		List<Entity> row5 = new ArrayList<>(Arrays.asList(wall, wall, wall, wall, wall));
+		List<List<Entity>> componentMap = new ArrayList<>(Arrays.asList(row1, row2, row3, row4, row5));
+		Room expectedRoom = new Room(new Point(14,4), componentMap);
+		
+		assertEquals(expectedRoom, room);
 	}
 
 }

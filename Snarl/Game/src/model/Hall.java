@@ -69,6 +69,8 @@ public class Hall implements LevelComponent {
 	 */
 	private List<Entity> createComponentMap() {
 		
+		//We need to figure out how to find the length of the hall, 
+		//without using the component map
 		int hallLength = getHallwayIndex(this.endRoomPosition);
 		List<Entity> hallMap = new ArrayList<>();
 		

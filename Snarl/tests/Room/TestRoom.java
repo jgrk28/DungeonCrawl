@@ -40,8 +40,7 @@ public class TestRoom {
 	}
 	
 	/**
-	 * Parses the JSON input from STDIN. Identifies the
-	 * room layout, origin, bounds, and point. Creates
+	 * Parses the JSON input from STDIN. Creates
 	 * the room based on these specifications
 	 */
 	private void parseInput() {
@@ -62,10 +61,17 @@ public class TestRoom {
 		this.JSONPoint = JSONInput.getJSONArray(1);
 		this.point = parsePoint(this.JSONPoint);
 		
-		this.room = parseRoom(JSONRoom);
-		
+		//Parse the JSON for the room
+		this.room = parseRoom(JSONRoom);		
 	}
 	
+	/**
+	 * Parses the given JSON input for a Room. Identifies the
+	 * room layout, origin, bounds, and point. Generates and
+	 * returns the created room
+	 * @param JSONRoom - the JSON object that defines a room
+	 * @return the room created based on the provided specifications
+	 */
 	public Room parseRoom(JSONObject JSONRoom) {
 		//Top-left corner of the room
 		this.JSONOriginPoint = JSONRoom.getJSONArray("origin");
@@ -133,7 +139,7 @@ public class TestRoom {
 			}
 			componentMap.add(componentRow);
 		}
-		//Create a new room with the origin and componentMap
+		//Return a new room with the origin and componentMap
 		return new Room(origin, componentMap);
 	}
 	
