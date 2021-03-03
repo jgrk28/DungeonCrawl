@@ -1,6 +1,6 @@
 ## PlayerClient ##
 
-The PlayerClient is a class that runs on the user's side of the TCP connection. This displays relevant information to the user, and sends moves and other commands that the user would like to perform in the game to the GameManager. The GameManager sends the game state specific to the user. This includes what the user can see in the level, if they are still in the active level, and whether or not the game is over. 
+The PlayerClient is a class that will run on the user's side of the TCP connection. For now, this can also be run locally and accessed as a class. This displays relevant information to the user, and sends moves and other commands that the user would like to perform in the game to the GameManager. The GameManager sends the game state specific to the user as well as whether or not their move was valid. The game state sent includes what the user can see in the level, if they are still in the active level, and whether or not the game is over. 
 
 ### Class PlayerClient ###
 
