@@ -22,8 +22,12 @@ public class DungeonTest {
 	private List<LevelComponent> levelMap;
 	private Entity space = new Space();
 	private Entity wall = new Wall();
-	private Key key;
-	private Exit exit;
+	private Key key1;
+	private Exit exit1;
+	private Key key2;
+	private Exit exit2;
+	private Key key3;
+	private Exit exit3;
 
 	private Room room1;
 	private Room room2;
@@ -78,8 +82,12 @@ public class DungeonTest {
 	public void initializeLevelComponents() {
 		//Initialize all components for use
 		//They have not been added to a level but they are available for use
-		this.key = new Key(new Point(4, 16));
-		this.exit = new Exit(new Point(7, 11));
+		this.key1 = new Key(new Point(1, 1));
+		this.exit1 = new Exit(new Point(6, 8));
+		this.key2 = new Key(new Point(2, 2));
+		this.exit2 = new Exit(new Point(7, 8));
+		this.key3 = new Key(new Point(4, 16));
+		this.exit3 = new Exit(new Point(7, 11));
 		initializeRoomOne();
 		initializeRoomTwo();
 		initializeRoomThree();
@@ -172,23 +180,23 @@ public class DungeonTest {
 	
 	private void initializeDoorsHallOne() {
 		//Doors for hall1
-		room1.connectHall(new Point(4,2), hall1);
-		room2.connectHall(new Point(6,6), hall1);
+		room1.connectHall(new Point(3,2), hall1);
+		room2.connectHall(new Point(6,7), hall1);
 		hall1.connectRooms(new Point(3,2), room1, new Point(6,7), room2);
 	}
 	
 	private void initializeDoorsHallTwo() {
 		//Doors for hall2
-		room2.connectHall(new Point(4,11), hall2);
-		room3.connectHall(new Point(2,13), hall2);
+		room2.connectHall(new Point(5,11), hall2);
+		room3.connectHall(new Point(2,14), hall2);
 		hall2.connectRooms(new Point(2,14), room3, new Point(5,11), room2);
 	}
 	
 	
 	private void initializeDoorsHallThree() {
 		//Doors for hall3
-		room2.connectHall(new Point(9,11), hall3);
-		room4.connectHall(new Point(12,11), hall3);
+		room2.connectHall(new Point(8,11), hall3);
+		room4.connectHall(new Point(13,11), hall3);
 		hall3.connectRooms(new Point(8,11), room2, new Point(13,11), room4);
 	}
 	
@@ -209,9 +217,9 @@ public class DungeonTest {
 		this.adversaries = new ArrayList<>(Arrays.asList(ghost1, ghost2, zombie1, zombie2));
 		
 		//List of levels in the Dungeon
-		Level level1 = new LevelImpl(initializeLevelMapOne(), this.key, this.exit);
-		Level level2 = new LevelImpl(initializeLevelMapTwo(), this.key, this.exit);
-		Level level3 = new LevelImpl(initializeLevelMapThree(), this.key, this.exit);
+		Level level1 = new LevelImpl(initializeLevelMapOne(), this.key1, this.exit1);
+		Level level2 = new LevelImpl(initializeLevelMapTwo(), this.key2, this.exit2);
+		Level level3 = new LevelImpl(initializeLevelMapThree(), this.key3, this.exit3);
 		this.levels = new ArrayList<>(Arrays.asList(level1, level2, level3));	
 	}
 	

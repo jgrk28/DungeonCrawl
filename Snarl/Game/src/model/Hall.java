@@ -390,40 +390,6 @@ public class Hall implements LevelComponent {
 	public Room getEndRoom() {
 		return this.endRoom;
 	}
-
-	/**
-	 * Getter for the position of the connection (door) to the room at the start of this hallway.
-	 * @return the position of the connection (door).
-	 * //TODO do we need this?
-	 */
-	public Point getStartRoomPosition() {
-		return this.startRoomPosition;
-	}
-
-	/**
-	 * Getter for the position of the connection (door) to the room at the end of this hallway.
-	 * @return the position of the connection (door).
-	 * //TODO do we need this?
-	 */
-	public Point getEndRoomPosition() {
-		return this.endRoomPosition;
-	}
-	
-	/**
-	 * TODO add comment
-	 * //TODO do we need this?
-	 */
-	public List<Entity> getComponentMap() {
-		return this.componentMap;
-	}
-	
-	/**
-	 * TODO add comment
-	 * //TODO do we need this?
-	 */
-	public List<Point> getWaypoints() {
-		return this.waypoints;
-	}
 	
 	@Override
 	public int hashCode() {
@@ -435,7 +401,6 @@ public class Hall implements LevelComponent {
 			  * this.endRoomPosition.hashCode();
 	}
 
-	//TODO I feel like we can just use == bc we only ever have 1 hall
 	@Override
 	public boolean equals(Object obj) { 
         if (obj == this) { 
@@ -445,13 +410,31 @@ public class Hall implements LevelComponent {
             return false; 
         } 
         
-        Hall hall = (Hall) obj;       
-        return  this.waypoints.equals(hall.getWaypoints())
-        		&& this.componentMap.equals(hall.getComponentMap())
-        		&& this.startRoom.equals(hall.getStartRoom())
-        		&& this.endRoom.equals(hall.getEndRoom())
-        		&& this.startRoomPosition.equals(hall.getStartRoomPosition())
-        		&& this.endRoomPosition.equals(hall.getEndRoomPosition());
+        Hall hall = (Hall) obj;
+        return hall.checkSameFields(
+        		this.waypoints,
+						this.componentMap,
+						this.startRoom,
+						this.endRoom,
+						this.startRoomPosition,
+						this.endRoomPosition
+						);
+	}
+
+	private boolean checkSameFields(
+			List<Point> waypoints,
+			List<Entity> componentMap,
+			Room startRoom,
+			Room endRoom,
+			Point startRoomPosition,
+			Point endRoomPosition
+	) {
+		return waypoints.equals(this.waypoints)
+				&& componentMap.equals(this.componentMap)
+				&& startRoom.equals(this.startRoom)
+				&& endRoom.equals(this.endRoom)
+				&& startRoomPosition.equals(this.startRoomPosition)
+				&& endRoomPosition.equals(this.endRoomPosition);
 	}
 
 }

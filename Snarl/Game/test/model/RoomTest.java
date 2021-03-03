@@ -108,7 +108,7 @@ public class RoomTest {
     initRoom3();
     assertEquals(new Point(0, 0), this.room1.getOrigin());
     assertEquals(new Point(15, 7), this.room2.getOrigin());
-    assertEquals(new Point(-2, 1), this.room3.getOrigin());
+    assertEquals(new Point(-2, -1), this.room3.getOrigin());
   }
 
   //Also tests connectHall
@@ -118,8 +118,8 @@ public class RoomTest {
 
     Hall fakeHall1 = new Hall(new ArrayList<>(), new ArrayList<>()); //Dummy variables to test doors
     Hall fakeHall2 = new Hall(new ArrayList<>(), new ArrayList<>());
-    Point door1 = new  Point(16, 6);
-    Point door2 = new  Point(20, 10);
+    Point door1 = new  Point(16, 7);
+    Point door2 = new  Point(19, 10);
 
     Map<Point, Hall> doors = new HashMap<>();
     doors.put(door1, fakeHall1);

@@ -172,22 +172,22 @@ public class TextualLevelViewTest {
 
 	//Doors for hall1
 	private void initializeDoorsHall1() {
-		room1.connectHall(new Point(4,2), hall1);
-		room2.connectHall(new Point(6,6), hall1);
+		room1.connectHall(new Point(3,2), hall1);
+		room2.connectHall(new Point(6,7), hall1);
 		hall1.connectRooms(new Point(3,2), room1, new Point(6,7), room2);
 	}
 
 	//Doors for hall2
 	private void initializeDoorsHall2() {
-		room2.connectHall(new Point(4,11), hall2);
-		room3.connectHall(new Point(2,13), hall2);
+		room2.connectHall(new Point(5,11), hall2);
+		room3.connectHall(new Point(2,14), hall2);
 		hall2.connectRooms(new Point(2,14), room3, new Point(5,11), room2);
 	}
 
 	//Doors for hall3
 	private void initializeDoorsHall3() {
-		room2.connectHall(new Point(9,11), hall3);
-		room4.connectHall(new Point(12,11), hall3);
+		room2.connectHall(new Point(8,11), hall3);
+		room4.connectHall(new Point(13,11), hall3);
 		hall3.connectRooms(new Point(8,11), room2, new Point(13,11), room4);
 	}
 	
@@ -223,8 +223,8 @@ public class TextualLevelViewTest {
 
 	//Doors for hall1Snake
 	private void initializeDoorsHall1Snake() {
-		room1.connectHall(new Point(4,2), hall1Snake);
-		room2.connectHall(new Point(6,6), hall1Snake);
+		room1.connectHall(new Point(3,2), hall1Snake);
+		room2.connectHall(new Point(6,7), hall1Snake);
 		hall1Snake.connectRooms(new Point(3,2), room1, new Point(6,7), room2);
 	}
 
@@ -248,8 +248,8 @@ public class TextualLevelViewTest {
 
 	//Doors for hall1RoomBrush
 	private void initializeDoorsHall1RoomBrush() {
-		room1.connectHall(new Point(4,2), hall1RoomBrush);
-		room2.connectHall(new Point(6,6), hall1RoomBrush);
+		room1.connectHall(new Point(3,2), hall1RoomBrush);
+		room2.connectHall(new Point(6,7), hall1RoomBrush);
 		hall1RoomBrush.connectRooms(new Point(3,2), room1, new Point(6,7), room2);
 	}
 
@@ -273,8 +273,8 @@ public class TextualLevelViewTest {
 
 	//Doors for hall1HallBrush
 	private void initializeDoorsHall1HallBrush() {
-		room1.connectHall(new Point(4,2), hall1HallBrush);
-		room2.connectHall(new Point(6,6), hall1HallBrush);
+		room1.connectHall(new Point(3,2), hall1HallBrush);
+		room2.connectHall(new Point(6,7), hall1HallBrush);
 		hall1HallBrush.connectRooms(new Point(3,2), room1, new Point(6,7), room2);
 	}
 

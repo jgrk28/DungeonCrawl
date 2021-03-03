@@ -53,7 +53,7 @@ public class Room implements LevelComponent {
 
 	/**
 	 * Connects the Room to the given Hall
-	 * @param doorPosition - the position in the Hall that connects through the door to the Room
+	 * @param doorPosition - the position in the Room that connects through the door to the Hall
 	 * @param adjHall - the Hall the Room is being connected to
 	 * @throws IllegalArgumentException if the Door is not on the boundary of the room
 	 */
@@ -208,18 +208,12 @@ public class Room implements LevelComponent {
 	public Map<Point, Hall> getDoors() {
 		return this.doors;
 	}
-
-	//TODO Dont think we need anything after this
-	/**
-	 * TODO add comment
-	 */
-	public List<List<Entity>> getComponentMap() {
-		return this.componentMap;
-	}
 	
 	@Override
 	public int hashCode() {
-	  return this.position.hashCode() * this.componentMap.hashCode();
+		return this.position.hashCode()
+				* this.componentMap.hashCode()
+				* this.doors.hashCode();
 	}
 
 	@Override
@@ -232,8 +226,17 @@ public class Room implements LevelComponent {
         } 
         
         Room room = (Room) obj;       
-        return  this.position.equals(room.getOrigin())
-        		&& this.componentMap.equals(room.getComponentMap());
+        return room.checkSameFields(this.position, this.componentMap, this.doors);
+	}
+
+	private boolean checkSameFields(
+			Point position,
+			List<List<Entity>> componentMap,
+			Map<Point, Hall> doors
+	) {
+		return position.equals(this.position)
+				&& componentMap.equals(this.componentMap)
+				&& doors.equals(this.doors);
 	}
 
 }
