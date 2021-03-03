@@ -89,15 +89,23 @@ public class Hall implements LevelComponent {
 		return hallMap;
 	}
 
+	/**
+	 * Determines the length of the hall using the start room position, the end room
+	 * position, and the waypoints
+	 * @return the length of the hallway
+	 */
 	private int getLengthByWaypoint() {
-		//Start at negative two to account for extra space in start and end position as those
+		//Start at -1 to account for extra space in start and end position as those
 		//positions are in their respective rooms.
-		int length = -2;
+		int length = -1;
 		Point currPos = this.startRoomPosition;
+		
+		//Calculate the distance for each waypoint
 		for (Point waypoint : this.waypoints) {
 			length += currPos.distance(waypoint);
 			currPos = waypoint;
 		}
+		
 		length += currPos.distance(this.endRoomPosition);
 		return length;
 	}

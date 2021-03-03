@@ -62,36 +62,8 @@ public class TestLevelTest {
 	public void testUnreachablePoint() {
 		String input = "[" + level + ", [6, 10] ]";
 		
-		String expectedOutput = "{\n"
-				+ "  \"traversable\": false,\n"
-				+ "  \"object\": null,\n"
-				+ "  \"type\": \"void\",\n"
-				+ "  \"reachable\": []\n"
-				+ "}";
-		
-		System.setIn(new ByteArrayInputStream(input.getBytes()));
-		
-		//Assign output of STDOUT to new Stream
-		ByteArrayOutputStream output = new ByteArrayOutputStream();
-		PrintStream print = new PrintStream(output);
-		System.setOut(print);
-		
-		TestLevel.main(new String[] {});
-		
-		assertEquals(expectedOutput, output.toString());
-	}
-	
-	//Tests a point in a room that is not traversable
-	@Test
-	public void testNonTraversableRoomTile() {
-		String input = "[" + level + ", [3, 1] ]";
-		
-		String expectedOutput = "{\n"
-				+ "  \"traversable\": false,\n"
-				+ "  \"object\": \"null\",\n"
-				+ "  \"type\": \"room\",\n"
-				+ "  \"reachable\": [4, 14], [10,5]]\n"
-				+ "}";
+		String expectedOutput = "{\"traversable\":false,\"type\":\"void\","
+				+ "\"reachable\":[],\"object\":null}";
 		
 		System.setIn(new ByteArrayInputStream(input.getBytes()));
 		
@@ -110,36 +82,8 @@ public class TestLevelTest {
 	public void testExitObject() {
 		String input = "[" + level + ", [7, 17] ]";
 		
-		String expectedOutput = "{\n"
-				+ "  \"traversable\": true,\n"
-				+ "  \"object\": \"exit\",\n"
-				+ "  \"type\": \"room\",\n"
-				+ "  \"reachable\": [[3, 1]]\n"
-				+ "}";
-		
-		System.setIn(new ByteArrayInputStream(input.getBytes()));
-		
-		//Assign output of STDOUT to new Stream
-		ByteArrayOutputStream output = new ByteArrayOutputStream();
-		PrintStream print = new PrintStream(output);
-		System.setOut(print);
-		
-		TestLevel.main(new String[] {});
-		
-		assertEquals(expectedOutput, output.toString());
-	}
-	
-	//Tests a point where the key is located in a room
-	@Test
-	public void testKeyObject() {
-		String input = "[" + level + ", [4, 2] ]";
-		
-		String expectedOutput = "{\n"
-				+ "  \"traversable\": true,\n"
-				+ "  \"object\": \"key\",\n"
-				+ "  \"type\": \"room\",\n"
-				+ "  \"reachable\": [[4, 14], [10,5]]\n"
-				+ "}";
+		String expectedOutput = "{\"traversable\":true,\"type\":\"room\","
+				+ "\"reachable\":[[3,1]],\"object\":\"exit\"}";
 		
 		System.setIn(new ByteArrayInputStream(input.getBytes()));
 		
@@ -158,13 +102,50 @@ public class TestLevelTest {
 	public void testHallwayPoint() {
 		String input = "[" + level + ", [12, 4] ]";
 		
-		String expectedOutput = "{\n"
-				+ "  \"traversable\": true,\n"
-				+ "  \"object\": null,\n"
-				+ "  \"type\": \"hallway\",\n"
-				+ "  \"reachable\": [[3, 1], [10, 5]]\n"
-				+ "}";
+		String expectedOutput = "{\"traversable\":true,\"type\":\"hallway\","
+				+ "\"reachable\":[[3,1],[10,5]],\"object\":null}";
 		
+		System.setIn(new ByteArrayInputStream(input.getBytes()));
+		
+		//Assign output of STDOUT to new Stream
+		ByteArrayOutputStream output = new ByteArrayOutputStream();
+		PrintStream print = new PrintStream(output);
+		System.setOut(print);
+		
+		TestLevel.main(new String[] {});
+		
+		assertEquals(expectedOutput, output.toString());
+	}
+	
+	//Tests a point in a room that is not traversable
+	@Test
+	public void testNonTraversableRoomTile() {
+		String input = "[" + level + ", [3, 1] ]";
+		
+		String expectedOutput = "{\"traversable\":false,\"type\":\"room\","
+				+ "\"reachable\":[[4,14],[10,5]],\"object\":null}";
+		
+		System.setIn(new ByteArrayInputStream(input.getBytes()));
+		
+		//Assign output of STDOUT to new Stream
+		ByteArrayOutputStream output = new ByteArrayOutputStream();
+		PrintStream print = new PrintStream(output);
+		System.setOut(print);
+		
+		TestLevel.main(new String[] {});
+		
+		assertEquals(expectedOutput, output.toString());
+	}
+
+	
+	//Tests a point where the key is located in a room
+	@Test
+	public void testKeyObject() {
+		String input = "[" + level + ", [4, 2] ]";
+		
+		String expectedOutput = "{\"traversable\":true,\"type\":\"room\","
+				+ "\"reachable\":[[4,14],[10,5]],\"object\":\"key\"}";
+
 		System.setIn(new ByteArrayInputStream(input.getBytes()));
 		
 		//Assign output of STDOUT to new Stream
