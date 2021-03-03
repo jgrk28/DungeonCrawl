@@ -95,18 +95,18 @@ public class Hall implements LevelComponent {
 	 * @return the length of the hallway
 	 */
 	private int getLengthByWaypoint() {
-		//Start at -1 to account for extra space in start and end position as those
-		//positions are in their respective rooms.
-		int length = -1;
+		int length = 0;
 		Point currPos = this.startRoomPosition;
 		
 		//Calculate the distance for each waypoint
 		for (Point waypoint : this.waypoints) {
+			//Add the distance in the segment counting one endpoint (the new waypoint)
 			length += currPos.distance(waypoint);
 			currPos = waypoint;
 		}
-		
-		length += currPos.distance(this.endRoomPosition);
+
+		//Add the distance in the segment not counting either end
+		length += (currPos.distance(this.endRoomPosition) - 1);
 		return length;
 	}
 

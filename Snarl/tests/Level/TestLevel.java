@@ -259,13 +259,14 @@ public class TestLevel {
 		for (Hall hall : doors.values()) {
 			Room startRoom = hall.getStartRoom();
 			Room endRoom = hall.getEndRoom();
-			if (!startRoom.equals(room)) {
-				Point startOrigin = startRoom.getOrigin();
-				reachableRooms.add(startOrigin);
-			}
-			if (!endRoom.equals(room)) {
+
+			//Find current room and add the neighbor
+			if (startRoom.equals(room)) {
 				Point endOrigin = endRoom.getOrigin();
 				reachableRooms.add(endOrigin);
+			} else if (endRoom.equals(room)) {
+				Point startOrigin = startRoom.getOrigin();
+				reachableRooms.add(startOrigin);
 			}
 		}
 		return reachableRooms;
