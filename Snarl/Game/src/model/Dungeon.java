@@ -1,10 +1,11 @@
 package model;
 
+import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class Dungeon {
+public class Dungeon implements RuleChecker {
 	
 	//All players in the game regardless of status in current level
 	private List<Player> players;
@@ -47,6 +48,48 @@ public class Dungeon {
 	 */
 	public Boolean isLastLevel() {
 		return currLevel == levels.size();		
+	}
+
+	@Override
+	public GameState isGameOver() {
+		//Status of the current level
+		GameState levelState = isLevelOver();
+		
+		if (levelState.equals(GameState.LOST)) {
+			return GameState.LOST;
+		}
+		else if (levelState.equals(GameState.WON) && isLastLevel()) {
+			return GameState.WON;
+		}
+		else {
+			return GameState.ACTIVE;
+		}
+		
+	}
+
+	@Override
+	public GameState isLevelOver() {
+		Level level = this.levels.get(this.currLevel);
+		return level.isLevelOver();
+	}
+
+	@Override
+	public Boolean checkValidMove(Actor actor, Point destination) {
+		Level level = this.levels.get(this.currLevel);
+		return level.checkValidMove(actor, destination);
+	}
+
+	@Override
+	public Boolean checkValidGameState() {
+		//A level is invalid if the level has been exited while the exit is 
+		//locked, if there is not exactly one key and exit, or if unknown players 
+		//or adversaries are in the level
+		for (Level level : this.levels) {
+			if (!level.checkValidLevelState(this.players, this.adversaries)) {
+				return false;
+			}
+		}
+		return true;
 	}
  
 }

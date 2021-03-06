@@ -70,8 +70,6 @@ public interface LevelComponent {
    */
   void placeActor(Actor actor, Point destination);
 
-
-
   //TODO combine these to just placeObject
   /**
    * Places the given key for this level in its position as determined by its field. If the
@@ -86,5 +84,13 @@ public interface LevelComponent {
    * level is created and also any time an actor moves off the exit.
    */
   void placeExit(Exit exit);
+  
+  /**
+   * Finds the location of the entity within the componentMap
+   * @param entity - the entity to be found
+   * @return the point that the entity is located at 
+   * @throws IllegalArgumentException if the entity is not in the room
+   */
+  Point findEntityLocation(Entity entity);
 
 }

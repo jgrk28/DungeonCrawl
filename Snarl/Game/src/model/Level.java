@@ -1,6 +1,7 @@
 package model;
 
 import java.awt.Point;
+import java.util.List;
 
 import modelView.LevelModelView;
 
@@ -45,5 +46,9 @@ public interface Level extends LevelModelView {
 	 * @return the LevelComponent that the point is located in
 	 */
 	LevelComponent findComponent(Point point);
+	
+	Boolean checkValidMove(Actor actor, Point destination);
+	
+	Boolean checkValidLevelState(List<Player> players, List<Adversary> adversaries);
 
 }

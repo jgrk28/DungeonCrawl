@@ -573,4 +573,87 @@ public class LevelImpl implements Level {
 		}
 	}
 
+	@Override
+	public Boolean checkValidMove(Actor actor, Point destination) {
+		LevelComponent sourceComponent = this.playerLocations.get(actor);
+		Point source = sourceComponent.findEntityLocation(actor);
+		
+		if (!actor.checkValidMoveDistance(source, destination)) {
+			return false;
+		}
+		
+		List<List<EntityType>> intermediateTypes = getIntermediateTypes(source, destination, sourceComponent);
+		return actor.checkValidMovePath(intermediateTypes);			
+	}
+	
+	private List<List<EntityType>> getIntermediateTypes(Point source, Point destination, LevelComponent sourceComponent) {
+		List<List<EntityType>> intermediateTypes = new ArrayList<>();
+		int row = source.y;
+		int col = source.x;
+		
+		while (row != destination.y) {
+			
+			List<EntityType> currRow = new ArrayList<>();
+			while (col != destination.x) {
+				Point currPoint = new Point(col, row);
+				EntityType currType;
+				try {
+					Entity currEntity = sourceComponent.getDestinationEntity(currPoint);
+					currType = sourceComponent.getEntityType(currEntity);
+				} catch (IllegalArgumentException e) {
+					LevelComponent destinationComponent = findComponent(currPoint);
+					Entity currEntity = destinationComponent.getDestinationEntity(currPoint);
+					currType = destinationComponent.getEntityType(currEntity);	
+				} 
+				currRow.add(currType);
+				
+				if (destination.x > col) {
+					col++;
+				}
+				if (destination.x < col) {
+					col--;
+				}		
+			}
+			
+			intermediateTypes.add(currRow);
+
+			if (destination.y > row) {
+				row++;
+			}
+			if (destination.y < row) {
+				row--;
+			}	
+		}
+
+		return intermediateTypes;
+	}
+
+	@Override
+	public Boolean checkValidLevelState(List<Player> players, List<Adversary> adversaries) {
+		if (this.levelExited && !this.exitUnlocked) {
+			return false;
+		} //TODO Additional checking may be needed for the key and exit in the level constructor 
+		else if (this.key == null || this.exit == null) {
+			return false;		
+		} else if (!checkValidActors(players, adversaries)) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+	
+	private Boolean checkValidActors(List<Player> players, List<Adversary> adversaries) {
+		for (Player player : this.playerLocations.keySet()) {
+			if (!players.contains(player)) {
+				return false;
+			}
+		}
+		for (Adversary adversary : this.adversaryLocations.keySet()) {
+			if (!adversaries.contains(adversary)) {
+				return false;
+			}
+		}
+		return true;
+	}
+
 }

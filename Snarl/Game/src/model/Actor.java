@@ -1,5 +1,8 @@
 package model;
 
+import java.awt.Point;
+import java.util.List;
+
 import modelView.EntityType;
 
 /**
@@ -13,5 +16,9 @@ public interface Actor extends Entity {
 	 * @return The type of InteractionResult generated
 	 */
 	InteractionResult getInteractionResult(EntityType entityType);
+	
+	Boolean checkValidMoveDistance(Point source, Point destination);
+	
+	Boolean checkValidMovePath(List<List<EntityType>> intermediateTypes);
 
 }

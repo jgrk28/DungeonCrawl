@@ -132,30 +132,25 @@ public class Room implements LevelComponent {
 	
 	@Override
 	public void removeActor(Actor actor) {
-		Point actorLocation = findActor(actor);
+		Point actorLocation = findEntityLocation(actor);
 		List<Entity> actorRow = componentMap.get(actorLocation.y);
 		actorRow.set(actorLocation.x, new Space());
 	}
 	
-	/**
-	 * Finds the location of the actor within the componentMap
-	 * @param actor - the actor to be found
-	 * @return the point that the actor is located at 
-	 * @throws IllegalArgumentException if the actor is not in the room
-	 */
-	private Point findActor(Actor actor) {
+	@Override
+	public Point findEntityLocation(Entity entity) {
 		//Iterate through the Room and check if the current Entity
 		//is the given actor
 		for (int i = 0; i < componentMap.size(); i++) {
 			List<Entity> entityRow = componentMap.get(i);
 			for (int j = 0; j < entityRow.size(); j++) {
 				Entity currEntity = entityRow.get(j);
-				if (currEntity.equals(actor)) {
+				if (currEntity.equals(entity)) {
 					return new Point(j,i);
 				}
 			}
 		}
-		throw new IllegalArgumentException("Actor is not in this component");
+		throw new IllegalArgumentException("Entity is not in this component");
 	}
 
 	@Override

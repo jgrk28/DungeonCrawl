@@ -332,23 +332,47 @@ public class Hall implements LevelComponent {
 
 	@Override
 	public void removeActor(Actor actor) {
-		int actorIndex = findActor(actor);
+		int actorIndex = findEntity(actor);
 		componentMap.set(actorIndex, new Space());			
 	}
 	
+	@Override
+	public Point findEntityLocation(Entity entity) {
+		int entityIndex = findEntity(entity);
+		
+		Point prevWaypoint = this.startRoomPosition;;	
+		int length = 0;
+	
+		//Calculate the distance for each waypoint
+		for (Point waypoint : this.waypoints) {
+			Point nextWaypoint = waypoint;
+			
+			if ((length + prevWaypoint.distance(waypoint)) > entityIndex) {
+				int distFromWaypoint = entityIndex - length;
+				Point currPosition = prevWaypoint;
+				for (int i = 0; i < distFromWaypoint; i++) {
+					currPosition = stepTowardDestination(currPosition, nextWaypoint);
+				}
+				return currPosition;
+			}
+			length += prevWaypoint.distance(waypoint);
+			prevWaypoint = nextWaypoint;
+		}	
+		throw new IllegalArgumentException("Entity is not in this component");
+	}
 	/**
-	 * Finds the location of the actor within the componentMap
-	 * @param actor - the actor to be found
-	 * @return the index in the hall that the actor is located at 
-	 * @throws IllegalArgumentException if the actor is not in the hall
+	 * Finds the location of the entity within the componentMap
+	 * @param entity - the entity to be found
+	 * @return the index in the hall that the entity is located at 
+	 * @throws IllegalArgumentException if the entity is not in the hall
 	 */
-	private int findActor(Actor actor) {
+	private int findEntity(Entity entity) {
 		for (int i = 0; i < componentMap.size(); i++) {
-			if (componentMap.get(i).equals(actor)) {
+			if (componentMap.get(i).equals(entity)) {
 				return i;
 			}
 		}
-		throw new IllegalArgumentException("Actor is not in this component");
+		throw new IllegalArgumentException("Entity is not in this component");
 	}
 
 	@Override
