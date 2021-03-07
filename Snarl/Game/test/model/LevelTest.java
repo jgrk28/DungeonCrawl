@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Map;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import view.TextualLevelViewTest;
 
 /**
