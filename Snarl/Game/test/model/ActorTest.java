@@ -93,6 +93,8 @@ public class ActorTest {
 	  Adversary zombie = new Zombie();
 	  zombie.getInteractionResult(EntityType.ZOMBIE);
   }
+  
+  
     
 }
 

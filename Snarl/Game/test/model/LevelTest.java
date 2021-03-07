@@ -494,56 +494,52 @@ public class LevelTest {
     assertEquals(GameState.WON, level.isLevelOver());
   }
 
-  /**
-   * These tests will be used when we implement the rule checker
-   * for players movements 
-   */
-  /*
-  @Test(expected = IllegalArgumentException.class)
+  //Tests for invalid player movements
+  @Test
   public void testPlayerActionBadTooLong() {
     Level level = makeTestLevel();
     level.playerAction(this.player3, new Point(4, 16));
-    level.playerAction(this.player3, new Point(1, 16));
+    assertFalse(level.checkValidMove(this.player3, new Point(1, 16)));
   }
 
-  @Test(expected = IllegalArgumentException.class)
+  @Test
   public void testPlayerActionBadTooLongDiag() {
     Level level = makeTestLevel();
-    level.playerAction(this.player1, new Point(6, 3));
+    assertFalse(level.checkValidMove(this.player1, new Point(6, 3)));
   }
 
-  @Test(expected = IllegalArgumentException.class)
+  @Test
   public void testPlayerActionBadOutOfBounds() {
     Level level = makeTestLevel();
-    level.playerAction(this.player2, new Point(9, 10));
+    assertFalse(level.checkValidMove(this.player2, new Point(9, 10)));
   }
 
-  @Test(expected = IllegalArgumentException.class)
+  @Test
   public void testPlayerActionBadOutOfBoundsHall() {
     Level level = makeTestLevel();
     level.playerAction(this.player1, new Point(6, 2));
-    level.playerAction(this.player1, new Point(7, 2));
+    assertFalse(level.checkValidMove(this.player1, new Point(7, 2)));
   }
 
-  @Test(expected = IllegalArgumentException.class)
+  @Test
   public void testPlayerActionBadWall() {
     Level level = makeTestLevel();
-    level.playerAction(this.player2, new Point(8, 10));
+    assertFalse(level.checkValidMove(this.player2, new Point(8, 10)));
   }
-
-  @Test(expected = IllegalArgumentException.class)
+  
+  @Test
   public void testPlayerActionBadWallDiag() {
     Level level = makeTestLevel();
-    level.playerAction(this.player2, new Point(8, 9));
+    assertFalse(level.checkValidMove(this.player2, new Point(8, 9)));
   }
 
-  @Test(expected = IllegalArgumentException.class)
+  @Test
   public void testPlayerActionBadExit() {
     Level level = makeTestLevel();
-    level.playerAction(this.player2, new Point(7, 11));
+    assertFalse(level.checkValidMove(this.player2, new Point(7, 11)));
   }
 
-  @Test(expected = IllegalArgumentException.class)
+  @Test
   public void testPlayerActionBadCollision() {
     Level level = makeTestLevel();
     level.playerAction(this.player2, new Point(6, 9));
@@ -551,30 +547,72 @@ public class LevelTest {
     level.playerAction(this.player2, new Point(6, 5));
     level.playerAction(this.player2, new Point(6, 3));
     level.playerAction(this.player2, new Point(5, 2));
-    level.playerAction(this.player2, new Point(4, 2));
+    assertFalse(level.checkValidMove(this.player2, new Point(4, 2)));
   }
 
-  @Test(expected = IllegalArgumentException.class)
+  @Test
   public void testPlayerActionBadIntoHall() {
     Level level = makeTestLevel();
     level.playerAction(this.player2, new Point(8, 11));
-    level.playerAction(this.player2, new Point(9, 12));
+    assertFalse(level.checkValidMove(this.player2, new Point(9, 12)));
   }
 
-  @Test(expected = IllegalArgumentException.class)
+  @Test
   public void testPlayerActionBadIntoRoomWall() {
     Level level = makeTestLevel();
-    level.playerAction(this.player1, new Point(3, 1));
+    assertFalse(level.checkValidMove(this.player1, new Point(3, 1)));
   }
 
-  @Test(expected = IllegalArgumentException.class)
+  @Test
   public void testPlayerActionBadIntoRoomExit() {
     Level level = makeTestLevel();
-    level.playerAction(this.player2, new Point(8, 11));
-    level.playerAction(this.player2, new Point(9, 11));
-    level.playerAction(this.player2, new Point(7, 11));
+    level.checkValidMove(this.player2, new Point(8, 11));
+    level.checkValidMove(this.player2, new Point(9, 11));
+    level.checkValidMove(this.player2, new Point(7, 11));
   }
-   */
+  
+  //Tests for valid player movements	  
+  @Test
+  public void testPlayerActionTwoSpacesUp() {
+	  Level level = makeTestLevel();
+	  assertTrue(level.checkValidMove(this.player3, new Point(3, 15)));
+  }
+  
+  @Test
+  public void testPlayerActionJumpOverAdversary() {
+	  Level level = makeTestLevel();
+	  assertTrue(level.checkValidMove(this.player3, new Point(1, 17)));
+  }
+  
+  @Test
+  public void testPlayerActionDiagonal() {
+	  Level level = makeTestLevel();
+	  assertTrue(level.checkValidMove(this.player3, new Point(2, 16)));
+  }
+    
+  @Test
+  public void testPlayerMoveThroughDoor() {
+	  Level level = makeTestLevel();
+	  assertTrue(level.checkValidMove(this.player1, new Point(2, 2)));
+  }
+  
+  @Test
+  public void testPlayerMoveToAdversary() {
+	  Level level = makeTestLevel();
+	  assertTrue(level.checkValidMove(this.player2, new Point(7, 8)));
+  }
+  
+  @Test
+  public void testPlayerMoveToExit() {
+	  Level level = makeTestLevel();
+	  assertTrue(level.checkValidMove(this.player2, new Point(7, 11)));
+  }
+  
+  @Test
+  public void testPlayerMoveToKey() {
+	  Level level = makeTestLevel();
+	  assertTrue(level.checkValidMove(this.player3, new Point(4, 17)));
+  }
 
   //Tests that an adversary can move and travel between LevelComponents
   @Test
@@ -664,71 +702,91 @@ public class LevelTest {
     assertEquals(GameState.LOST, level.isLevelOver());
   }
 
-  /**
-   * These tests will be used when we implement the rule checker
-   * for adversaries movements 
-   */
-  /*
-  @Test(expected = IllegalArgumentException.class)
+  //Tests for invalid adversary movements
+  @Test
   public void testAdversaryActionBadTooLong() {
     Level level = makeTestLevel();
-    level.adversaryAction(this.ghost1, new Point(7, 10));
+    assertFalse(level.checkValidMove(this.ghost1, new Point(7, 10)));
   }
 
-  @Test(expected = IllegalArgumentException.class)
+  @Test
   public void testAdversaryActionBadTooLongDiag() {
     Level level = makeTestLevel();
-    level.adversaryAction(this.ghost1, new Point(6, 9));
+    assertFalse(level.checkValidMove(this.ghost1, new Point(6, 9)));
   }
 
-  @Test(expected = IllegalArgumentException.class)
+  @Test
   public void testAdversaryActionBadOutOfBounds() {
     Level level = makeTestLevel();
     level.adversaryAction(this.ghost2, new Point(2, 13));
-    level.adversaryAction(this.ghost2, new Point(2, 12));
+    assertFalse(level.checkValidMove(this.ghost2, new Point(2, 12)));
   }
 
-  @Test(expected = IllegalArgumentException.class)
+  @Test
   public void testAdversaryActionBadWall() {
     Level level = makeTestLevel();
-    level.adversaryAction(this.zombie, new Point(2, 18));
+    assertFalse(level.checkValidMove(this.zombie, new Point(2, 18)));
   }
 
-  @Test(expected = IllegalArgumentException.class)
+  @Test
   public void testAdversaryActionBadExit() {
     Level level = makeTestLevel();
     level.adversaryAction(this.ghost1, new Point(7, 9));
     level.adversaryAction(this.ghost1, new Point(7, 10));
-    level.adversaryAction(this.ghost1, new Point(7, 11));
+    assertFalse(level.checkValidMove(this.ghost1, new Point(7, 11)));
   }
 
-  @Test(expected = IllegalArgumentException.class)
+  @Test
   public void testAdversaryActionBadCollision() {
     Level level = makeTestLevel();
     level.adversaryAction(this.ghost2, new Point(2, 15));
     level.adversaryAction(this.ghost2, new Point(2, 16));
-    level.adversaryAction(this.ghost2, new Point(2, 17));
+    assertFalse(level.checkValidMove(this.ghost2, new Point(2, 17)));
   }
 
-  @Test(expected = IllegalArgumentException.class)
+  @Test
   public void testAdversaryActionBadIntoHall() {
     Level level = makeTestLevel();
     level.adversaryAction(this.ghost2, new Point(2, 13));
     level.adversaryAction(this.zombie, new Point(2, 16));
     level.adversaryAction(this.zombie, new Point(2, 15));
     level.adversaryAction(this.zombie, new Point(2, 14));
-    level.adversaryAction(this.zombie, new Point(2, 13));
+    assertFalse(level.checkValidMove(this.zombie, new Point(2, 13)));
   }
 
-  @Test(expected = IllegalArgumentException.class)
+  @Test
   public void testPlayerActionBadIntoRoom() {
     Level level = makeTestLevel();
     level.adversaryAction(this.ghost2, new Point(2, 13));
     level.adversaryAction(this.zombie, new Point(2, 16));
     level.adversaryAction(this.zombie, new Point(2, 15));
     level.adversaryAction(this.zombie, new Point(2, 14));
-
-    level.adversaryAction(this.ghost2, new Point(2, 14));
+    assertFalse(level.checkValidMove(this.ghost2, new Point(2, 14)));
   }
-   */
+  
+  //Tests for valid adversary movements	 
+  @Test
+  public void testAdversaryActionMoveUp() {
+	  Level level = makeTestLevel();
+	  assertTrue(level.checkValidMove(this.ghost2, new Point(2, 13)));
+  }
+
+  @Test
+  public void testAdversaryActionMoveLeft() {
+	  Level level = makeTestLevel();
+	  assertTrue(level.checkValidMove(this.ghost1, new Point(6, 8)));
+  }
+
+  @Test
+  public void testAdversaryActionMoveRight() {
+	  Level level = makeTestLevel();
+	  assertTrue(level.checkValidMove(this.zombie, new Point(4, 17)));
+  }
+  
+  @Test
+  public void testAdversaryActionMoveDown() {
+	  Level level = makeTestLevel();
+	  assertTrue(level.checkValidMove(this.ghost1, new Point(7, 9)));
+  }
+   
 }

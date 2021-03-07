@@ -89,7 +89,7 @@ public class Dungeon implements RuleChecker {
 
 	@Override
 	public Boolean checkValidMove(Actor actor, Point destination) {
-		Level level = this.levels.get(this.currLevel);
+		Level level = getCurrentLevel();
 		return level.checkValidMove(actor, destination);
 	}
 

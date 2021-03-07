@@ -579,7 +579,16 @@ public class LevelImpl implements Level {
 
 	@Override
 	public Boolean checkValidMove(Actor actor, Point destination) {
-		LevelComponent sourceComponent = this.playerLocations.get(actor);
+		LevelComponent sourceComponent;
+		
+		if (actor instanceof Player) {
+			sourceComponent = this.playerLocations.get(actor);
+		} else if (actor instanceof Adversary) {
+			sourceComponent = this.adversaryLocations.get(actor);
+		} else {
+			throw new IllegalArgumentException("Invalid actor type");
+		}
+		
 		Point source = sourceComponent.findEntityLocation(actor);
 		
 		if (!actor.checkValidMoveDistance(source, destination)) {
