@@ -32,14 +32,28 @@ public class Dungeon implements RuleChecker {
 		this.levels = levels;
 	}
 
+	public Level startCurrentLevel() {
+		Level currLevel = getCurrentLevel();
+		currLevel.placeActors(this.players, this.adversaries);
+		return currLevel;
+	}
+
+	/**
+	 * Returns the current level
+	 * @return The current level in the dungeon
+	 */
+	public Level getCurrentLevel() {
+		Level currLevel = this.levels.get(this.currLevel - 1);
+		return currLevel;
+	}
+
 	/**
 	 * Returns the next level and increments the level counter
 	 * @return The next level in the dungeon
 	 */
 	public Level getNextLevel() {
-		Level nextLevel = levels.get(currLevel - 1); 
 		currLevel++;
-		return nextLevel;
+		return getCurrentLevel();
 	}
 
 	/**

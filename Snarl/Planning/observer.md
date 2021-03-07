@@ -63,7 +63,7 @@ XXXXXX
   * Removes the given View from the list of observers
 * JSONObject getState()
   * Returns the current game state in the form of a JSONObject that is parsable by a View
-* void notifyObserver()
+* void notifyObservers()
   * Calls drawGame() on all of the observers
 
 

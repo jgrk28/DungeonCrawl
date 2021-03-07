@@ -15,13 +15,15 @@ import modelView.LevelModelView;
  * checking that the level is over
  */
 public interface Level extends LevelModelView {
-	
-	/**
-	 * Processes a player's action by moving the player and
-	 * performing the corresponding interaction
-	 * @param player - the player performing the action
-	 * @param destination - the destination for the player's move
-	 */
+
+	void placeActors(List<Player> players, List<Adversary> adversaries);
+
+		/**
+     * Processes a player's action by moving the player and
+     * performing the corresponding interaction
+     * @param player - the player performing the action
+     * @param destination - the destination for the player's move
+     */
 	void playerAction(Player player, Point destination);
 	
 	/**

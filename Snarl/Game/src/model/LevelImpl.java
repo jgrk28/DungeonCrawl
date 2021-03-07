@@ -134,21 +134,7 @@ public class LevelImpl implements Level {
 		placeKey();
 		placeExit();
 
-		//Identify the top left-most and bottom right-most rooms in the level
-		Room topLeftRoom = getBoundaryRoom(true);
-		Room bottomRightRoom = getBoundaryRoom(false);
-
-		//Add players to top left room
-		for (Player player : players) {
-			playerLocations.put(player, topLeftRoom);
-			placeActorValidly(player, topLeftRoom);
-		}
-		
-		//Add adversaries to bottom right room
-		for (Adversary adversary : adversaries) {
-			adversaryLocations.put(adversary, bottomRightRoom);
-			placeActorValidly(adversary, bottomRightRoom);
-		}
+		placeActors(players, adversaries);
 	}
 
 	/**
@@ -244,6 +230,24 @@ public class LevelImpl implements Level {
 	private void placeExit() {
 		LevelComponent component = findComponent(this.exit.location);
 		component.placeExit(this.exit);	
+	}
+
+	public void placeActors(List<Player> players, List<Adversary> adversaries) {
+		//Identify the top left-most and bottom right-most rooms in the level
+		Room topLeftRoom = getBoundaryRoom(true);
+		Room bottomRightRoom = getBoundaryRoom(false);
+
+		//Add players to top left room
+		for (Player player : players) {
+			playerLocations.put(player, topLeftRoom);
+			placeActorValidly(player, topLeftRoom);
+		}
+
+		//Add adversaries to bottom right room
+		for (Adversary adversary : adversaries) {
+			adversaryLocations.put(adversary, bottomRightRoom);
+			placeActorValidly(adversary, bottomRightRoom);
+		}
 	}
 
 	/**
