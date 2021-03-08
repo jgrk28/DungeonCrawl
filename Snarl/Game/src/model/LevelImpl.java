@@ -2,6 +2,7 @@ package model;
 
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -596,18 +597,20 @@ public class LevelImpl implements Level {
 		}
 		
 		List<List<EntityType>> intermediateTypes = getIntermediateTypes(source, destination, sourceComponent);
-		return actor.checkValidMovePath(intermediateTypes);			
+		return actor.checkValidMovePath(source, destination, intermediateTypes);			
 	}
 	
 	private List<List<EntityType>> getIntermediateTypes(Point source, Point destination, LevelComponent sourceComponent) {
 		List<List<EntityType>> intermediateTypes = new ArrayList<>();
-		int row = source.y;
-		int col = source.x;
+
+		int minX = Math.min(source.x, destination.x);
+		int maxX = Math.max(source.x, destination.x);
+		int minY = Math.min(source.y, destination.y);
+		int maxY = Math.max(source.y, destination.y);
 		
-		while (row != destination.y) {
-			
+		for (int row = minY; row <= maxY; row++) {			
 			List<EntityType> currRow = new ArrayList<>();
-			while (col != destination.x) {
+			for (int col = minX; col <= maxX; col++) {
 				Point currPoint = new Point(col, row);
 				EntityType currType;
 				try {
@@ -618,26 +621,10 @@ public class LevelImpl implements Level {
 					Entity currEntity = destinationComponent.getDestinationEntity(currPoint);
 					currType = destinationComponent.getEntityType(currEntity);	
 				} 
-				currRow.add(currType);
-				
-				if (destination.x > col) {
-					col++;
-				}
-				if (destination.x < col) {
-					col--;
-				}		
-			}
-			
-			intermediateTypes.add(currRow);
-
-			if (destination.y > row) {
-				row++;
-			}
-			if (destination.y < row) {
-				row--;
-			}	
-		}
-
+				currRow.add(currType);	
+			} 		
+			intermediateTypes.add(currRow);	
+		}  
 		return intermediateTypes;
 	}
 

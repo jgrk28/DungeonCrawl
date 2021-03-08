@@ -31,14 +31,13 @@ public abstract class Adversary implements Actor {
 	}
 	
 	@Override
-	public Boolean checkValidMovePath(List<List<EntityType>> intermediateTypes) {
-		int numCols = intermediateTypes.size();
-		if (numCols == 0) {
-			throw new IllegalArgumentException("Source to destination map must have at least one EntityType");
-		}
-		int numRows = intermediateTypes.get(0).size();
+	public Boolean checkValidMovePath(Point source, Point destination, 
+			List<List<EntityType>> intermediateTypes) {
+		int minX = Math.min(source.x, destination.x);
+		int minY = Math.min(source.y, destination.y);
+		Point relativeDestPoint = new Point(destination.x - minX, destination.y - minY);
 		
-		return isTraversable(intermediateTypes.get(numCols).get(numRows));		
+		return isTraversable(intermediateTypes.get(relativeDestPoint.y).get(relativeDestPoint.x));		
 	}
 	
 	private Boolean isTraversable(EntityType entityType) {

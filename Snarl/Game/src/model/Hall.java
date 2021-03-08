@@ -360,6 +360,7 @@ public class Hall implements LevelComponent {
 		}	
 		throw new IllegalArgumentException("Entity is not in this component");
 	}
+	
 	/**
 	 * Finds the location of the entity within the componentMap
 	 * @param entity - the entity to be found

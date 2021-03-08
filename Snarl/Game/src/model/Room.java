@@ -132,9 +132,12 @@ public class Room implements LevelComponent {
 	
 	@Override
 	public void removeActor(Actor actor) {
-		Point actorLocation = findEntityLocation(actor);
-		List<Entity> actorRow = componentMap.get(actorLocation.y);
-		actorRow.set(actorLocation.x, new Space());
+		Point absoluteActorLocation = findEntityLocation(actor);
+		//Find the relative location in the room
+		Point relativeActorLocation = new Point(absoluteActorLocation.x - position.x,
+				absoluteActorLocation.y - position.y);
+		List<Entity> actorRow = componentMap.get(relativeActorLocation.y);
+		actorRow.set(relativeActorLocation.x, new Space());
 	}
 	
 	@Override
@@ -146,7 +149,7 @@ public class Room implements LevelComponent {
 			for (int j = 0; j < entityRow.size(); j++) {
 				Entity currEntity = entityRow.get(j);
 				if (currEntity.equals(entity)) {
-					return new Point(j,i);
+					return new Point(j + position.x, i + position.y);
 				}
 			}
 		}

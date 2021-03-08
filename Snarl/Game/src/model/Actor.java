@@ -19,6 +19,6 @@ public interface Actor extends Entity {
 	
 	Boolean checkValidMoveDistance(Point source, Point destination);
 	
-	Boolean checkValidMovePath(List<List<EntityType>> intermediateTypes);
+	Boolean checkValidMovePath(Point source, Point destination, List<List<EntityType>> intermediateTypes);
 
 }

@@ -43,22 +43,20 @@ public class Player implements Actor {
 	}
 	
 	@Override
-	public Boolean checkValidMovePath(List<List<EntityType>> intermediateTypes) {
-		Point sourcePoint = new Point(0,0);
-		int numCols = intermediateTypes.size();
-		if (numCols == 0) {
-			throw new IllegalArgumentException("Source to destination map must have at least one EntityType");
-		}
-		int numRows = intermediateTypes.get(0).size();
-		Point destPoint = new Point(numRows, numCols);
+	public Boolean checkValidMovePath(Point source, Point destination, 
+			List<List<EntityType>> intermediateTypes) {
+		int minX = Math.min(source.x, destination.x);
+		int minY = Math.min(source.y, destination.y);
+		Point relativeSourcePoint = new Point(source.x - minX, source.y - minY);
+		Point relativeDestPoint = new Point(destination.x - minX, destination.y - minY);
 		
 		List<Point> visited = new ArrayList<>();
 		
-		if (sourcePoint.equals(destPoint)) {
+		if (relativeSourcePoint.equals(relativeDestPoint)) {
 			return true;
 		} else {
-			visited.add(sourcePoint);
-			return depthFirstSearchRecursive(visited, sourcePoint, destPoint, intermediateTypes);
+			visited.add(relativeSourcePoint);
+			return depthFirstSearchRecursive(visited, relativeSourcePoint, relativeDestPoint, intermediateTypes);
 		}
 		
 	}

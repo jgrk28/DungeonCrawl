@@ -779,7 +779,7 @@ public class LevelTest {
   @Test
   public void testAdversaryActionMoveRight() {
 	  Level level = makeTestLevel();
-	  assertTrue(level.checkValidMove(this.zombie, new Point(4, 17)));
+	  assertTrue(level.checkValidMove(this.zombie, new Point(3, 17)));
   }
   
   @Test
