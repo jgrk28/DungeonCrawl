@@ -62,13 +62,22 @@ public class RuleCheckerTest {
 	    );
 	  }
 	  
-	  public RuleChecker makeTestDungeon() {
+	  public Dungeon makeTestDungeon() {
 		  Level level = makeTestLevel();
 		  List<Level> levels = new ArrayList<>(Arrays.asList(level));
 		  List<Player> players = new ArrayList<>(Arrays.asList(this.player1, this.player2, this.player3));
 		  List<Adversary> adversaries = new ArrayList<>(Arrays.asList(this.ghost1, this.zombie, this.ghost2));
 		  return new Dungeon(players, adversaries, 1, levels);	 
 	  }
+
+	  public Dungeon makeTwoLevelDungeon() {
+			Level level1 = makeTestLevel();
+			Level level2 = makeTestLevel();
+			List<Level> levels = new ArrayList<>(Arrays.asList(level1, level2));
+			List<Player> players = new ArrayList<>(Arrays.asList(this.player1, this.player2, this.player3));
+			List<Adversary> adversaries = new ArrayList<>(Arrays.asList(this.ghost1, this.zombie, this.ghost2));
+			return new Dungeon(players, adversaries, 1, levels);
+		}
 	  
 	  //Tests for invalid player movements
 	  @Test
@@ -194,4 +203,200 @@ public class RuleCheckerTest {
 		  assertTrue(dungeon.checkValidMove(this.ghost1, new Point(7, 9)));
 	  }
 
+		@Test
+		public void testIsLevelOverActive() {
+			Dungeon dungeon = makeTwoLevelDungeon();
+			RuleChecker ruleChecker = dungeon;
+
+			assertEquals(GameState.ACTIVE, ruleChecker.isLevelOver());
+
+			Level firstLevel = dungeon.getCurrentLevel();
+			beatLevel(firstLevel);
+			Level secondLevel = dungeon.getCurrentLevel();
+
+			assertEquals(GameState.ACTIVE, ruleChecker.isLevelOver());
+		}
+
+	@Test
+	public void testIsLevelOverWon() {
+		Dungeon dungeon = makeTwoLevelDungeon();
+		RuleChecker ruleChecker = dungeon;
+
+		Level firstLevel = dungeon.getCurrentLevel();
+		beatLevel(firstLevel);
+
+		assertEquals(GameState.WON, ruleChecker.isLevelOver());
+	}
+
+	@Test
+	public void testIsLevelOverLost() {
+		Dungeon dungeon = makeTwoLevelDungeon();
+		RuleChecker ruleChecker = dungeon;
+
+		Level firstLevel = dungeon.getCurrentLevel();
+		loseLevel(firstLevel);
+
+		assertEquals(GameState.LOST, ruleChecker.isLevelOver());
+	}
+
+	  @Test
+		public void testIsGameOverActive() {
+			Dungeon dungeon = makeTwoLevelDungeon();
+			RuleChecker ruleChecker = dungeon;
+
+			assertEquals(GameState.ACTIVE, ruleChecker.isGameOver());
+
+			Level firstLevel = dungeon.getCurrentLevel();
+			beatLevel(firstLevel);
+
+			assertEquals(GameState.ACTIVE, ruleChecker.isGameOver());
+
+			Level secondLevel = dungeon.getCurrentLevel();
+
+			assertEquals(GameState.ACTIVE, ruleChecker.isGameOver());
+		}
+
+	@Test
+	public void testIsGameOverWon() {
+		Dungeon dungeon = makeTwoLevelDungeon();
+		RuleChecker ruleChecker = dungeon;
+
+		Level secondLevel = dungeon.getNextLevel();
+		beatLevel(secondLevel);
+
+		assertEquals(GameState.WON, ruleChecker.isGameOver());
+	}
+
+	@Test
+	public void testIsGameOverLost() {
+		Dungeon dungeon = makeTwoLevelDungeon();
+		RuleChecker ruleChecker = dungeon;
+
+		Level firstLevel = dungeon.getCurrentLevel();
+		loseLevel(firstLevel);
+
+		assertEquals(GameState.LOST, ruleChecker.isGameOver());
+	}
+
+	@Test
+	public void testIsGameOverLostSecondLevel() {
+		Dungeon dungeon = makeTwoLevelDungeon();
+		RuleChecker ruleChecker = dungeon;
+
+		Level firstLevel = dungeon.getCurrentLevel();
+		beatLevel(firstLevel);
+
+		Level secondLevel = dungeon.getNextLevel();
+		loseLevel(secondLevel);
+
+		assertEquals(GameState.LOST, ruleChecker.isGameOver());
+	}
+
+	private void beatLevel(Level level) {
+		//Player3 get Key and die
+		level.playerAction(player3, new Point(4, 17));
+		level.playerAction(player3, new Point(2, 17));
+
+		//Player 2 exit
+		level.playerAction(player2, new Point(7, 11));
+
+		//Player 1 die
+		level.playerAction(player1, new Point(6, 2));
+		level.playerAction(player1, new Point(6, 4));
+		level.playerAction(player1, new Point(6, 6));
+		level.playerAction(player1, new Point(6, 8));
+		level.playerAction(player1, new Point(7, 8));
+	}
+
+	private void loseLevel(Level level) {
+		//Player3 get Key and die
+		level.playerAction(player3, new Point(4, 17));
+		level.playerAction(player3, new Point(2, 17));
+
+		//Player 2 die
+		level.playerAction(player2, new Point(7, 8));
+
+		//Player 1 die
+		level.playerAction(player1, new Point(6, 2));
+		level.playerAction(player1, new Point(6, 4));
+		level.playerAction(player1, new Point(6, 6));
+		level.playerAction(player1, new Point(6, 8));
+		level.playerAction(player1, new Point(7, 8));
+	}
+
+	@Test
+	public void testCheckValidGameStateNormal() {
+		Dungeon dungeon = makeTwoLevelDungeon();
+		RuleChecker ruleChecker = dungeon;
+		assertTrue(ruleChecker.checkValidGameState());
+	}
+
+	@Test
+	public void testCheckValidGameStateNoKey() {
+		Level level1 = makeTestLevel();
+		//Add null key
+		LevelMap map = new LevelMap();
+		Level level2 = new LevelImpl(map.initializeLevelMap(), null, this.exit);
+		List<Level> levels = new ArrayList<>(Arrays.asList(level1, level2));
+		List<Player> players = new ArrayList<>(Arrays.asList(this.player1, this.player2, this.player3));
+		List<Adversary> adversaries = new ArrayList<>(Arrays.asList(this.ghost1, this.zombie, this.ghost2));
+		RuleChecker ruleChecker = new Dungeon(players, adversaries, 1, levels);
+		assertFalse(ruleChecker.checkValidGameState());
+	}
+
+	@Test
+	public void testCheckValidGameStateNoExit() {
+		Level level1 = makeTestLevel();
+		//Add no exit
+		LevelMap map = new LevelMap();
+		Level level2 = new LevelImpl(map.initializeLevelMap(), this.key, null);
+		List<Level> levels = new ArrayList<>(Arrays.asList(level1, level2));
+		List<Player> players = new ArrayList<>(Arrays.asList(this.player1, this.player2, this.player3));
+		List<Adversary> adversaries = new ArrayList<>(Arrays.asList(this.ghost1, this.zombie, this.ghost2));
+		RuleChecker ruleChecker = new Dungeon(players, adversaries, 1, levels);
+		assertFalse(ruleChecker.checkValidGameState());
+	}
+
+	@Test
+	public void testCheckValidGameStateBadExit() {
+		Level level1 = makeTestLevel();
+		//Add no exit
+		LevelMap map = new LevelMap();
+		Level level2 = new LevelImpl(
+				new HashMap<Player, Point>(),
+				new HashMap<Adversary, Point>(),
+				map.initializeLevelMap(),
+				false,
+				true,
+				this.key,
+				this.exit
+		);
+		List<Level> levels = new ArrayList<>(Arrays.asList(level1, level2));
+		List<Player> players = new ArrayList<>(Arrays.asList(this.player1, this.player2, this.player3));
+		List<Adversary> adversaries = new ArrayList<>(Arrays.asList(this.ghost1, this.zombie, this.ghost2));
+		RuleChecker ruleChecker = new Dungeon(players, adversaries, 1, levels);
+		assertFalse(ruleChecker.checkValidGameState());
+	}
+
+	@Test
+	public void testCheckValidGameStateBadPlayer() {
+		Level level1 = makeTestLevel();
+		Level level2 = makeTestLevel();
+		List<Level> levels = new ArrayList<>(Arrays.asList(level1, level2));
+		List<Player> players = new ArrayList<Player>(Arrays.asList(new Player(), this.player2, this.player3));
+		List<Adversary> adversaries = new ArrayList<>(Arrays.asList(this.ghost1, this.zombie, this.ghost2));
+		RuleChecker ruleChecker = new Dungeon(players, adversaries, 1, levels);
+		assertFalse(ruleChecker.checkValidGameState());
+	}
+
+	@Test
+	public void testCheckValidGameStateBadAdversary() {
+		Level level1 = makeTestLevel();
+		Level level2 = makeTestLevel();
+		List<Level> levels = new ArrayList<>(Arrays.asList(level1, level2));
+		List<Player> players = new ArrayList<>(Arrays.asList(this.player1, this.player2, this.player3));
+		List<Adversary> adversaries = new ArrayList<Adversary>(Arrays.asList(new Ghost(), this.zombie, this.ghost2));
+		RuleChecker ruleChecker = new Dungeon(players, adversaries, 1, levels);
+		assertFalse(ruleChecker.checkValidGameState());
+	}
 }

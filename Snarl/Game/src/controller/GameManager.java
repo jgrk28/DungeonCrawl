@@ -61,6 +61,7 @@ public class GameManager {
   public void playLevel(Level level) {
     while (level.isLevelOver().equals(GameState.ACTIVE)) {
       for (Map.Entry<Player, PlayerClient> currPlayer : playerClients.entrySet()) {
+        /*
         Point playerDestination = currPlayer.getValue().takeTurn();
         while (!this.ruleChecker.checkValidMove(currPlayer.getKey(), playerDestination)) {
           //Need to notify the playerClient that their move is invalid
@@ -71,6 +72,7 @@ public class GameManager {
         //Need to notify the player of the new gamestate
         //This will send the players location, inLevel, and viewable map
         //Will need to add functions in level to get that information
+        */
       }
 
       //Add adversary turns
