@@ -185,7 +185,7 @@ public class RuleCheckerTest {
 	  @Test
 	  public void testAdversaryActionMoveRight() {
 		  RuleChecker dungeon = makeTestDungeon();
-		  assertTrue(dungeon.checkValidMove(this.zombie, new Point(4, 17)));
+		  assertTrue(dungeon.checkValidMove(this.zombie, new Point(3, 17)));
 	  }
 	  
 	  @Test
