@@ -339,28 +339,43 @@ public class Hall implements LevelComponent {
 	@Override
 	public Point findEntityLocation(Entity entity) {
 		int entityIndex = findEntity(entity);
-		
-		Point prevWaypoint = this.startRoomPosition;
+
 		int length = 0;
-	
+
+		Point nextDestination;
+		//If there are no waypoints, the destination is the endRoom
+		//Otherwise, the destination is the next waypoint
+		if (this.waypoints.isEmpty()) {
+			nextDestination = this.endRoomPosition;
+		} else {
+			nextDestination = this.waypoints.get(0);
+		}
+		Point prevWaypoint  = stepTowardDestination(startRoomPosition, nextDestination);
+
 		//Calculate the distance for each waypoint
-		for (Point waypoint : this.waypoints) {
-			Point nextWaypoint = waypoint;
-			
-			//TODO First waypoint is in the start room and last is in the endroom
-			//causes errors with length of first segment
-			if ((length + prevWaypoint.distance(waypoint)) > entityIndex) {
+		for (int waypointCount = 0; waypointCount <= waypoints.size(); waypointCount++) {
+			//If we have reached the end of the waypoints, the nextDestination is the EndRoom
+			if (this.waypoints.size() <= waypointCount) {
+				nextDestination = stepTowardDestination(this.endRoomPosition, prevWaypoint);
+			} else {
+				//Otherwise, get the next waypoint in the list
+				nextDestination = this.waypoints.get(waypointCount);
+			}
+
+			if ((length + prevWaypoint.distance(nextDestination)) > entityIndex) {
 				int distFromWaypoint = entityIndex - length;
 				Point currPosition = prevWaypoint;
 				for (int i = 0; i < distFromWaypoint; i++) {
-					currPosition = stepTowardDestination(currPosition, nextWaypoint);
+					currPosition = stepTowardDestination(currPosition, nextDestination);
 				}
 				return currPosition;
 			}
-			length += prevWaypoint.distance(waypoint);
-			prevWaypoint = nextWaypoint;
-		}	
+			length += prevWaypoint.distance(nextDestination);
+			prevWaypoint = nextDestination;
+		}
+
 		throw new IllegalArgumentException("Entity is not in this component");
+
 	}
 	
 	/**

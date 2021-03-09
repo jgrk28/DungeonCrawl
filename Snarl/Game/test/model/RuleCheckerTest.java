@@ -105,12 +105,6 @@ public class RuleCheckerTest {
 	  }
 
 	  @Test
-	  public void testPlayerActionBadExit() {
-		  RuleChecker dungeon = makeTestDungeon();
-		  assertFalse(dungeon.checkValidMove(this.player2, new Point(7, 11)));
-	  }
-
-	  @Test
 	  public void testPlayerActionBadIntoRoomWall() {
 		  RuleChecker dungeon = makeTestDungeon();
 		  assertFalse(dungeon.checkValidMove(this.player1, new Point(3, 1)));
@@ -212,7 +206,7 @@ public class RuleCheckerTest {
 
 			Level firstLevel = dungeon.getCurrentLevel();
 			beatLevel(firstLevel);
-			Level secondLevel = dungeon.getCurrentLevel();
+			Level secondLevel = dungeon.getNextLevel();
 
 			assertEquals(GameState.ACTIVE, ruleChecker.isLevelOver());
 		}
@@ -251,7 +245,7 @@ public class RuleCheckerTest {
 
 			assertEquals(GameState.ACTIVE, ruleChecker.isGameOver());
 
-			Level secondLevel = dungeon.getCurrentLevel();
+			Level secondLevel = dungeon.getNextLevel();
 
 			assertEquals(GameState.ACTIVE, ruleChecker.isGameOver());
 		}

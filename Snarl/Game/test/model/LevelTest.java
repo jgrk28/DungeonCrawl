@@ -493,6 +493,36 @@ public class LevelTest {
     assertEquals(GameState.WON, level.isLevelOver());
   }
 
+  @Test
+  public void testPlayerActionOntoLockedExit() {
+    Level level = makeTestLevel();
+    level.playerAction(this.player2, new Point(7, 11));
+    level.playerAction(this.player2, new Point(8, 11));
+
+    String expectedOut = ""
+        + "XXXX              \n"
+        + "X..X              \n"
+        + "X...P**           \n"
+        + "XXXX  *           \n"
+        + "      *           \n"
+        + "      *           \n"
+        + "      *           \n"
+        + "     X.XX         \n"
+        + "     X.GX         \n"
+        + "     X..X         \n"
+        + "     X..X    XXXXX\n"
+        + "  ***..@P****....X\n"
+        + "  *  XXXX    X...X\n"
+        + "  *          X...X\n"
+        + "XXGXXX       X...X\n"
+        + "X....X       XXXXX\n"
+        + "X....X            \n"
+        + "X.ZP!X            \n"
+        + "XXXXXX            \n";
+
+    TextualLevelViewTest.testDrawLevel(level, expectedOut);
+  }
+
   //Tests for invalid player movements
   @Test
   public void testPlayerActionBadTooLong() {
@@ -530,12 +560,6 @@ public class LevelTest {
   public void testPlayerActionBadWallDiag() {
     Level level = makeTestLevel();
     assertFalse(level.checkValidMove(this.player2, new Point(8, 9)));
-  }
-
-  @Test
-  public void testPlayerActionBadExit() {
-    Level level = makeTestLevel();
-    assertFalse(level.checkValidMove(this.player2, new Point(7, 11)));
   }
 
   @Test
@@ -718,7 +742,7 @@ public class LevelTest {
   public void testAdversaryActionBadOutOfBounds() {
     Level level = makeTestLevel();
     level.adversaryAction(this.ghost2, new Point(2, 13));
-    assertFalse(level.checkValidMove(this.ghost2, new Point(2, 12)));
+    assertFalse(level.checkValidMove(this.ghost2, new Point(3, 13)));
   }
 
   @Test

@@ -83,7 +83,7 @@ public class Dungeon implements RuleChecker {
 
 	@Override
 	public GameState isLevelOver() {
-		Level level = this.levels.get(this.currLevel);
+		Level level = getCurrentLevel();
 		return level.isLevelOver();
 	}
 

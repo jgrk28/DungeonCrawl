@@ -491,8 +491,8 @@ public class LevelImpl implements Level {
 		
 		//If player runs into a exit or adversary, we are removing the player
 		//instead of moving them
-		boolean removePlayer = interaction.equals(InteractionResult.EXIT)
-				|| interaction.equals(InteractionResult.REMOVE_PLAYER);
+		boolean moveExitsLevel = interaction.equals(InteractionResult.EXIT) && exitUnlocked;
+		boolean removePlayer = moveExitsLevel || interaction.equals(InteractionResult.REMOVE_PLAYER);
 			
 		//If player is moving to a new room, remove them from the source room
 		//Otherwise, remove them from their current position
@@ -509,14 +509,18 @@ public class LevelImpl implements Level {
 		} else {
 			this.playerLocations.remove(player);
 		}
-		
-		if (interaction.equals(InteractionResult.EXIT)) {
+
+		if (sourceComponent.equals(exitRoom) && !this.exitUnlocked) {
+			sourceComponent.placeExit(this.exit);
+		}
+
+		if (moveExitsLevel) {
 			this.levelExited = true;
 		}
-		
+
 		if (interaction.equals(InteractionResult.FOUND_KEY)) {
 			this.exitUnlocked = true;
-		}			
+		}
 	}
 	
 	@Override
@@ -556,7 +560,6 @@ public class LevelImpl implements Level {
 		
 		if (sourceComponent.equals(keyRoom)) {
 			sourceComponent.placeKey(this.key);
-			
 		} else if (sourceComponent.equals(exitRoom)) {
 			sourceComponent.placeExit(this.exit);			
 		}
@@ -614,13 +617,12 @@ public class LevelImpl implements Level {
 				Point currPoint = new Point(col, row);
 				EntityType currType;
 				try {
-					Entity currEntity = sourceComponent.getDestinationEntity(currPoint);
-					currType = sourceComponent.getEntityType(currEntity);
-				} catch (IllegalArgumentException e) {
 					LevelComponent destinationComponent = findComponent(currPoint);
 					Entity currEntity = destinationComponent.getDestinationEntity(currPoint);
-					currType = destinationComponent.getEntityType(currEntity);	
-				} 
+					currType = destinationComponent.getEntityType(currEntity);
+				} catch (IllegalArgumentException e) {
+					currType = EntityType.EMPTY;
+				}
 				currRow.add(currType);	
 			} 		
 			intermediateTypes.add(currRow);	
