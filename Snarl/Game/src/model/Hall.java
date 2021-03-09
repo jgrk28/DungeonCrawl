@@ -340,13 +340,15 @@ public class Hall implements LevelComponent {
 	public Point findEntityLocation(Entity entity) {
 		int entityIndex = findEntity(entity);
 		
-		Point prevWaypoint = this.startRoomPosition;;	
+		Point prevWaypoint = this.startRoomPosition;
 		int length = 0;
 	
 		//Calculate the distance for each waypoint
 		for (Point waypoint : this.waypoints) {
 			Point nextWaypoint = waypoint;
 			
+			//TODO First waypoint is in the start room and last is in the endroom
+			//causes errors with length of first segment
 			if ((length + prevWaypoint.distance(waypoint)) > entityIndex) {
 				int distFromWaypoint = entityIndex - length;
 				Point currPosition = prevWaypoint;
