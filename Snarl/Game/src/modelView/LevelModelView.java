@@ -13,6 +13,4 @@ public interface LevelModelView {
 	 */
 	ArrayList<ArrayList<EntityType>> getMap();
 	
-	
-
 }

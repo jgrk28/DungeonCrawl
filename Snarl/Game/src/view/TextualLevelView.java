@@ -1,5 +1,7 @@
 package view;
 
+import java.io.OutputStream;
+import java.io.PrintStream;
 import java.util.ArrayList;
 
 import modelView.EntityType;
@@ -35,9 +37,11 @@ public class TextualLevelView implements LevelView {
 	
 	//The read-only version of the Level model
 	private LevelModelView modelView;
+	private PrintStream output;
 	
-	public TextualLevelView(LevelModelView modelView) {
+	public TextualLevelView(LevelModelView modelView, PrintStream output) {
 		this.modelView = modelView;
+		this.output = output;
 	}
 
 	@Override
@@ -56,7 +60,7 @@ public class TextualLevelView implements LevelView {
 			}
 			output.append("\n");
 		}
-		System.out.print(output.toString());
+		this.output.print(output.toString());
 	}
 	
 	/**

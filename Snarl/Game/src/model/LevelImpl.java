@@ -558,7 +558,7 @@ public class LevelImpl implements Level {
 			this.playerLocations.remove(destinationEntity);
 		}	
 		
-		if (sourceComponent.equals(keyRoom)) {
+		if (sourceComponent.equals(keyRoom) && !this.exitUnlocked) {
 			sourceComponent.placeKey(this.key);
 		} else if (sourceComponent.equals(exitRoom)) {
 			sourceComponent.placeExit(this.exit);			
@@ -656,6 +656,21 @@ public class LevelImpl implements Level {
 			}
 		}
 		return true;
+	}
+
+	@Override
+	public Boolean isPlayerAlive(Player player) {
+		return playerLocations.containsKey(player);
+	}
+
+	@Override
+	public ArrayList<ArrayList<EntityType>> getPlayerMap(Player player) {
+		LevelComponent sourceComponent = playerLocations.get(player);
+		Point playerLocation = sourceComponent.findEntityLocation(player);
+		
+		ArrayList<ArrayList<EntityType>> fullLevel = getMap();
+		//Crop map based on player's location
+		player.cropViewableMap(fullLevel, playerLocation);
 	}
 
 }

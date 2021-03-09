@@ -1,9 +1,12 @@
 package model;
 
 import java.awt.Point;
+import java.util.ArrayList;
 import java.util.List;
 
+import modelView.EntityType;
 import modelView.LevelModelView;
+import modelView.PlayerModelView;
 
 /**
  * Level extends the LevelModelView interface to provide
@@ -52,5 +55,9 @@ public interface Level extends LevelModelView {
 	Boolean checkValidMove(Actor actor, Point destination);
 	
 	Boolean checkValidLevelState(List<Player> players, List<Adversary> adversaries);
+	
+	Boolean isPlayerAlive(Player player);
+	
+	ArrayList<ArrayList<EntityType>> getPlayerMap(Player player);
 
 }

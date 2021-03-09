@@ -3,6 +3,8 @@ package controller;
 import clients.AdversaryClient;
 import clients.PlayerClient;
 import java.awt.Point;
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -14,6 +16,8 @@ import model.Level;
 import model.Player;
 import model.RuleChecker;
 import model.Zombie;
+import modelView.PlayerModelView;
+import view.PlayerView;
 
 public class GameManager {
   private Dungeon dungeon;
@@ -73,7 +77,13 @@ public class GameManager {
         //This will send the players location, inLevel, and viewable map
         //This may happen by just updating the player observer instead on the player as the
         //information just needs to get to the user.
-        currPlayer.getValue().displayGameState();
+        
+		ByteArrayOutputStream output = new ByteArrayOutputStream();
+		PrintStream gameState = new PrintStream(output);
+		PlayerView playerView = new PlayerView(level, gameState);
+		playerView.drawLevel();
+		
+        currPlayer.getValue().displayGameState(gameState.toString());
         //Will need to add functions in level to get that information
       }
 

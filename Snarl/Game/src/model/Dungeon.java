@@ -3,9 +3,11 @@ package model;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
-public class Dungeon implements RuleChecker {
+import modelView.DungeonModelView;
+import modelView.EntityType;
+
+public class Dungeon implements RuleChecker, DungeonModelView {
 	
 	//All players in the game regardless of status in current level
 	private List<Player> players;
@@ -104,6 +106,27 @@ public class Dungeon implements RuleChecker {
 			}
 		}
 		return true;
+	}
+
+	@Override
+	public int getCurrentLevelIndex() {
+		return this.currLevel;
+	}
+
+	@Override
+	public Boolean isPlayerAlive(Player player) {
+		if (!players.contains(player)) {
+			throw new IllegalArgumentException("The player is not in the dungeon");
+		}
+		Level currLevel = getCurrentLevel();
+		return currLevel.isPlayerAlive(player);
+	
+	}
+
+	@Override
+	public ArrayList<ArrayList<EntityType>> getPlayerMap(Player player) {
+		Level currLevel = getCurrentLevel();
+		return currLevel.getPlayerMap(player);
 	}
  
 }
