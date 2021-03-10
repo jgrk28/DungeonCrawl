@@ -26,12 +26,12 @@ public class LevelComponentTest {
     Key key = null;
     Exit exit = null;
     LevelModelView modelView = new LevelImpl(levelMap, key, exit);
-    LevelView view = new TextualLevelView(modelView);
 
-    //Get output string from STDOUT
+    //Make print stream to go into view
     ByteArrayOutputStream output = new ByteArrayOutputStream();
     PrintStream print = new PrintStream(output);
-    System.setOut(print);
+
+    LevelView view = new TextualLevelView(modelView, print);
 
     //Display level to STDOUT
     view.drawLevel();
@@ -320,5 +320,44 @@ public class LevelComponentTest {
     this.room2.placeExit(newExit2);
     assertEquals(newExit2, this.room2.getDestinationEntity(new Point(15, 7)));
 
+  }
+
+  @Test
+  public void testFindEntityLocationSimple() {
+    assertEquals(new Point(2, 1), this.room1.findEntityLocation(this.player));
+    assertEquals(new Point(1, 1), this.room1.findEntityLocation(this.key));
+    assertEquals(new Point(1, 3), this.room1.findEntityLocation(this.ghost));
+    assertEquals(new Point(16, 8), this.room2.findEntityLocation(this.exit));
+    assertEquals(new Point(4, 11), this.hall1.findEntityLocation(this.player));
+    assertEquals(new Point(4, 3), this.hall2.findEntityLocation(this.zombie));
+  }
+
+  @Test
+  public void testFindEntityLocationMultiple() {
+    assertEquals(new Point(0, 0), this.room1.findEntityLocation(this.wall));
+    assertEquals(new Point(1, 2), this.room1.findEntityLocation(this.space));
+    assertEquals(new Point(16, 7), this.room2.findEntityLocation(this.wall));
+    assertEquals(new Point(2, 11), this.hall1.findEntityLocation(this.space));
+    assertEquals(new Point(5, 4), this.hall2.findEntityLocation(this.space));
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testFindEntityLocationNotInComponent1() {
+    this.room1.findEntityLocation(this.zombie);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testFindEntityLocationNotInComponent2() {
+    this.room2.findEntityLocation(this.player);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testFindEntityLocationNotInComponent3() {
+    this.hall1.findEntityLocation(this.ghost);
+  }
+  
+  @Test(expected = IllegalArgumentException.class)
+  public void testFindEntityLocationNotInComponent4() {
+    this.hall2.findEntityLocation(this.wall);
   }
 }

@@ -16,9 +16,23 @@ public interface Actor extends Entity {
 	 * @return The type of InteractionResult generated
 	 */
 	InteractionResult getInteractionResult(EntityType entityType);
-	
-	Boolean checkValidMoveDistance(Point source, Point destination);
-	
-	Boolean checkValidMovePath(Point source, Point destination, List<List<EntityType>> intermediateTypes);
 
+	/**
+	 * Checks if the distance of the given move is valid for this actor
+	 * @return True if the move distance is acceptable
+	 */
+	Boolean checkValidMoveDistance(Point source, Point destination);
+
+	/**
+	 * Checks if there is a valid path from the source to the destination given this actors
+	 * rules of movement and the intermediate types given
+	 * @param source - The absolute starting position of the move with respect to (0,0), the level
+	 *               origin
+	 * @param destination - The absolute ending position of the move with respect to (0,0), the level
+	 * 	 *               origin
+	 * @param intermediateTypes - A matrix of EntityTypes in the smallest rectangle including the
+	 *                          start and end position of the move
+	 * @return True if there is a valid path
+	 */
+	Boolean checkValidMovePath(Point source, Point destination, List<List<EntityType>> intermediateTypes);
 }
