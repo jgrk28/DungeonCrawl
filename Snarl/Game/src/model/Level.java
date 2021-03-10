@@ -91,6 +91,6 @@ public interface Level extends LevelModelView {
 	 * @param player - the player in the level
 	 * @return the viewable map of EntityType for the player
 	 */
-	ArrayList<ArrayList<EntityType>> getPlayerMap(Player player);
+	List<List<EntityType>> getPlayerMap(Player player);
 
 }

@@ -2,6 +2,7 @@ package modelView;
 
 import java.util.ArrayList;
 
+import java.util.List;
 import model.Player;
 
 /**
@@ -22,16 +23,13 @@ public class PlayerModelView {
    * see.
    * @return a map of all EntityTypes within the Level
    */
-  ArrayList<ArrayList<EntityType>> getMap() {
+  public List<List<EntityType>> getMap() {
 	return dungeonModelView.getPlayerMap(this.player); 	  
   }
-  
-  int getCurrentLevel() {
-	return dungeonModelView.getCurrentLevelIndex();
-	  
-  }
-  
-  Boolean isPlayerAlive() {  
+
+	public int getCurrentLevel() { return dungeonModelView.getCurrentLevelIndex(); }
+
+	public Boolean isPlayerAlive() {
 	return dungeonModelView.isPlayerAlive(this.player);	  
   }
 }

@@ -1,5 +1,7 @@
 package Level;
 
+import static Utils.ParseUtils.parsePoint;
+
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
@@ -93,55 +95,72 @@ public class TestLevel {
 	 * @return the level created based on the provided specifications
 	 */
 	private Level parseLevel(JSONObject JSONLevel) {
-		
-		this.levelMap = new ArrayList<>();
-		
-		//Array of Rooms
-		JSONArray JSONRooms = JSONLevel.getJSONArray("rooms");
-		//Array of Halls
-		JSONArray JSONHalls = JSONLevel.getJSONArray("hallways");
-		
-		//Objects
-		JSONArray JSONObjects = JSONLevel.getJSONArray("objects");
-		
-		//Key
-		JSONObject JSONKey = JSONObjects.getJSONObject(0);
-		Point keyLocation = parsePoint(JSONKey.getJSONArray("position"));
-		this.key = new Key(keyLocation);
-		
-		//Exit
-		JSONObject JSONExit = JSONObjects.getJSONObject(1);
-		Point exitLocation = parsePoint(JSONExit.getJSONArray("position"));
-		this.exit = new Exit(exitLocation);
-		
-		//Create the rooms and add them to the map
-		for (int i = 0; i < JSONRooms.length(); i++) {
-			JSONObject JSONRoom = JSONRooms.getJSONObject(i);
-			TestRoom roomParser = new TestRoom();
-			Room newRoom = roomParser.parseRoom(JSONRoom);
-			this.levelMap.add(newRoom);
-		}
-		
-		//Create the halls and add them to the map
-		for (int j = 0; j < JSONHalls.length(); j++) {
-			JSONObject JSONHall = JSONHalls.getJSONObject(j);
-			TestHall hallParser = new TestHall();
-			Hall newHall = hallParser.parseHall(JSONHall, this.levelMap);
-			this.levelMap.add(newHall);
-		}
+		this.levelMap = parseLevelMap(JSONLevel);
+		this.key = parseKey(JSONLevel);
+		this.exit = parseExit(JSONLevel);
+
 		
 		return new LevelImpl(this.levelMap, key, exit);
 	}
 
 	/**
-	 * Converts the JSONArray values for the location of a cell to a Point
-	 * @param JSONPoint - the JSONArray of [row, column] values
-	 * @return the Point representation of the JSONPoint, (column, row)
+	 * Parses the given JSON input for a Level. Identifies the
+	 * the rooms and hallways in the level, and puts them into a level map
+	 * @param JSONLevel - the JSON object that defines a level
+	 * @return the list of level components created based on the provided specifications
 	 */
-	private Point parsePoint(JSONArray JSONPoint) {
-		int x = JSONPoint.getInt(1);
-		int y = JSONPoint.getInt(0);
-		return new Point(x,y);
+	public static List<LevelComponent> parseLevelMap(JSONObject JSONLevel) {
+
+		List<LevelComponent> map = new ArrayList<>();
+
+		//Array of Rooms
+		JSONArray JSONRooms = JSONLevel.getJSONArray("rooms");
+		//Array of Halls
+		JSONArray JSONHalls = JSONLevel.getJSONArray("hallways");
+
+		//Create the rooms and add them to the map
+		for (int i = 0; i < JSONRooms.length(); i++) {
+			JSONObject JSONRoom = JSONRooms.getJSONObject(i);
+			TestRoom roomParser = new TestRoom();
+			Room newRoom = roomParser.parseRoom(JSONRoom);
+			map.add(newRoom);
+		}
+
+		//Create the halls and add them to the map
+		for (int j = 0; j < JSONHalls.length(); j++) {
+			JSONObject JSONHall = JSONHalls.getJSONObject(j);
+			TestHall hallParser = new TestHall();
+			Hall newHall = hallParser.parseHall(JSONHall, map);
+			map.add(newHall);
+		}
+
+		return map;
+	}
+
+	/**
+	 * Parses the given JSON input for a Level. Identifies the
+	 * the key for this level.
+	 * @param JSONLevel - the JSON object that defines a level
+	 * @return the key created based on the provided specifications
+	 */
+	public static Key parseKey(JSONObject JSONLevel) {
+		JSONArray JSONObjects = JSONLevel.getJSONArray("objects");
+		JSONObject JSONKey = JSONObjects.getJSONObject(0);
+		Point keyLocation = parsePoint(JSONKey.getJSONArray("position"));
+		return new Key(keyLocation);
+	}
+
+	/**
+	 * Parses the given JSON input for a Level. Identifies the
+	 * the exit for this level.
+	 * @param JSONLevel - the JSON object that defines a level
+	 * @return the exit created based on the provided specifications
+	 */
+	public static Exit parseExit(JSONObject JSONLevel) {
+		JSONArray JSONObjects = JSONLevel.getJSONArray("objects");
+		JSONObject JSONExit = JSONObjects.getJSONObject(1);
+		Point exitLocation = parsePoint(JSONExit.getJSONArray("position"));
+		return new Exit(exitLocation);
 	}
 
 	/**

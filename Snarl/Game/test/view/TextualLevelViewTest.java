@@ -25,12 +25,10 @@ public class TextualLevelViewTest {
 		PrintStream print = new PrintStream(output);
 		
 		//Initialize view
-		LevelView view = new TextualLevelView(modelView, print);
-
-		System.setOut(print);
+		View view = new TextualLevelView(modelView, print);
 
 		//Draw level to STDOUT
-		view.drawLevel();
+		view.draw();
 
 		//Check that level was drawn as expected
 		assertEquals(expectedOut, output.toString());

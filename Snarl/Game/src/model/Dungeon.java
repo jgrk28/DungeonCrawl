@@ -124,7 +124,7 @@ public class Dungeon implements RuleChecker, DungeonModelView {
 	}
 
 	@Override
-	public ArrayList<ArrayList<EntityType>> getPlayerMap(Player player) {
+	public List<List<EntityType>> getPlayerMap(Player player) {
 		Level currLevel = getCurrentLevel();
 		return currLevel.getPlayerMap(player);
 	}

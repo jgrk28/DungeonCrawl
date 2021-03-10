@@ -43,7 +43,7 @@ public class LevelImpl implements Level {
 	private List<LevelComponent> levelMap;
 
 	//The map of all EntityTypes used to render the Level
-	private ArrayList<ArrayList<EntityType>> viewableMap;
+	private List<List<EntityType>> viewableMap;
 	
 	//Ordered map of players that reflects the turn order 
 	//and maps to each player to their current location
@@ -356,7 +356,7 @@ public class LevelImpl implements Level {
 	}
 	
 	@Override
-	public ArrayList<ArrayList<EntityType>> getMap() {
+	public List<List<EntityType>> getMap() {
 		Point topLeftBound = getTopLeft();
 		Point bottomRightBound = getBottomRight();
 		this.viewableMap = initializeEmptyMap(topLeftBound, bottomRightBound);
@@ -426,18 +426,18 @@ public class LevelImpl implements Level {
 	 * @param topLeftBound - top left bound of viewable level
 	 * @param bottomRightBound - bottom right bound of viewable level
 	 */
-	ArrayList<ArrayList<EntityType>> initializeEmptyMap(Point topLeftBound,
+	private List<List<EntityType>> initializeEmptyMap(Point topLeftBound,
 			Point bottomRightBound) {
 		//Determine the size of the map based on the bounds
 		int xSize = bottomRightBound.x - topLeftBound.x + 1;
 		int ySize = bottomRightBound.y - topLeftBound.y + 1;
 
-		ArrayList<ArrayList<EntityType>> emptyMap = new ArrayList<>();
+		List<List<EntityType>> emptyMap = new ArrayList<>();
 
 		//Iterate through the map and place an EMPTY EntityType at
 		//each coordinate
 		for (int i = 0; i < ySize; i++) {
-			ArrayList<EntityType> emptyRow = new ArrayList<>();
+			List<EntityType> emptyRow = new ArrayList<>();
 			for (int j = 0; j < xSize; j++) {
 				emptyRow.add(j, EntityType.EMPTY);
 			}
@@ -468,7 +468,7 @@ public class LevelImpl implements Level {
 					//Add the EntityType to the viewableMap
 					int croppedYIndex = i - topLeftBound.y;
 					int croppedXIndex = j - topLeftBound.x;
-					ArrayList<EntityType> editRow = this.viewableMap.get(croppedYIndex);
+					List<EntityType> editRow = this.viewableMap.get(croppedYIndex);
 					editRow.set(croppedXIndex, destEntityDrawable);
 				} catch (IllegalArgumentException e) {
 					//Do Nothing
@@ -691,14 +691,13 @@ public class LevelImpl implements Level {
 	}
 
 	@Override
-	public ArrayList<ArrayList<EntityType>> getPlayerMap(Player player) {
+	public List<List<EntityType>> getPlayerMap(Player player) {
 		LevelComponent sourceComponent = playerLocations.get(player);
 		Point playerLocation = sourceComponent.findEntityLocation(player);
 		
-		ArrayList<ArrayList<EntityType>> fullLevel = getMap();
+		List<List<EntityType>> fullLevel = getMap();
 		//Crop map based on player's location
-		//player.cropViewableMap(fullLevel, playerLocation);
-		return null;
+		return player.cropViewableMap(fullLevel, playerLocation);
 	}
 
 }

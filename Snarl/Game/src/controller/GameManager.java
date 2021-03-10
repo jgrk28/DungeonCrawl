@@ -17,7 +17,7 @@ import model.Player;
 import model.RuleChecker;
 import model.Zombie;
 import modelView.PlayerModelView;
-import view.PlayerView;
+import view.TextualPlayerView;
 
 public class GameManager {
   private Dungeon dungeon;
@@ -59,7 +59,11 @@ public class GameManager {
   public void playGame() {
     Level currLevel = this.dungeon.startCurrentLevel();
     playLevel(currLevel);
-    //Figure out how to loop through the levels and end the game
+    while (this.dungeon.isGameOver().equals(GameState.ACTIVE)) {
+      currLevel = this.dungeon.getNextLevel();
+      playLevel(currLevel);
+    }
+    endGame(this.dungeon.isGameOver());
   }
 
   public void playLevel(Level level) {
@@ -73,26 +77,42 @@ public class GameManager {
         }
         level.playerAction(currPlayer.getKey(), playerDestination);
 
-        //Need to notify the player of the new gamestate
-        //This will send the players location, inLevel, and viewable map
-        //This may happen by just updating the player observer instead on the player as the
-        //information just needs to get to the user.
-        
-		ByteArrayOutputStream output = new ByteArrayOutputStream();
-		PrintStream gameState = new PrintStream(output);
-		PlayerView playerView = new PlayerView(level, gameState);
-		playerView.drawLevel();
-		
-        currPlayer.getValue().displayGameState(gameState.toString());
-        //Will need to add functions in level to get that information
+        notifyAllPlayers();
       }
 
       //Add adversary turns once we implement the AdversaryClient or at least a stub
     }
+    //We may want to add display to user when the level ends to give info
   }
 
-  public void endGame() {
+  private void notifyAllPlayers() {
+    for (Map.Entry<Player, PlayerClient> currPlayer : playerClients.entrySet()) {
+      //This will notify the player of the new gamestate
+      //This may happen by just updating the player observer instead on the player as the
+      //information just needs to get to the user.
+      ByteArrayOutputStream gameState = new ByteArrayOutputStream();
+      PrintStream printStream = new PrintStream(gameState);
+      PlayerModelView playerModelView = new PlayerModelView(currPlayer.getKey(), this.dungeon);
+      TextualPlayerView playerView = new TextualPlayerView(playerModelView, printStream);
+      playerView.draw();
 
+      currPlayer.getValue().displayGameState(gameState.toString());
+    }
+  }
+
+  public void endGame(GameState gameOver) {
+    for (Map.Entry<Player, PlayerClient> currPlayer : playerClients.entrySet()) {
+      String gameResult;
+      if (gameOver.equals(GameState.WON)) {
+        gameResult = "Game is over. You Won!";
+      } else if (gameOver.equals(GameState.LOST)) {
+        gameResult = "Game is over. You Lost :(";
+      } else {
+        throw new IllegalArgumentException("Game is not over");
+      }
+
+      currPlayer.getValue().displayGameState(gameResult);
+    }
   }
 
 }

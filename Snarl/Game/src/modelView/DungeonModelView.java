@@ -1,7 +1,6 @@
 package modelView;
 
-import java.util.ArrayList;
-
+import java.util.List;
 import model.Player;
 
 public interface DungeonModelView {
@@ -10,5 +9,5 @@ public interface DungeonModelView {
 	
 	Boolean isPlayerAlive(Player player);
 	
-	ArrayList<ArrayList<EntityType>> getPlayerMap(Player player); 
+	List<List<EntityType>> getPlayerMap(Player player);
 }

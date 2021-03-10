@@ -1,5 +1,7 @@
 package Room;
 
+import static Utils.ParseUtils.parsePoint;
+
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -86,17 +88,6 @@ public class TestRoom {
 		JSONArray layout = JSONRoom.getJSONArray("layout");	
 		
 		return generateRoom(origin, rows, columns, layout);
-	}
-	
-	/**
-	 * Converts the JSONArray values for the location of a cell to a Point
-	 * @param JSONPoint - the JSONArray of [row, column] values
-	 * @return the Point representation of the JSONPoint, (column, row)
-	 */
-	private Point parsePoint(JSONArray JSONPoint) {
-		int x = JSONPoint.getInt(1);
-		int y = JSONPoint.getInt(0);
-		return new Point(x,y);
 	}
 	
 	/**

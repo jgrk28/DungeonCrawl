@@ -4,6 +4,7 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 import java.util.ArrayList;
 
+import java.util.List;
 import modelView.EntityType;
 import modelView.LevelModelView;
 
@@ -33,54 +34,19 @@ import modelView.LevelModelView;
  * - Adversary - Zombie (Z)
  * - Empty - where no entities have been placed  (" ")
  */
-public class TextualLevelView implements LevelView {
-	
+public class TextualLevelView extends AbstractTextualView {
 	//The read-only version of the Level model
 	private LevelModelView modelView;
-	private PrintStream output;
 	
 	public TextualLevelView(LevelModelView modelView, PrintStream output) {
+		super(output);
 		this.modelView = modelView;
-		this.output = output;
 	}
 
 	@Override
-	public void drawLevel() {
-		
-		ArrayList<ArrayList<EntityType>> level = modelView.getMap();
-		StringBuilder output = new StringBuilder();
-		
-		//Iterate through the level, identify the entity, and append to
-		//the output
-		for (int i = 0; i < level.size(); i++) {
-			ArrayList<EntityType> row = level.get(i);
-			for (int j = 0; j < row.size(); j++) {
-				String currEntity = drawEntity(row.get(j));
-				output.append(currEntity);
-			}
-			output.append("\n");
-		}
-		this.output.print(output.toString());
-	}
-	
-	/**
-	 * Returns the String representation for a given EntityType
-	 * @param entity - the given EntityType from the Level
-	 * @return the String corresponding to an EntityType
-	 */
-	private String drawEntity(EntityType entity) {
-		switch (entity) {
-			case SPACE: return ".";
-			case WALL: return "X";
-			case HALL_SPACE: return "*";
-			case KEY: return "!";
-			case EXIT: return "@";
-			case PLAYER: return "P";
-			case GHOST: return "G";
-			case ZOMBIE: return "Z";
-			case EMPTY: return " ";
-			default: throw new IllegalArgumentException("Entity type is not valid");
-		}
+	public void draw() {
+		List<List<EntityType>> level = modelView.getMap();
+		drawLevelMap(level);
 	}
 
 }

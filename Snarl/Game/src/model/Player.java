@@ -10,6 +10,8 @@ import modelView.EntityType;
  * Represents a player within a game of Snarl
  */
 public class Player implements Actor {
+	private static final int maxMoveDistance = 2;
+	private static final int sightBoxWidth = 2;
 
 	@Override
 	public EntityType getEntityType() {
@@ -37,9 +39,9 @@ public class Player implements Actor {
 	}
 
 	@Override
-	public Boolean checkValidMoveDistance(Point source, Point destination) {	
+	public Boolean checkValidMoveDistance(Point source, Point destination) {
 		int distance = Math.abs(source.x - destination.x) + Math.abs(source.y - destination.y);
-		return distance <= 2;		
+		return distance <= maxMoveDistance;
 	}
 	
 	@Override
@@ -112,6 +114,35 @@ public class Player implements Actor {
 		} catch (IllegalArgumentException e) {
 			return false;
 		}
+	}
+
+	public List<List<EntityType>> cropViewableMap(
+			List<List<EntityType>> fullLevel,
+			Point playerLocation) {
+		List<List<EntityType>> croppedMap = new ArrayList<>();
+		if (fullLevel.size() == 0) {
+			throw new IllegalArgumentException("Full Level map contains no components");
+		}
+
+		int fullLevelYMin = playerLocation.y - this.sightBoxWidth;
+		int fullLevelYMax = playerLocation.y + this.sightBoxWidth;
+		int fullLevelXMin = playerLocation.x - this.sightBoxWidth;
+		int fullLevelXMax = playerLocation.x + this.sightBoxWidth;
+		for (int fullLevelY = fullLevelYMin; fullLevelY <= fullLevelYMax; fullLevelY++) {
+			List<EntityType> croppedRow = new ArrayList<>();
+			for (int fullLevelX = fullLevelXMin; fullLevelX <= fullLevelXMax; fullLevelX++) {
+				if (fullLevelY >= 0
+						&& fullLevelX >= 0
+						&& fullLevelY < fullLevel.size()
+						&& fullLevelY < fullLevel.get(0).size()) {
+					EntityType entityType = fullLevel.get(fullLevelY).get(fullLevelX);
+					croppedRow.add(entityType);
+				}
+			}
+			croppedMap.add(croppedRow);
+		}
+		return croppedMap;
+
 	}
 
 }
