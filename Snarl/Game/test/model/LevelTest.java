@@ -39,6 +39,18 @@ public class LevelTest {
   private Hall hall1;
   private Hall hall2;
   private Hall hall3;
+  
+  //Entity types
+  private EntityType w = EntityType.WALL;
+  private EntityType s = EntityType.SPACE;
+  private EntityType h = EntityType.HALL_SPACE;
+  private EntityType e = EntityType.EMPTY;
+  private EntityType k = EntityType.KEY;
+  private EntityType x = EntityType.EXIT;
+  private EntityType g = EntityType.GHOST;
+  private EntityType z = EntityType.ZOMBIE;
+  private EntityType p = EntityType.PLAYER;
+  
 
   //Simple 4x4 room with one space for a possible door
   private void initializeRoom1() {
@@ -885,7 +897,7 @@ public class LevelTest {
 	  assertEquals(this.room4,level.findComponent(new Point(15, 15)));  
   }
   
-  //TODO These two tests are hitting stack overflows in hashcode
+  //These two tests are hitting stack overflows in hashcode
   @Test
   public void testFindComponentAdversary() {
 	  Level level = makeTestLevel();
@@ -895,7 +907,7 @@ public class LevelTest {
   @Test
   public void testFindComponentHall() {
 	  Level level = makeTestLevel();
-	 // assertEquals(this.hall2,level.findComponent(new Point(9, 11)));  
+	  //assertEquals(this.hall2,level.findComponent(new Point(9, 11)));  
   }
   
   //Tests for checkValidLevelState
@@ -985,16 +997,22 @@ public class LevelTest {
   //TODO complete implementation for getPlayerMap
 	
 	@Test
-	public void testGetPlayerMap() {
+	public void testGetPlayer1Map() {
 	    Level level = makeTestLevel();
-	    EntityType w = EntityType.WALL;
-	    EntityType s = EntityType.SPACE;
-	    EntityType h = EntityType.HALL_SPACE;
-	    EntityType e = EntityType.EMPTY;
-	    EntityType k = EntityType.KEY;
-	    EntityType x = EntityType.EXIT;
-	    EntityType g = EntityType.GHOST;
-	    EntityType p = EntityType.PLAYER;
+	    
+	    List<List<EntityType>> expectedMap = Arrays.asList(
+	            Arrays.asList(w, w, e, e, e),
+	            Arrays.asList(s, w, e, e, e),
+	            Arrays.asList(s, s, p, h, h),
+	            Arrays.asList(w, w, e, e, h),
+	            Arrays.asList(e, e, e, e, h));
+
+	    assertEquals(expectedMap,level.getPlayerMap(this.player1));
+	}
+	
+	@Test
+	public void testGetPlayer2Map() {
+	    Level level = makeTestLevel();
 	    
 	    List<List<EntityType>> expectedMap = Arrays.asList(
 	            Arrays.asList(w, s, g, w, e),
@@ -1005,6 +1023,19 @@ public class LevelTest {
 
 	    assertEquals(expectedMap,level.getPlayerMap(this.player2));
 	}
+	
+	@Test
+	public void testGetPlayer3Map() {
+	    Level level = makeTestLevel();
+	    
+	    List<List<EntityType>> expectedMap = Arrays.asList(
+	            Arrays.asList(s, s, s, s, w),
+	            Arrays.asList(s, s, s, s, w),
+	            Arrays.asList(s, z, p, k, w),
+	            Arrays.asList(w, w, w, w, w),
+	            Arrays.asList());
 
+	    assertEquals(expectedMap,level.getPlayerMap(this.player3));
+	}
    
 }

@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.List;
 import org.junit.Test;
 
+//Tests for the Hall class
 public class HallTest {
   Hall hall1;
   Hall hall2;

@@ -177,8 +177,8 @@ public class Player implements Actor {
 			for (int fullLevelX = fullLevelXMin; fullLevelX <= fullLevelXMax; fullLevelX++) {
 				if (fullLevelY >= 0
 						&& fullLevelX >= 0
-						&& fullLevelY < fullLevel.size()
-						&& fullLevelY < fullLevel.get(0).size()) {
+						&& fullLevelY <= fullLevel.size()
+						&& fullLevelY <= fullLevel.get(0).size()) {
 					EntityType entityType = fullLevel.get(fullLevelY).get(fullLevelX);
 					croppedRow.add(entityType);
 				}

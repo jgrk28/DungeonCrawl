@@ -7,6 +7,7 @@ import modelView.EntityType;
 import org.junit.Before;
 import org.junit.Test;
 
+//Tests for entities
 public class EntityTest {
   Entity wall;
   Entity space;

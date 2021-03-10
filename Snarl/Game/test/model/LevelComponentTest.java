@@ -15,7 +15,9 @@ import org.junit.Test;
 import view.TextualLevelView;
 import view.View;
 
+//Tests for LevelComponents
 public class LevelComponentTest {
+	
   //Helper function to create a level add one component to it and then test
   //whether the level looks as expected.
   //This is currently used in both the HallTest and RoomTest classes.

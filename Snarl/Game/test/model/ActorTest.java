@@ -8,8 +8,22 @@ import java.util.List;
 import org.junit.Test;
 
 import modelView.EntityType;
+import modelView.LevelModelView;
+import model.Player;
 
+//Tests for the Actor class
 public class ActorTest {
+	
+  //Entity types
+  private EntityType w = EntityType.WALL;
+  private EntityType s = EntityType.SPACE;
+  private EntityType h = EntityType.HALL_SPACE;
+  private EntityType e = EntityType.EMPTY;
+  private EntityType k = EntityType.KEY;
+  private EntityType x = EntityType.EXIT;
+  private EntityType g = EntityType.GHOST;
+  private EntityType z = EntityType.ZOMBIE;
+  private EntityType p = EntityType.PLAYER;
   
   //Testing interaction results for players
   @Test
@@ -196,5 +210,68 @@ public class ActorTest {
     assertFalse(player.checkValidMovePath(new Point(7,0), new Point(8, -1), badMap3));
     assertFalse(player.checkValidMovePath(new Point(0,5), new Point(0, 6), badMap4));
   }
-}
+  
+  //Tests for cropViewableMap
+  
+  //Generates the full level map
+  public List<List<EntityType>> generateLevelMap() {
+	  LevelMap map = new LevelMap();
+	  List<LevelComponent> levelMap = map.initializeLevelMap();
+	    
+	  Key key = new Key(new Point(4, 17));
+	  Exit exit = new Exit(new Point(7, 11));
+	  
+	  //Initialize ModelView
+	  LevelModelView modelView = new LevelImpl(levelMap, key, exit);
+	  List<List<EntityType>> fullLevelMap = modelView.getMap();
+	  return fullLevelMap;	  
+  }
+  
+  @Test 
+  public void cropViewableMapPlayer1() {
+	  List<List<EntityType>> fullLevelMap =  generateLevelMap();
+	  
+	  List<List<EntityType>> expectedMap = Arrays.asList(
+	          Arrays.asList(w, w, e, e, e),
+	          Arrays.asList(s, w, e, e, e),
+	          Arrays.asList(s, s, h, h, h),
+	          Arrays.asList(w, w, e, e, h),
+	          Arrays.asList(e, e, e, e, h));
+	  
+	  Player player = new Player();
 
+	  assertEquals(expectedMap, player.cropViewableMap(fullLevelMap, new Point(4,2)));	    	    
+  }
+  
+  @Test 
+  public void cropViewableMapPlayer2() {
+	  List<List<EntityType>> fullLevelMap =  generateLevelMap();
+	  
+	  List<List<EntityType>> expectedMap = Arrays.asList(
+	          Arrays.asList(w, s, s, w, e),
+	          Arrays.asList(w, s, s, w, e),
+	          Arrays.asList(w, s, s, w, e),
+	          Arrays.asList(s, s, x, s, h),
+	          Arrays.asList(w, w, w, w, e));
+	  
+	  Player player = new Player();
+
+	  assertEquals(expectedMap, player.cropViewableMap(fullLevelMap, new Point(7,10)));	    	    
+  }
+  
+  @Test 
+  public void cropViewableMapPlayer3() {
+	  List<List<EntityType>> fullLevelMap =  generateLevelMap();
+	  
+	  List<List<EntityType>> expectedMap = Arrays.asList(
+	          Arrays.asList(s, s, s, s, w),
+	          Arrays.asList(s, s, s, s, w),
+	          Arrays.asList(s, s, s, k, w),
+	          Arrays.asList(w, w, w, w, w),
+	          Arrays.asList());
+	  
+	  Player player = new Player();
+
+	  assertEquals(expectedMap, player.cropViewableMap(fullLevelMap, new Point(3,17)));	    	    
+  }
+}

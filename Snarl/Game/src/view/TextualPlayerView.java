@@ -45,7 +45,7 @@ public class TextualPlayerView extends AbstractTextualView {
 		StringBuilder output = new StringBuilder();
 		output.append("You are currently on level: " + currLevelIndex + "\n");
 		if (isAlive) {
-			output.append("You are currently active in the level\n");
+			output.append("You are active in the level\n");
 		} else {
 			output.append("You are no longer active in the level\n");
 		}

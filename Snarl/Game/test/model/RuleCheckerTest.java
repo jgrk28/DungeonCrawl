@@ -11,6 +11,7 @@ import java.util.Map;
 
 import org.junit.Test;
 
+//Tests for the RuleChecker interface
 public class RuleCheckerTest {
 	
 	  private Key key;
