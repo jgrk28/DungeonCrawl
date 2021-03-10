@@ -12,8 +12,8 @@ import modelView.EntityType;
 import modelView.LevelModelView;
 import org.junit.Before;
 import org.junit.Test;
-import view.LevelView;
 import view.TextualLevelView;
+import view.View;
 
 public class LevelComponentTest {
   //Helper function to create a level add one component to it and then test
@@ -31,10 +31,10 @@ public class LevelComponentTest {
     ByteArrayOutputStream output = new ByteArrayOutputStream();
     PrintStream print = new PrintStream(output);
 
-    LevelView view = new TextualLevelView(modelView, print);
+    View view = new TextualLevelView(modelView, print);
 
     //Display level to STDOUT
-    view.drawLevel();
+    view.draw();
 
     //Check if display output is as expected
     assertEquals(expectedOut, output.toString());

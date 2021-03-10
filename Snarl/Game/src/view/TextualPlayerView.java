@@ -1,13 +1,36 @@
 package view;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import java.io.PrintStream;
-
 import java.util.List;
+
 import modelView.EntityType;
 import modelView.PlayerModelView;
 
+/**
+ * Represents an ACSII art view for a player within
+ * a level
+ * 
+ * An textual view for a player may look like this
+ * 
+ * X.GX
+ * X..X
+ * X.PX
+ * ..@.*
+ * XXXX 
+ *
+ * Where each Entity corresponds to the following:
+ * - Wall (X)
+ * - Space (.)
+ * - Hall Space (*)
+ * - Key (!)
+ * - Exit (@)
+ * - Player (P)
+ * - Adversary - Ghost (G)
+ * - Adversary - Zombie (Z)
+ * - Empty - where no entities have been placed  (" ")
+ */
 public class TextualPlayerView extends AbstractTextualView {
+	//The read-only version of the player model
 	protected PlayerModelView playerModelView;
 	
 	public TextualPlayerView(PlayerModelView playerModelView, PrintStream output) {

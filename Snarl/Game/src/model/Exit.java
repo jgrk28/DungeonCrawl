@@ -9,12 +9,16 @@ import modelView.EntityType;
  * The ASCII representation of an Exit is "@"
  */
 public class Exit implements Entity {
-	//TODO make this extend an abstract object class
-	public Point location;
+  //TODO make this extend an abstract object class
+  public Point location;
 	
-	public Exit(Point location) {
-		this.location = location;
-	}
+  /**
+    * Initialize the exit with a location
+    * @param location - the location in the level
+    */
+  public Exit(Point location) {
+    this.location = location;
+  }
 
   @Override
   public EntityType getEntityType() {

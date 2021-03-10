@@ -92,5 +92,5 @@ public interface LevelComponent {
    * @throws IllegalArgumentException if the entity is not in the room
    */
   Point findEntityLocation(Entity entity);
-
+  
 }

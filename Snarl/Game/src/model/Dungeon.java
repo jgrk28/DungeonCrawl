@@ -1,12 +1,16 @@
 package model;
 
 import java.awt.Point;
-import java.util.ArrayList;
 import java.util.List;
 
 import modelView.DungeonModelView;
 import modelView.EntityType;
 
+/**
+ * Represents a dungeon for a game of Snarl. Manages the levels relevant 
+ * to the dungeon, and checks that interactions within the dungeon are 
+ * valid based on the rules of the game.
+ */
 public class Dungeon implements RuleChecker, DungeonModelView {
 	
 	//All players in the game regardless of status in current level
@@ -34,6 +38,11 @@ public class Dungeon implements RuleChecker, DungeonModelView {
 		this.levels = levels;
 	}
 
+	/**
+	 * Starts the current level of the game and places the players and 
+	 * adversaries in the level.
+	 * @return the level
+	 */
 	public Level startCurrentLevel() {
 		Level currLevel = getCurrentLevel();
 		currLevel.placeActors(this.players, this.adversaries);
@@ -60,7 +69,7 @@ public class Dungeon implements RuleChecker, DungeonModelView {
 
 	/**
 	 * Checks if the current level is the last level in the dungeon
-	 * @return True if the current level is the last level
+	 * @return true if the current level is the last level
 	 */
 	public Boolean isLastLevel() {
 		return currLevel == levels.size();		
@@ -79,8 +88,7 @@ public class Dungeon implements RuleChecker, DungeonModelView {
 		}
 		else {
 			return GameState.ACTIVE;
-		}
-		
+		}		
 	}
 
 	@Override
@@ -95,11 +103,13 @@ public class Dungeon implements RuleChecker, DungeonModelView {
 		return level.checkValidMove(actor, destination);
 	}
 
+	/**
+	 * A level is invalid if the level has been exited while the exit is 
+	 * locked, if there is not exactly one key and exit, or if unknown players 
+	 * or adversaries are in the level
+	 */
 	@Override
 	public Boolean checkValidGameState() {
-		//A level is invalid if the level has been exited while the exit is 
-		//locked, if there is not exactly one key and exit, or if unknown players 
-		//or adversaries are in the level
 		for (Level level : this.levels) {
 			if (!level.checkValidLevelState(this.players, this.adversaries)) {
 				return false;
@@ -120,7 +130,6 @@ public class Dungeon implements RuleChecker, DungeonModelView {
 		}
 		Level currLevel = getCurrentLevel();
 		return currLevel.isPlayerAlive(player);
-	
 	}
 
 	@Override

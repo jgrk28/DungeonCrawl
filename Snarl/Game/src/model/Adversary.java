@@ -9,9 +9,12 @@ import modelView.EntityType;
  * Represents an adversary for the players in the level.
  */
 public abstract class Adversary implements Actor {
+	
+	private static final int maxMoveDistance = 1;
   
-	//An adversary cannot move to a space that has a key, exit, wall, or another adversary
+	@Override
 	public InteractionResult getInteractionResult(EntityType entityType) {
+		//An adversary cannot move to a space that has a key, exit, wall, or another adversary
 		switch (entityType) {
 			case HALL_SPACE:
 				//This will return the same result as space
@@ -27,7 +30,7 @@ public abstract class Adversary implements Actor {
 	@Override
 	public Boolean checkValidMoveDistance(Point source, Point destination) {	
 		int distance = Math.abs(source.x - destination.x) + Math.abs(source.y - destination.y);
-		return distance <= 1;		
+		return distance <= maxMoveDistance;		
 	}
 	
 	@Override
@@ -40,6 +43,11 @@ public abstract class Adversary implements Actor {
 		return isTraversable(intermediateTypes.get(relativeDestPoint.y).get(relativeDestPoint.x));		
 	}
 	
+	/**
+	 * Checks if the EntityType is traversable by an adversary
+	 * @param entityType - the entity type to check
+	 * @return true if an interaction with the EntityType is possible, false otherwise
+	 */
 	private Boolean isTraversable(EntityType entityType) {
 		try {
 			getInteractionResult(entityType);

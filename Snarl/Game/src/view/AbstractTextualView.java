@@ -4,7 +4,12 @@ import java.io.PrintStream;
 import java.util.List;
 import modelView.EntityType;
 
+/**
+ * Abstract class for common methods of Textual views
+ * (ASCII based)
+ */
 public abstract class AbstractTextualView implements View {
+ 
   protected PrintStream output;
 
   public AbstractTextualView(PrintStream output) {
@@ -31,6 +36,11 @@ public abstract class AbstractTextualView implements View {
     }
   }
 
+  /**
+   * Returns the ASCII representation of the level map based 
+   * on the provided EntityTypes
+   * @param level - the map of all EntityTypes in the level
+   */
   protected void drawLevelMap(List<List<EntityType>> level) {
     StringBuilder output = new StringBuilder();
 

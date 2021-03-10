@@ -255,7 +255,6 @@ public class DungeonTest {
 		
 		Dungeon dungeon = new Dungeon(players, adversaries, currLevel, levels);
 		
-		assertEquals(levels.get(0), dungeon.getNextLevel());
 		assertEquals(levels.get(1), dungeon.getNextLevel());
 		assertEquals(levels.get(2), dungeon.getNextLevel());
 	}

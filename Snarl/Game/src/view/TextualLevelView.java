@@ -1,10 +1,8 @@
 package view;
 
-import java.io.OutputStream;
 import java.io.PrintStream;
-import java.util.ArrayList;
-
 import java.util.List;
+
 import modelView.EntityType;
 import modelView.LevelModelView;
 

@@ -3,12 +3,12 @@ package model;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import org.junit.Before;
-
+/**
+ * This class is used to generate a level map
+ * for testing
+ */
 public class LevelMap {
 	
 	private List<LevelComponent> levelMap;

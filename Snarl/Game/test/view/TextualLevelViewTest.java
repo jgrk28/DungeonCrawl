@@ -362,7 +362,7 @@ public class TextualLevelViewTest {
 				+ "        XXXXX\n";
 
 		//Room with key is not in this level
-		//TODO cant put in no key
+		//TODO can't put in no key
 		testDrawLevel(new LevelImpl(this.levelMap, null, this.exit), expectedOut);
 
 	}

@@ -350,18 +350,22 @@ public class Hall implements LevelComponent {
 		} else {
 			nextDestination = this.waypoints.get(0);
 		}
+		//Step into the hall
 		Point prevWaypoint  = stepTowardDestination(startRoomPosition, nextDestination);
 
 		//Calculate the distance for each waypoint
 		for (int waypointCount = 0; waypointCount <= waypoints.size(); waypointCount++) {
 			//If we have reached the end of the waypoints, the nextDestination is the EndRoom
 			if (this.waypoints.size() <= waypointCount) {
+				//Step into the hall
 				nextDestination = stepTowardDestination(this.endRoomPosition, prevWaypoint);
 			} else {
 				//Otherwise, get the next waypoint in the list
 				nextDestination = this.waypoints.get(waypointCount);
 			}
-
+			
+			//If the index is located between the current position and the next destination,
+			//find the location of the entity
 			if ((length + prevWaypoint.distance(nextDestination)) > entityIndex) {
 				int distFromWaypoint = entityIndex - length;
 				Point currPosition = prevWaypoint;
@@ -426,7 +430,7 @@ public class Hall implements LevelComponent {
 
 	/**
 	 * Getter for the room connected to the end of this hallway. This room will be set at
-	 * construction but this getter will allow easy traversal of the level map.
+  	 * construction but this getter will allow easy traversal of the level map.
 	 * @return the room connected to the end of the hallway
 	 */
 	public Room getEndRoom() {
@@ -463,6 +467,17 @@ public class Hall implements LevelComponent {
 						);
 	}
 
+	/**
+	 * Helper method for equals that checks that the fields for the two
+	 * halls are the same
+	 * @param waypoints - the waypoints in the hall
+	 * @param componentMap - the map of the hall
+	 * @param startRoom - the start room of the hall
+	 * @param endRoom - the end room of the hall
+	 * @param startRoomPosition - the position of the start room
+	 * @param endRoomPosition - the position of the end room
+	 * @return true if the fields are equal for both halls
+	 */
 	private boolean checkSameFields(
 			List<Point> waypoints,
 			List<Entity> componentMap,

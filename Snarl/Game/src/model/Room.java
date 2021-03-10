@@ -227,6 +227,14 @@ public class Room implements LevelComponent {
         return room.checkSameFields(this.position, this.componentMap, this.doors);
 	}
 
+	/**
+	 * Helper method for equals that checks that the fields for the two
+	 * rooms are the same
+	 * @param position - upper-left Cartesian coordinates of the Room
+	 * @param componentMap - a list of all entities within this LevelComponent
+	 * @param doors - a map of the location and Hall that doors in the Room connect to
+	 * @return true if the fields are equal for both rooms
+	 */
 	private boolean checkSameFields(
 			Point position,
 			List<List<Entity>> componentMap,

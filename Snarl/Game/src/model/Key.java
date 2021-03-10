@@ -10,12 +10,15 @@ import modelView.EntityType;
  */
 public class Key implements Entity {
   //TODO make this extend an abstract object class
-
   public Point location;
 	
-	public Key(Point location) {
-		this.location = location;
-	}
+  /**
+	* Initialize the key with a location
+	* @param location - the location in the level
+	*/
+  public Key(Point location) {
+    this.location = location;
+  }
 
   @Override
   public EntityType getEntityType() {
