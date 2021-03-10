@@ -19,12 +19,14 @@ import java.util.List;
 //X for wall, . for space, * for hallways, P for player, G for ghost, and Z for zombie
 public class TextualLevelViewTest {
 	public static void testDrawLevel(LevelModelView modelView, String expectedOut) {
-		//Initialize view
-		LevelView view = new TextualLevelView(modelView);
-
+		
 		//Assign output of STDOUT to new Stream
 		ByteArrayOutputStream output = new ByteArrayOutputStream();
 		PrintStream print = new PrintStream(output);
+		
+		//Initialize view
+		LevelView view = new TextualLevelView(modelView, print);
+
 		System.setOut(print);
 
 		//Draw level to STDOUT

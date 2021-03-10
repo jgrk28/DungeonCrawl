@@ -61,10 +61,14 @@ public class LevelImpl implements Level {
 	
 	//Key within the level, stores its own position
 	private Key key;
+	
+	//Room that the key is located in
 	private LevelComponent keyRoom;
 	
 	//Exit within the level, stores its own position
 	private Exit exit;
+	
+	//Room that the exit is located in
 	private LevelComponent exitRoom;
 	
 	/** 
@@ -115,7 +119,8 @@ public class LevelImpl implements Level {
 	 * @param key - the key within the level
 	 * @param exit - the exit within the level
 	 */
-	public LevelImpl(List<Player> players, List<Adversary> adversaries, List<LevelComponent> levelMap, Key key, Exit exit) {
+	public LevelImpl(List<Player> players, List<Adversary> adversaries, 
+			List<LevelComponent> levelMap, Key key, Exit exit) {
 		if (levelMap.isEmpty()) {
 			throw new IllegalArgumentException("Level map does not have any components");
 		}
@@ -233,6 +238,7 @@ public class LevelImpl implements Level {
 		component.placeExit(this.exit);	
 	}
 
+	@Override
 	public void placeActors(List<Player> players, List<Adversary> adversaries) {
 		//Identify the top left-most and bottom right-most rooms in the level
 		Room topLeftRoom = getBoundaryRoom(true);
@@ -346,7 +352,7 @@ public class LevelImpl implements Level {
 				return component;
 			}
 		}
-		throw new IllegalArgumentException("Point is not anywhere within the level");
+		throw new IllegalArgumentException("Point is not within a LevelComponent");
 	}
 	
 	@Override
@@ -585,6 +591,7 @@ public class LevelImpl implements Level {
 	public Boolean checkValidMove(Actor actor, Point destination) {
 		LevelComponent sourceComponent;
 		
+		//Get the actor location from the corresponding map
 		if (actor instanceof Player) {
 			sourceComponent = this.playerLocations.get(actor);
 		} else if (actor instanceof Adversary) {
@@ -593,16 +600,27 @@ public class LevelImpl implements Level {
 			throw new IllegalArgumentException("Invalid actor type");
 		}
 		
+		//Find the point that the actor is located at
 		Point source = sourceComponent.findEntityLocation(actor);
 		
+		//Check that the actor is moving a valid distance
 		if (!actor.checkValidMoveDistance(source, destination)) {
 			return false;
 		}
 		
+		//Identify all intermediate EntityTypes between the source and the destination
+		//If a valid path exists, return true
 		List<List<EntityType>> intermediateTypes = getIntermediateTypes(source, destination, sourceComponent);
 		return actor.checkValidMovePath(source, destination, intermediateTypes);			
 	}
 	
+	/**
+	 * Returns a matrix of intermediate paths between the source and destination 
+	 * @param source - the current location of the actor
+	 * @param destination - the destination of the actor
+	 * @param sourceComponent - the component that the actor is located in
+	 * @return a list of lists for each EntityType in the intermediate paths
+	 */
 	private List<List<EntityType>> getIntermediateTypes(Point source, Point destination, LevelComponent sourceComponent) {
 		List<List<EntityType>> intermediateTypes = new ArrayList<>();
 
@@ -611,11 +629,14 @@ public class LevelImpl implements Level {
 		int minY = Math.min(source.y, destination.y);
 		int maxY = Math.max(source.y, destination.y);
 		
+		//Iterate from the smallest coordinate to the largest coordinate for the source
+		//and destination
 		for (int row = minY; row <= maxY; row++) {			
 			List<EntityType> currRow = new ArrayList<>();
 			for (int col = minX; col <= maxX; col++) {
 				Point currPoint = new Point(col, row);
 				EntityType currType;
+				//If the point is not in a LevelComponent, it is the EMPTY EntityType
 				try {
 					LevelComponent destinationComponent = findComponent(currPoint);
 					Entity currEntity = destinationComponent.getDestinationEntity(currPoint);
@@ -644,6 +665,12 @@ public class LevelImpl implements Level {
 		}
 	}
 	
+	/**
+	 * Checks that every actor in the level is a member of the game
+	 * @param players - all players to check
+	 * @param adversaries - all adversaries to check
+	 * @return true if all actors are in the game, false otherwise
+	 */
 	private Boolean checkValidActors(List<Player> players, List<Adversary> adversaries) {
 		for (Player player : this.playerLocations.keySet()) {
 			if (!players.contains(player)) {
@@ -670,7 +697,8 @@ public class LevelImpl implements Level {
 		
 		ArrayList<ArrayList<EntityType>> fullLevel = getMap();
 		//Crop map based on player's location
-		player.cropViewableMap(fullLevel, playerLocation);
+		//player.cropViewableMap(fullLevel, playerLocation);
+		return null;
 	}
 
 }

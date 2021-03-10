@@ -263,81 +263,41 @@ public class LevelTest {
 
     TextualLevelViewTest.testDrawLevel(level, expectedOut);
   }
-
-  /**
-   * Tests that the level has been won when there are no players in the level,
-   * the exit is unlocked, and the level has been exited
-   */
+  
+  //Test for placeActors
   @Test
-  public void testIsLevelOverWon() {
-    initializeLevelMap();
-    Map<Player, Point> playersPos = new HashMap<>();
-    Map<Adversary, Point> adversariesPos = new HashMap<>();
-    adversariesPos.put(this.ghost1, new Point(7, 8));
-    boolean exitUnlocked = true;
-    boolean levelExited = true;
-    Level level = new LevelImpl(
-        playersPos,
-        adversariesPos,
-        this.levelMap,
-        exitUnlocked,
-        levelExited,
-        this.key,
-        this.exit
-    );
+  public void testPlaceActors() {
+	  initializeLevelMap();
+	  List<Player> players = new ArrayList<>(Arrays.asList(this.player1, this.player2, this.player3));
+	  List<Adversary> adversaries = new ArrayList<>(Arrays.asList(this.ghost1, this.zombie, this.ghost2));
+	  Level level = new LevelImpl(this.levelMap, this.key, this.exit);
+	  level.placeActors(players, adversaries);
 
-    assertEquals(GameState.WON, level.isLevelOver());
+	    String expectedOut = ""
+	        + "XXXX              \n"
+	        + "XPPX              \n"
+	        + "XP..***           \n"
+	        + "XXXX  *           \n"
+	        + "      *           \n"
+	        + "      *           \n"
+	        + "      *           \n"
+	        + "     X.XX         \n"
+	        + "     X..X         \n"
+	        + "     X..X         \n"
+	        + "     X..X    XXXXX\n"
+	        + "  ***..@.****GZG.X\n"
+	        + "  *  XXXX    X...X\n"
+	        + "  *          X...X\n"
+	        + "XX.XXX       X...X\n"
+	        + "X....X       XXXXX\n"
+	        + "X....X            \n"
+	        + "X...!X            \n"
+	        + "XXXXXX            \n";
+
+	    TextualLevelViewTest.testDrawLevel(level, expectedOut);	  
   }
-
-  /**
-   * Tests that the level has been lost when there are no players in the level,
-   * the exit is unlocked, and the level has not been exited
-   */
-  @Test
-  public void testIsLevelOverLost() {
-    initializeLevelMap();
-    Map<Player, Point> playersPos = new HashMap<>();
-    Map<Adversary, Point> adversariesPos = new HashMap<>();
-    adversariesPos.put(this.ghost1, new Point(7, 8));
-    boolean exitUnlocked = true;
-    boolean levelExited = false;
-    Level level = new LevelImpl(
-        playersPos,
-        adversariesPos,
-        this.levelMap,
-        exitUnlocked,
-        levelExited,
-        this.key,
-        this.exit
-    );
-    assertEquals(GameState.LOST, level.isLevelOver());
-  }
-
-  /**
-   * Tests that the level is active when there is at least one player in the level,
-   * the exit is unlocked, and the level has been exited
-   */
-  @Test
-  public void testIsLevelOverActive() {
-    initializeLevelMap();
-    Map<Player, Point> playersPos = new HashMap<>();
-    playersPos.put(this.player1, new Point(5, 2));
-    Map<Adversary, Point> adversariesPos = new HashMap<>();
-    adversariesPos.put(this.ghost1, new Point(7, 8));
-    boolean exitUnlocked = true;
-    boolean levelExited = true;
-    Level level = new LevelImpl(
-        playersPos,
-        adversariesPos,
-        this.levelMap,
-        exitUnlocked,
-        levelExited,
-        this.key,
-        this.exit
-    );
-
-    assertEquals(GameState.ACTIVE, level.isLevelOver());
-  }
+  
+  //Tests for playerAction
 
   //Tests that moving a player is updated in the level
   @Test
@@ -636,6 +596,8 @@ public class LevelTest {
 	  Level level = makeTestLevel();
 	  assertTrue(level.checkValidMove(this.player3, new Point(4, 17)));
   }
+  
+  //Tests for adversaryAction
 
   //Tests that an adversary can move and travel between LevelComponents
   @Test
@@ -811,5 +773,212 @@ public class LevelTest {
 	  Level level = makeTestLevel();
 	  assertTrue(level.checkValidMove(this.ghost1, new Point(7, 9)));
   }
+  
+  //Test for isLevelOver
+
+  /**
+   * Tests that the level has been won when there are no players in the level,
+   * the exit is unlocked, and the level has been exited
+   */
+  @Test
+  public void testIsLevelOverWon() {
+    initializeLevelMap();
+    Map<Player, Point> playersPos = new HashMap<>();
+    Map<Adversary, Point> adversariesPos = new HashMap<>();
+    adversariesPos.put(this.ghost1, new Point(7, 8));
+    boolean exitUnlocked = true;
+    boolean levelExited = true;
+    Level level = new LevelImpl(
+        playersPos,
+        adversariesPos,
+        this.levelMap,
+        exitUnlocked,
+        levelExited,
+        this.key,
+        this.exit
+    );
+
+    assertEquals(GameState.WON, level.isLevelOver());
+  }
+
+  /**
+   * Tests that the level has been lost when there are no players in the level,
+   * the exit is unlocked, and the level has not been exited
+   */
+  @Test
+  public void testIsLevelOverLost() {
+    initializeLevelMap();
+    Map<Player, Point> playersPos = new HashMap<>();
+    Map<Adversary, Point> adversariesPos = new HashMap<>();
+    adversariesPos.put(this.ghost1, new Point(7, 8));
+    boolean exitUnlocked = true;
+    boolean levelExited = false;
+    Level level = new LevelImpl(
+        playersPos,
+        adversariesPos,
+        this.levelMap,
+        exitUnlocked,
+        levelExited,
+        this.key,
+        this.exit
+    );
+    assertEquals(GameState.LOST, level.isLevelOver());
+  }
+
+  /**
+   * Tests that the level is active when there is at least one player in the level,
+   * the exit is unlocked, and the level has been exited
+   */
+  @Test
+  public void testIsLevelOverActive() {
+    initializeLevelMap();
+    Map<Player, Point> playersPos = new HashMap<>();
+    playersPos.put(this.player1, new Point(5, 2));
+    Map<Adversary, Point> adversariesPos = new HashMap<>();
+    adversariesPos.put(this.ghost1, new Point(7, 8));
+    boolean exitUnlocked = true;
+    boolean levelExited = true;
+    Level level = new LevelImpl(
+        playersPos,
+        adversariesPos,
+        this.levelMap,
+        exitUnlocked,
+        levelExited,
+        this.key,
+        this.exit
+    );
+
+    assertEquals(GameState.ACTIVE, level.isLevelOver());
+  }
+  
+  //Tests for findComponent
+  
+  @Test (expected = IllegalArgumentException.class)
+  public void testFindComponentNoComponent() {
+	  Level level = makeTestLevel();
+	  level.findComponent(new Point(11, 0));  
+  }
+  
+  @Test
+  public void testFindComponentKey() {
+	  Level level = makeTestLevel();
+	  assertEquals(this.room3,level.findComponent(new Point(4, 17)));  
+  }
+  
+  @Test
+  public void testFindComponentExit() {
+	  Level level = makeTestLevel();
+	  assertEquals(this.room2,level.findComponent(new Point(7, 11)));  
+  }
+  
+  @Test
+  public void testFindComponentPlayer() {
+	  Level level = makeTestLevel();
+	  assertEquals(this.hall1,level.findComponent(new Point(4, 2)));  
+  }
+  
+  @Test
+  public void testFindComponentAdversary() {
+	  Level level = makeTestLevel();
+	  assertEquals(this.room3,level.findComponent(new Point(7, 8)));  
+  }
+  
+  @Test
+  public void testFindComponentRoom() {
+	  Level level = makeTestLevel();
+	  assertEquals(this.room4,level.findComponent(new Point(15, 15)));  
+  }
+  
+  @Test
+  public void testFindComponentHall() {
+	  Level level = makeTestLevel();
+	  assertEquals(this.hall2,level.findComponent(new Point(11, 11)));  
+  }
+  
+  //Tests for checkValidLevelState
+  @Test
+	public void testCheckValidLevelStateNormal() {
+		Level level = makeTestLevel();
+	    List<Player> players = new ArrayList<>(Arrays.asList(this.player1, this.player2, this.player3));
+	    List<Adversary> adversaries = new ArrayList<>(Arrays.asList(this.ghost1, this.zombie, this.ghost2));
+		assertTrue(level.checkValidLevelState(players, adversaries));
+	}
+
+	@Test
+	public void testCheckValidLeveltateNoKey() {
+		//Add null key
+		LevelMap map = new LevelMap();
+		Level level = new LevelImpl(map.initializeLevelMap(), null, this.exit);
+		List<Player> players = new ArrayList<>(Arrays.asList(this.player1, this.player2, this.player3));
+		List<Adversary> adversaries = new ArrayList<>(Arrays.asList(this.ghost1, this.zombie, this.ghost2));
+		assertFalse(level.checkValidLevelState(players, adversaries));
+	}
+
+	@Test
+	public void testCheckValidLevelStateNoExit() {
+		//Add no exit
+		LevelMap map = new LevelMap();
+		Level level = new LevelImpl(map.initializeLevelMap(), this.key, null);
+		List<Player> players = new ArrayList<>(Arrays.asList(this.player1, this.player2, this.player3));
+		List<Adversary> adversaries = new ArrayList<>(Arrays.asList(this.ghost1, this.zombie, this.ghost2));
+		assertFalse(level.checkValidLevelState(players, adversaries));
+	}
+
+	@Test
+	public void testCheckValidLevelStateBadExit() {
+		//Add no exit
+		LevelMap map = new LevelMap();
+		Level level = new LevelImpl(
+				new HashMap<Player, Point>(),
+				new HashMap<Adversary, Point>(),
+				map.initializeLevelMap(),
+				false,
+				true,
+				this.key,
+				this.exit
+		);
+		List<Player> players = new ArrayList<>(Arrays.asList(this.player1, this.player2, this.player3));
+		List<Adversary> adversaries = new ArrayList<>(Arrays.asList(this.ghost1, this.zombie, this.ghost2));
+		assertFalse(level.checkValidLevelState(players, adversaries));
+	}
+
+	@Test
+	public void testCheckValidLevelStateBadPlayer() {
+		Level level = makeTestLevel();
+		List<Player> players = new ArrayList<Player>(Arrays.asList(new Player(), this.player2, this.player3));
+		List<Adversary> adversaries = new ArrayList<>(Arrays.asList(this.ghost1, this.zombie, this.ghost2));
+		assertFalse(level.checkValidLevelState(players, adversaries));
+	}
+
+	@Test
+	public void testCheckValidLevelStateBadAdversary() {
+		Level level = makeTestLevel();
+		List<Player> players = new ArrayList<>(Arrays.asList(this.player1, this.player2, this.player3));
+		List<Adversary> adversaries = new ArrayList<Adversary>(Arrays.asList(new Ghost(), this.zombie, this.ghost2));
+		assertFalse(level.checkValidLevelState(players, adversaries));
+	}
+ 
+  //Tests for isPlayerAlive
+	
+	@Test
+	public void testIsPlayerAliveTrue() {
+		LevelMap map = new LevelMap();
+		List<Player> players = new ArrayList<>(Arrays.asList(this.player1, this.player2, this.player3));
+		List<Adversary> adversaries = new ArrayList<>(Arrays.asList(this.ghost1, this.zombie, this.ghost2));
+		Level level = new LevelImpl(players, adversaries, map.initializeLevelMap(),this.key, this.exit);
+		assertTrue(level.isPlayerAlive(this.player1));
+	}
+	
+	@Test
+	public void testIsPlayerAliveFalsePlayer() {
+		LevelMap map = new LevelMap();
+		List<Player> players = new ArrayList<>(Arrays.asList(this.player1, this.player2, this.player3));
+		List<Adversary> adversaries = new ArrayList<>(Arrays.asList(this.ghost1, this.zombie, this.ghost2));
+		Level level = new LevelImpl(players, adversaries, map.initializeLevelMap(),this.key, this.exit);
+		assertFalse(level.isPlayerAlive(new Player()));
+	}  
+  
+  //Tests for getPlayerMap
+  //TODO complete implementation for getPlayerMap
    
 }

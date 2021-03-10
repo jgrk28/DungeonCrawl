@@ -6,7 +6,6 @@ import java.util.List;
 
 import modelView.EntityType;
 import modelView.LevelModelView;
-import modelView.PlayerModelView;
 
 /**
  * Level extends the LevelModelView interface to provide
@@ -19,9 +18,16 @@ import modelView.PlayerModelView;
  */
 public interface Level extends LevelModelView {
 
+	/**
+	 * Places the actors in the top left-most room in the level, and 
+	 * places the adversaries in the bottom right-most room in the 
+	 * level
+	 * @param players - all players in the level
+	 * @param adversaries - all adversaries in the level
+	 */
 	void placeActors(List<Player> players, List<Adversary> adversaries);
 
-		/**
+	/**
      * Processes a player's action by moving the player and
      * performing the corresponding interaction
      * @param player - the player performing the action
@@ -52,12 +58,39 @@ public interface Level extends LevelModelView {
 	 */
 	LevelComponent findComponent(Point point);
 	
+	/**
+	 * Checks if the move is valid for the given actor and if the interaction at the 
+	 * destination is valid. A move is valid if it is within the movement bounds of 
+	 * the given actor, and if the actor can interact with the destination entity. An 
+	 * actor can be a player or an adversary
+	 * @param actor - the actor performing the move
+	 * @param destination - the destination of the move
+	 * @return true if the move is valid, false otherwise
+	 */
 	Boolean checkValidMove(Actor actor, Point destination);
 	
+	/**
+	 * Checks if the level is in a valid state. The level is invalid if the level has 
+	 * been exited while the exit is locked, if there is not exactly one key and exit, 
+	 * or if unknown players or adversaries are in the level
+	 * @param players - all players in the dungeon
+	 * @param adversaries - all adversaries in the dungeon
+	 * @return true if the level state is valid, false otherwise
+	 */
 	Boolean checkValidLevelState(List<Player> players, List<Adversary> adversaries);
 	
+	/**
+	 * Determines whether the player is currently alive in the level
+	 * @param player - the player to locate
+	 * @return true if the player is in the level, false otherwise
+	 */
 	Boolean isPlayerAlive(Player player);
 	
+	/**
+	 * Returns the map of EntityType for the viewable map around the player's location
+	 * @param player - the player in the level
+	 * @return the viewable map of EntityType for the player
+	 */
 	ArrayList<ArrayList<EntityType>> getPlayerMap(Player player);
 
 }
