@@ -2,7 +2,6 @@ package Game.controller;
 
 import static org.junit.Assert.assertEquals;
 
-import Game.controller.GameManager;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Arrays;

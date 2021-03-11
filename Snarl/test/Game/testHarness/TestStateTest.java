@@ -1,6 +1,5 @@
 package Game.testHarness;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import State.TestState;
@@ -81,4 +80,11 @@ public class TestStateTest {
   public void testBadDestination() throws IOException {
     testJSONFile("tests/State/6-in.json", "tests/State/6-out.json");
   }
+  
+  //Tests when a player moves to a space where another player is located
+  @Test
+  public void testBadDestinationPlayerExists() throws IOException {
+    testJSONFile("tests/State/7-in.json", "tests/State/7-out.json");
+  }
+
 }
