@@ -29,6 +29,7 @@ public class TextualPlayerViewTest {
 	//Fields for the PlayerModelView
 	private PlayerModelView playerModelView0;
 	private PlayerModelView playerModelView1;
+	private PlayerModelView playerModelView2;
 	
 	private DungeonModelView dungeonView;
 	
@@ -92,6 +93,7 @@ public class TextualPlayerViewTest {
 		this.dungeonView = this.dungeon;
 		this.playerModelView0 = new PlayerModelView(this.players.get(0), dungeonView);	
 		this.playerModelView1 = new PlayerModelView(this.players.get(1), dungeonView);	
+		this.playerModelView2 = new PlayerModelView(this.players.get(2), dungeonView);	
 	}
 	
 	public static void testDrawPlayerView(PlayerModelView playerModelView, String expectedOut) {
@@ -114,7 +116,7 @@ public class TextualPlayerViewTest {
 		initializePlayerModelView();
 
 		String expectedOut = "You are currently on level: 1\n"
-				+ "You are active in the level\n"
+				+ "You are active in the level\n\n"
 				+ "XXXX\n"
 				+ "XPPX\n"
 				+ "XP..\n"
@@ -124,17 +126,34 @@ public class TextualPlayerViewTest {
 	}
 	
 	@Test
-	public void testDrawPlayer1ViewNextLevel() {
+	public void testDrawPlayer1View() {
+		initializePlayerModelView();
+
+		String expectedOut = "You are currently on level: 1\n"
+				+ "You are active in the level\n\n"
+				+ "XXXX \n"
+				+ "XPPX \n"
+				+ "XP..*\n"
+				+ "XXXX \n";
+
+		testDrawPlayerView(playerModelView1, expectedOut);
+	}
+	
+	@Test
+	public void testDrawPlayer2View() {
 		initializePlayerModelView();
 
 		String expectedOut = "You are currently on level: 1\n"
 				+ "You are active in the level\n"
 				+ "XXXX\n"
 				+ "XPPX\n"
-				+ "XP..*\n"
-				+ "XXXX\n";
+				+ "XP..\n"
+				+ "XXXX\n"
+				+ "    \n";
 
-		testDrawPlayerView(playerModelView1, expectedOut);
+		testDrawPlayerView(playerModelView2, expectedOut);
 	}
+	
+	//TODO add tests for when a player is no longer in the level
 
 }
