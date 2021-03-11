@@ -8,6 +8,14 @@ import modelView.EntityType;
  */
 public class Ghost extends Adversary {
 
+	public Ghost(String name) {
+		super(name);
+	}
+
+	public Ghost() {
+		super();
+	}
+
 	@Override
 	public EntityType getEntityType() {
 		return EntityType.GHOST;

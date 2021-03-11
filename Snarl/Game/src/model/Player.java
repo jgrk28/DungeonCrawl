@@ -9,9 +9,17 @@ import modelView.EntityType;
 /**
  * Represents a player within a game of Snarl
  */
-public class Player implements Actor {
+public class Player extends AbstractActor {
 	private static final int maxMoveDistance = 2;
 	private static final int sightBoxWidth = 2;
+
+	public Player(String name) {
+		super(name);
+	}
+
+	public Player() {
+		super();
+	}
 
 	@Override
 	public EntityType getEntityType() {
@@ -132,20 +140,6 @@ public class Player implements Actor {
 			neighbors.add(new Point(currPoint.x, currPoint.y - 1));	
 		}
 		return neighbors;		
-	}
-	
-	/**
-	 * Determines if the given EntityType is traversable for a player 
-	 * @param entityType - the EntityType
-	 * @return true if the EntityType is traversable
-	 */
-	private Boolean isTraversable(EntityType entityType) {
-		try {
-			getInteractionResult(entityType);
-			return true;
-		} catch (IllegalArgumentException e) {
-			return false;
-		}
 	}
 
 	/**

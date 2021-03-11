@@ -7,6 +7,14 @@ import modelView.EntityType;
  */
 public class Zombie extends Adversary {
 
+	public Zombie(String name) {
+		super(name);
+	}
+
+	public Zombie() {
+		super();
+	}
+
 	@Override
 	public EntityType getEntityType() {
 		return EntityType.ZOMBIE;

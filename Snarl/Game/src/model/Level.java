@@ -32,7 +32,7 @@ public interface Level extends LevelModelView {
      * @param player - the player performing the action
      * @param destination - the destination for the player's move
      */
-	void playerAction(Player player, Point destination);
+	InteractionResult playerAction(Player player, Point destination);
 	
 	/**
 	 * Processes an adversary's action by moving the adversary 
@@ -40,7 +40,7 @@ public interface Level extends LevelModelView {
 	 * @param adversary - the adversary performing the action
 	 * @param destination - the destination for the adversary's move
 	 */
-	void adversaryAction(Adversary adversary, Point destination);
+	InteractionResult adversaryAction(Adversary adversary, Point destination);
 	
 	/**
 	 * Checks if the level has ended. A level is over once all
@@ -91,5 +91,15 @@ public interface Level extends LevelModelView {
 	 * @return the viewable map of EntityType for the player
 	 */
 	List<List<EntityType>> getPlayerMap(Player player);
+
+	/**
+	 * Returns the player with the given name. Since names are unique across all actors there
+	 * will only ever be one player with each name.
+	 * @param name - the name of the player to get
+	 * @return the referenced player.
+	 * @throws IllegalArgumentException if there is no player with the given name
+	 * TODO needs tests
+	 */
+	Player getPlayer(String name);
 
 }

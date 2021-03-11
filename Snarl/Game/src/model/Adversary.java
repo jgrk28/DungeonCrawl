@@ -8,10 +8,18 @@ import modelView.EntityType;
 /**
  * Represents an adversary for the players in the level.
  */
-public abstract class Adversary implements Actor {
+public abstract class Adversary extends AbstractActor {
 	
 	private static final int maxMoveDistance = 1;
-  
+
+	public Adversary(String name) {
+		super(name);
+	}
+
+	public Adversary() {
+		super();
+	}
+
 	@Override
 	public InteractionResult getInteractionResult(EntityType entityType) {
 		//An adversary cannot move to a space that has a key, exit, wall, or another adversary
@@ -26,11 +34,11 @@ public abstract class Adversary implements Actor {
 				throw new IllegalArgumentException("Illegal interaction entity for adversary");
 		}
 	}
-	
+
 	@Override
-	public Boolean checkValidMoveDistance(Point source, Point destination) {	
+	public Boolean checkValidMoveDistance(Point source, Point destination) {
 		int distance = Math.abs(source.x - destination.x) + Math.abs(source.y - destination.y);
-		return distance <= maxMoveDistance;		
+		return distance <= maxMoveDistance;
 	}
 	
 	@Override
@@ -41,19 +49,5 @@ public abstract class Adversary implements Actor {
 		Point relativeDestPoint = new Point(destination.x - minX, destination.y - minY);
 		
 		return isTraversable(intermediateTypes.get(relativeDestPoint.y).get(relativeDestPoint.x));		
-	}
-	
-	/**
-	 * Checks if the EntityType is traversable by an adversary
-	 * @param entityType - the entity type to check
-	 * @return true if an interaction with the EntityType is possible, false otherwise
-	 */
-	private Boolean isTraversable(EntityType entityType) {
-		try {
-			getInteractionResult(entityType);
-			return true;
-		} catch (IllegalArgumentException e) {
-			return false;
-		}
 	}
 }

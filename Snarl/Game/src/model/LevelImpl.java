@@ -130,13 +130,20 @@ public class LevelImpl implements Level {
 		this.playerLocations = new LinkedHashMap<>();
 		this.adversaryLocations = new LinkedHashMap<>();
 		this.key = key;
-		this.keyRoom = findComponent(this.key.location);
+		if (this.key == null) {
+			this.keyRoom = null;
+		} else {
+			this.keyRoom = findComponent(this.key.location);
+			placeKey();
+		}
+
 		this.exit = exit;
-		this.exitRoom = findComponent(this.exit.location);
-		
-		//Place the key and exit
-		placeKey();
-		placeExit();
+		if (this.exit == null) {
+			this.exitRoom = null;
+		} else {
+			this.exitRoom = findComponent(this.exit.location);
+			placeExit();
+		}
 
 		placeActors(players, adversaries);
 	}
@@ -172,13 +179,20 @@ public class LevelImpl implements Level {
 		this.playerLocations = new LinkedHashMap<>();
 		this.adversaryLocations = new LinkedHashMap<>();
 		this.key = key;
-		this.keyRoom = findComponent(this.key.location);
+		if (this.key == null) {
+			this.keyRoom = null;
+		} else {
+			this.keyRoom = findComponent(this.key.location);
+			placeKey();
+		}
+
 		this.exit = exit;
-		this.exitRoom = findComponent(this.exit.location);
-		
-		//Place the key and exit
-		placeKey();
-		placeExit();
+		if (this.exit == null) {
+			this.exitRoom = null;
+		} else {
+			this.exitRoom = findComponent(this.exit.location);
+			placeExit();
+		}
 
 		//Add players to the corresponding LevelComponent
 		for (Map.Entry<Player, Point> entry : players.entrySet()) {
@@ -476,7 +490,7 @@ public class LevelImpl implements Level {
 	}
 
 	@Override
-	public void playerAction(Player player, Point destination) {
+	public InteractionResult playerAction(Player player, Point destination) {
 		LevelComponent sourceComponent = this.playerLocations.get(player);
 		LevelComponent destinationComponent;
 		
@@ -492,11 +506,14 @@ public class LevelImpl implements Level {
 		Entity destinationEntity = destinationComponent.getDestinationEntity(destination);
 		EntityType destinationType = destinationComponent.getEntityType(destinationEntity);
 		InteractionResult interaction = player.getInteractionResult(destinationType);
-		
-		//If player runs into a exit or adversary, we are removing the player
+
+		if (interaction.equals(InteractionResult.EXIT) && !exitUnlocked) {
+			interaction = InteractionResult.NONE;
+		}
+		//If player runs into an unlocked exit or adversary, we are removing the player
 		//instead of moving them
-		boolean moveExitsLevel = interaction.equals(InteractionResult.EXIT) && exitUnlocked;
-		boolean removePlayer = moveExitsLevel || interaction.equals(InteractionResult.REMOVE_PLAYER);
+		boolean removePlayer = interaction.equals(InteractionResult.EXIT)
+				|| interaction.equals(InteractionResult.REMOVE_PLAYER);
 			
 		//If player is moving to a new room, remove them from the source room
 		//Otherwise, remove them from their current position
@@ -518,17 +535,19 @@ public class LevelImpl implements Level {
 			sourceComponent.placeExit(this.exit);
 		}
 
-		if (moveExitsLevel) {
+		if (interaction.equals(InteractionResult.EXIT)) {
 			this.levelExited = true;
 		}
 
 		if (interaction.equals(InteractionResult.FOUND_KEY)) {
 			this.exitUnlocked = true;
 		}
+
+		return interaction;
 	}
 	
 	@Override
-	public void adversaryAction(Adversary adversary, Point destination) {	
+	public InteractionResult adversaryAction(Adversary adversary, Point destination) {
 		LevelComponent sourceComponent = this.adversaryLocations.get(adversary);
 		LevelComponent destinationComponent;
 		
@@ -567,6 +586,8 @@ public class LevelImpl implements Level {
 		} else if (sourceComponent.equals(exitRoom)) {
 			sourceComponent.placeExit(this.exit);			
 		}
+
+		return interaction;
 	}
 	
 	@Override
@@ -696,6 +717,16 @@ public class LevelImpl implements Level {
 		List<List<EntityType>> fullLevel = getMap();
 		//Crop map based on player's location
 		return player.cropViewableMap(fullLevel, playerLocation);
+	}
+
+	@Override
+	public Player getPlayer(String name) {
+		for (Player player : this.playerLocations.keySet()) {
+			if (player.hasName(name)) {
+				return player;
+			}
+		}
+		throw new IllegalArgumentException("Actor does not exist in this level");
 	}
 
 }

@@ -141,26 +141,36 @@ public class TestLevel {
 	 * Parses the given JSON input for a Level. Identifies the
 	 * the key for this level.
 	 * @param JSONLevel - the JSON object that defines a level
-	 * @return the key created based on the provided specifications
+	 * @return the first key found in the list of objects if no exit found, returns null
 	 */
 	public static Key parseKey(JSONObject JSONLevel) {
 		JSONArray JSONObjects = JSONLevel.getJSONArray("objects");
-		JSONObject JSONKey = JSONObjects.getJSONObject(0);
-		Point keyLocation = parsePoint(JSONKey.getJSONArray("position"));
-		return new Key(keyLocation);
+		for (int i = 0; i < JSONObjects.length(); i++) {
+			JSONObject JSONObj = JSONObjects.getJSONObject(i);
+			if (JSONObj.getString("type").equals("key")) {
+				Point keyLocation = parsePoint(JSONObj.getJSONArray("position"));
+				return new Key(keyLocation);
+			}
+		}
+		return null;
 	}
 
 	/**
 	 * Parses the given JSON input for a Level. Identifies the
 	 * the exit for this level.
 	 * @param JSONLevel - the JSON object that defines a level
-	 * @return the exit created based on the provided specifications
+	 * @return the first exit found in the list of objects if no exit found, returns null
 	 */
 	public static Exit parseExit(JSONObject JSONLevel) {
 		JSONArray JSONObjects = JSONLevel.getJSONArray("objects");
-		JSONObject JSONExit = JSONObjects.getJSONObject(1);
-		Point exitLocation = parsePoint(JSONExit.getJSONArray("position"));
-		return new Exit(exitLocation);
+		for (int i = 0; i < JSONObjects.length(); i++) {
+			JSONObject JSONObj = JSONObjects.getJSONObject(i);
+			if (JSONObj.getString("type").equals("exit")) {
+				Point exitLocation = parsePoint(JSONObj.getJSONArray("position"));
+				return new Exit(exitLocation);
+			}
+		}
+		return null;
 	}
 
 	/**
@@ -294,7 +304,7 @@ public class TestLevel {
 
 	/**
 	 * Outputs all relevant information about the provided point
-	 * as a JSONOBject
+	 * as a JSONObject
 	 */
 	private void outputPointInfo() {
 		JSONObject outputObject = new JSONObject();
