@@ -7,21 +7,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 import java.util.Map;
-import model.Entity;
-import model.Space;
+import Game.model.Entity;
+import Game.model.Space;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
 import Hall.TestHall;
 import Room.TestRoom;
-import model.Exit;
-import model.Hall;
-import model.Key;
-import model.Level;
-import model.LevelComponent;
-import model.LevelImpl;
-import model.Room;
+import Game.model.Exit;
+import Game.model.Hall;
+import Game.model.Key;
+import Game.model.Level;
+import Game.model.LevelComponent;
+import Game.model.LevelImpl;
+import Game.model.Room;
 
 /**
  * Tests that a level can be generated based on the

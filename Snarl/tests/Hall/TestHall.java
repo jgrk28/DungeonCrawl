@@ -9,9 +9,9 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import model.Hall;
-import model.LevelComponent;
-import model.Room;
+import Game.model.Hall;
+import Game.model.LevelComponent;
+import Game.model.Room;
 
 /**
  * Tests that halls can be created based on the 

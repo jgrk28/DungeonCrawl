@@ -11,10 +11,10 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
-import model.Room;
-import model.Space;
-import model.Wall;
-import model.Entity;
+import Game.model.Room;
+import Game.model.Space;
+import Game.model.Wall;
+import Game.model.Entity;
 
 /**
  * Tests that rooms can be created based on the 
