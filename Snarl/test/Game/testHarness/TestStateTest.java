@@ -87,4 +87,40 @@ public class TestStateTest {
     testJSONFile("tests/State/7-in.json", "tests/State/7-out.json");
   }
 
+  //Supplied by instructors finds key
+  @Test
+  public void testSupplied1() throws IOException {
+    testJSONFile("tests/State/8-in.json", "tests/State/8-out.json");
+  }
+
+  //Supplied by instructors player exits
+  @Test
+  public void testSupplied2() throws IOException {
+    testJSONFile("tests/State/9-in.json", "tests/State/9-out.json");
+  }
+
+  //Supplied by instructors player ejected
+  @Test
+  public void testSupplied3() throws IOException {
+    testJSONFile("tests/State/10-in.json", "tests/State/10-out.json");
+  }
+
+  //New level move into hallway
+  @Test
+  public void testMoveIntoHall() throws IOException {
+    testJSONFile("tests/State/11-in.json", "tests/State/11-out.json");
+  }
+
+  //Bad player and bad tile
+  @Test
+  public void testDoubleInvalid() throws IOException {
+    testJSONFile("tests/State/12-in.json", "tests/State/12-out.json");
+  }
+
+  //Move player onto exit but the exit is locked
+  @Test
+  public void testExitLocked() throws IOException {
+    testJSONFile("tests/State/13-in.json", "tests/State/13-out.json");
+  }
+
 }

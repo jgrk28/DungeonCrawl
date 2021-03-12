@@ -209,9 +209,10 @@ public class Room implements LevelComponent {
 	
 	@Override
 	public int hashCode() {
+		//Can not check hashCode of Hall because that relies on the hashCode of room
 		return this.position.hashCode()
 				* this.componentMap.hashCode()
-				* this.doors.hashCode();
+				* this.doors.keySet().hashCode();
 	}
 
 	@Override

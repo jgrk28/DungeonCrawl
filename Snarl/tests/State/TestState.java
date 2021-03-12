@@ -264,8 +264,7 @@ public class TestState {
         JSONPoint.put(this.point.y);
         JSONPoint.put(this.point.x);
         JSONPlayer.put("position", JSONPoint);
-        JSONPlayers.remove(i);
-        JSONPlayers.put(JSONPlayer);
+        JSONPlayers.put(i, JSONPlayer);
         break;
       }
     }

@@ -1,11 +1,9 @@
 package Game.modelView;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import Game.modelView.DungeonModelView;
-import Game.modelView.EntityType;
-import Game.modelView.PlayerModelView;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -125,8 +123,26 @@ public class PlayerModelViewTest {
 		PlayerModelView playerView = new PlayerModelView(new Player(), this.dungeonView);
 		playerView.isPlayerAlive();
 	}
-		
-	//TODO add test for isPlayerAlive => false
+
+	//Tests for isPlayerAlive
+	@Test
+	public void testIsPlayerAliveFalse() {
+		Level firstLevel = levels.get(0);
+		Player player0 = players.get(0);
+		firstLevel.playerAction(player0, new Point(2, 2));
+		firstLevel.playerAction(player0, new Point(4, 2));
+		firstLevel.playerAction(player0, new Point(6, 2));
+		firstLevel.playerAction(player0, new Point(6, 4));
+		firstLevel.playerAction(player0, new Point(6, 6));
+		firstLevel.playerAction(player0, new Point(6, 8));
+		firstLevel.playerAction(player0, new Point(6, 10));
+		firstLevel.playerAction(player0, new Point(7, 11));
+		firstLevel.playerAction(player0, new Point(9, 11));
+		firstLevel.playerAction(player0, new Point(11, 11));
+		assertTrue(playerModelView0.isPlayerAlive());
+		firstLevel.playerAction(player0, new Point(13, 11));
+		assertFalse(playerModelView0.isPlayerAlive());
+	}
 		
 	//Test for getPlayerMap
 	

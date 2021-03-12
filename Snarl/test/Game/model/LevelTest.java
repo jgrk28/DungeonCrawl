@@ -867,7 +867,6 @@ public class LevelTest {
   }
   
   //Tests for findComponent
-  
   @Test (expected = IllegalArgumentException.class)
   public void testFindComponentNoComponent() {
 	  Level level = makeTestLevel();
@@ -902,13 +901,13 @@ public class LevelTest {
   @Test
   public void testFindComponentAdversary() {
 	  Level level = makeTestLevel();
-	  //assertEquals(this.room2,level.findComponent(new Point(2, 14)));  
+	  assertEquals(this.room2,level.findComponent(new Point(7, 8)));
   }
   
   @Test
   public void testFindComponentHall() {
 	  Level level = makeTestLevel();
-	  //assertEquals(this.hall2,level.findComponent(new Point(9, 11)));  
+	  assertEquals(this.hall2,level.findComponent(new Point(4, 11)));
   }
   
   //Tests for checkValidLevelState
@@ -996,7 +995,6 @@ public class LevelTest {
   
   //Tests for getPlayerMap
   //TODO complete implementation for getPlayerMap
-	
 	@Test
 	public void testGetPlayer1Map() {
 	    Level level = makeTestLevel();

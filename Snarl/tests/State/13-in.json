@@ -1,0 +1,44 @@
+[ {
+  "type": "state",
+  "level":
+  { "type": "level",
+    "rooms":
+    [ { "type": "room",
+      "origin": [ 0, 0 ],
+      "bounds": { "rows": 4, "columns": 4 },
+      "layout": [ [ 0, 0, 0, 0 ],
+        [ 0, 1, 1, 0 ],
+        [ 0, 1, 1, 2 ],
+        [ 0, 0, 0, 0 ] ] },
+      { "type": "room",
+        "origin": [ 1, 7 ],
+        "bounds": { "rows": 5, "columns": 5 },
+        "layout": [ [ 0, 0, 0, 0, 0 ],
+          [ 0, 1, 1, 1, 0 ],
+          [ 0, 1, 1, 1, 0 ],
+          [ 2, 1, 1, 1, 0 ],
+          [ 0, 0, 0, 0, 0 ] ] } ],
+    "objects":
+    [ { "type": "key", "position": [ 1, 1 ] },
+      { "type": "exit", "position": [ 3, 10 ] } ],
+    "hallways":
+    [ { "type": "hallway",
+      "from": [ 2, 3 ],
+      "to": [ 4, 7 ],
+      "waypoints": [ [ 2, 5 ], [ 4, 5 ] ] } ]
+  },
+  "players":
+  [ { "type": "player", "name": "Jacob", "position": [2, 1] },
+    { "type": "player", "name": "Juliette", "position": [4, 5] },
+    { "type": "player", "name": "Cosette", "position": [2, 9] }
+  ],
+  "adversaries":
+  [ { "name": "brainy", "type": "zombie", "position": [ 2, 2 ] },
+    { "name": "casper", "type": "ghost", "position": [ 4, 6 ] },
+    { "name": "buster", "type": "ghost", "position": [ 4, 10 ] }
+  ],
+  "exit-locked": true
+},
+  "Cosette",
+  [3, 10]
+]
