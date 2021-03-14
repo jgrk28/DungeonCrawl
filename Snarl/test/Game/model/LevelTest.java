@@ -920,7 +920,7 @@ public class LevelTest {
 	}
 
 	@Test
-	public void testCheckValidLeveltateNoKey() {
+	public void testCheckValidLevelStateNoKey() {
 		//Add null key
 		LevelMap map = new LevelMap();
 		Level level = new LevelImpl(map.initializeLevelMap(), null, this.exit);
