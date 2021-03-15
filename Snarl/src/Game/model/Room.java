@@ -30,8 +30,8 @@ public class Room implements LevelComponent {
 	//Upper-left Cartesian coordinates of the Room
 	private Point position;
 	
-	//A list of all entities within this LevelComponent
-	private List<List<Entity>> componentMap;
+	//A list of all tiles within this LevelComponent
+	private List<List<Tile>> componentMap;
 	
 	//A Map of the location and Hall that doors in the Room connect to
 	private Map<Point, Hall> doors;
@@ -41,7 +41,7 @@ public class Room implements LevelComponent {
 	 * @param position - upper-left Cartesian coordinates of the Room
 	 * @param componentMap - the map of all entities in the Room
 	 */
-	public Room(Point position, List<List<Entity>> componentMap) {
+	public Room(Point position, List<List<Tile>> componentMap) {
 		//Ensure component map is not empty
 		if (componentMap.isEmpty()) {
 			throw new IllegalArgumentException("The component map is empty");
@@ -97,7 +97,7 @@ public class Room implements LevelComponent {
 	public Point getBottomRightBound() {
 		//Get the size of the Room
 		int roomY = this.componentMap.size() - 1;
-		List<Entity> roomTopRow = this.componentMap.get(0);
+		List<Tile> roomTopRow = this.componentMap.get(0);
 		int roomX = roomTopRow.size() - 1;
 
 		//Find the bottom right bound based on the upper left bound and the size of the Room
@@ -106,21 +106,21 @@ public class Room implements LevelComponent {
 	}
 
 	@Override
-	public EntityType getEntityType(Entity entity) {
-		return entity.getEntityType();
+	public EntityType getEntityType(Tile tile) {
+		return tile.getEntityType();
 	}
 
 	@Override
-	public Entity getDestinationEntity(Point point) {
+	public Tile getDestinationTile(Point point) {
 		//Check to see if the destination point exists in the Room
 		if (!inComponent(point)) {
 			throw new IllegalArgumentException("Point not in component");
 		}
 
-		//If the destination exists, return the Entity at that location 
+		//If the destination exists, return the tile at that location 
 		int relativeX = point.x - this.position.x;
 		int relativeY = point.y - this.position.y;
-		List<Entity> row = this.componentMap.get(relativeY);
+		List<Tile> row = this.componentMap.get(relativeY);
 		return row.get(relativeX);
 	}
 
@@ -132,28 +132,29 @@ public class Room implements LevelComponent {
 	
 	@Override
 	public void removeActor(Actor actor) {
-		Point absoluteActorLocation = findEntityLocation(actor);
+		Point absoluteActorLocation = findActorLocation(actor);
 		//Find the relative location in the room
 		Point relativeActorLocation = new Point(absoluteActorLocation.x - position.x,
 				absoluteActorLocation.y - position.y);
-		List<Entity> actorRow = componentMap.get(relativeActorLocation.y);
+		List<Tile> actorRow = componentMap.get(relativeActorLocation.y);
 		actorRow.set(relativeActorLocation.x, new Space());
 	}
 	
 	@Override
-	public Point findEntityLocation(Entity entity) {
-		//Iterate through the Room and check if the current Entity
-		//is the given actor
+	public Point findActorLocation(Actor actor) {
+		//Iterate through the Room and check if the current tile
+		//has the given actor
 		for (int i = 0; i < componentMap.size(); i++) {
-			List<Entity> entityRow = componentMap.get(i);
-			for (int j = 0; j < entityRow.size(); j++) {
-				Entity currEntity = entityRow.get(j);
-				if (currEntity.equals(entity)) {
+			List<Tile> tileRow = componentMap.get(i);
+			for (int j = 0; j < tileRow.size(); j++) {
+				Tile currTile = tileRow.get(j);
+				Actor tileActor = currTile.getActor();
+				if (tileActor.equals(actor)) {
 					return new Point(j + position.x, i + position.y);
 				}
 			}
 		}
-		throw new IllegalArgumentException("Entity is not in this component");
+		throw new IllegalArgumentException("Actor is not in this component");
 	}
 
 	@Override
@@ -165,29 +166,27 @@ public class Room implements LevelComponent {
 		//Find the relative position of the actor in the room
 		Point relativePos = new Point(destination.x - this.position.x,
 				destination.y - this.position.y);
-		List<Entity> row = this.componentMap.get(relativePos.y);
-		row.set(relativePos.x, actor);
+		List<Tile> row = this.componentMap.get(relativePos.y);
+		Tile tile = row.get(relativePos.x);
+		tile.placeActor(actor);
+		row.set(relativePos.x, tile);
 	}
 
-	//TODO combine these
+
 	@Override
-	public void placeKey(Key key) {
-		if (this.getDestinationEntity(key.location).equals(new Space())) {
-			Point relativePos = new Point(key.location.x - this.position.x,
-					key.location.y - this.position.y);
-			List<Entity> keyRow = this.componentMap.get(relativePos.y);
-			keyRow.set(relativePos.x, key);
+	public void placeItem(Item item) {
+		Point destination = item.getLocation();
+		
+		if (!inComponent(destination)) {
+			throw new IllegalArgumentException("Point not in component");
 		}
-	}
-
-	@Override
-	public void placeExit(Exit exit) {
-		if (this.getDestinationEntity(exit.location).equals(new Space())) {
-			Point relativePos = new Point(exit.location.x - this.position.x,
-					exit.location.y - this.position.y);
-			List<Entity> exitRow = this.componentMap.get(relativePos.y);
-			exitRow.set(relativePos.x, exit);
-		}	
+		
+		Point relativePos = new Point(destination.x - this.position.x,
+				destination.y - this.position.y);
+		List<Tile> row = this.componentMap.get(relativePos.y);
+		Tile tile = row.get(relativePos.x);
+		tile.placeItem(item);
+		row.set(relativePos.x, tile);
 	}
 
 	/**
@@ -238,7 +237,7 @@ public class Room implements LevelComponent {
 	 */
 	private boolean checkSameFields(
 			Point position,
-			List<List<Entity>> componentMap,
+			List<List<Tile>> componentMap,
 			Map<Point, Hall> doors
 	) {
 		return position.equals(this.position)

@@ -26,10 +26,10 @@ public interface LevelComponent {
   
   /**
    * Identifies the EntityType for a given Entity within the LevelComponent
-   * @param entity - the Entity in the componentMap 
+   * @param tile - the Tile in the componentMap 
    * @return the corresponding EntityType
    */
-  EntityType getEntityType(Entity entity);
+  EntityType getEntityType(Tile tile);
 
   /**
    * Checks if a given coordinate is located within the Room
@@ -39,13 +39,13 @@ public interface LevelComponent {
   boolean inComponent(Point point);
 
   /**
-   * Finds the entity at a given point within the componentMap 
+   * Finds the Tile at a given point within the componentMap 
    * @param point - the coordinates of the requested entity
-   * @return the entity located at the given coordinates
+   * @return the Tile located at the given coordinates
    * @throws IllegalArgumentException if the coordinates do not exist within
    * the LevelComponent
    */
-  Entity getDestinationEntity(Point point);
+  Tile getDestinationTile(Point point);
   
   /**
    * Moves the actor to the specified destination by removing them from
@@ -70,27 +70,19 @@ public interface LevelComponent {
    */
   void placeActor(Actor actor, Point destination);
 
-  //TODO combine these to just placeObject
   /**
-   * Places the given key for this level in its position as determined by its field. If the
-   * position is occupied it will simply not place the key. This function will be called when the
-   * level is created.
+   * Places the given item for this level in its position as determined by its field.  
+   * This method will be called when the level is created.
+   * @param item - the item to be placed
    */
-  void placeKey(Key key);
-
-  /**
-   * Places the given exit for this level in its position as determined by its field. If the
-   * position is occupied it will simply not place the exit. This function will be called when the
-   * level is created and also any time an actor moves off the exit.
-   */
-  void placeExit(Exit exit);
+  void placeItem(Item item);
   
   /**
-   * Finds the location of the entity within the componentMap
-   * @param entity - the entity to be found
-   * @return the point that the entity is located at 
-   * @throws IllegalArgumentException if the entity is not in the room
+   * Finds the location of the actor within the componentMap
+   * @param actor - the actor to be found
+   * @return the point that the actor is located at 
+   * @throws IllegalArgumentException if the actor is not in the room
    */
-  Point findEntityLocation(Entity entity);
+  Point findActorLocation(Actor actor);
   
 }

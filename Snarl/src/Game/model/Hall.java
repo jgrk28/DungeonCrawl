@@ -19,8 +19,8 @@ import Game.modelView.EntityType;
  */
 public class Hall implements LevelComponent {
 	
-	//A list of all entities within this LevelComponent
-	private List<Entity> componentMap;
+	//A list of all tiles within this LevelComponent
+	private List<Tile> componentMap;
 	
 	//A list of all points that represent corners in a Hall
 	private List<Point> waypoints;
@@ -45,7 +45,7 @@ public class Hall implements LevelComponent {
 	 * @param waypoints - a list of points that represent corners in the hall. 
 	 * If there are no corners in the hall, this list will be empty
 	 */
-	public Hall(List<Entity> componentMap, List<Point> waypoints) {
+	public Hall(List<Tile> componentMap, List<Point> waypoints) {
 		this.componentMap = componentMap;
 		this.waypoints = waypoints;
 		this.startRoom = null;
@@ -79,8 +79,8 @@ public class Hall implements LevelComponent {
 	 * filling it with spaces.
 	 * @return List of Entities that represents the tiles in the hallway
 	 */
-	private List<Entity> createEmptyComponentMap() {
-		List<Entity> hallMap = new ArrayList<>();
+	private List<Tile> createEmptyComponentMap() {
+		List<Tile> hallMap = new ArrayList<>();
 		int hallLength = getLengthByWaypoint();
 		for (int i = 0; i < hallLength; i++) {
 			hallMap.add(new Space());
@@ -165,8 +165,8 @@ public class Hall implements LevelComponent {
 	//Top left includes the door that the hall is connected to
 	public Point getTopLeftBound() {
 		
-		Integer minX = startRoomPosition.x;
-		Integer minY = startRoomPosition.y;
+		Integer minX = this.startRoomPosition.x;
+		Integer minY = this.startRoomPosition.y;
 
 		//Iterate through all waypoints to find the minimum x and y values
 		for (Point waypoint : this.waypoints) {
@@ -178,11 +178,11 @@ public class Hall implements LevelComponent {
 			}
 		}
 		
-		if (endRoomPosition.x < minX) {
-			minX = endRoomPosition.x;
+		if (this.endRoomPosition.x < minX) {
+			minX = this.endRoomPosition.x;
 		}	
-		if (endRoomPosition.y < minY) {
-			minY = endRoomPosition.y;
+		if (this.endRoomPosition.y < minY) {
+			minY = this.endRoomPosition.y;
 		}
 		
 		return new Point(minX, minY);
@@ -192,8 +192,8 @@ public class Hall implements LevelComponent {
 	//Bottom right bound includes the door that the hall is connected to 
 	public Point getBottomRightBound() {
 		
-		Integer maxX = startRoomPosition.x;
-		Integer maxY = startRoomPosition.y;
+		Integer maxX = this.startRoomPosition.x;
+		Integer maxY = this.startRoomPosition.y;
 
 		//Iterate through all waypoints to find the maximum x and y values
 		for (Point waypoint : this.waypoints) {
@@ -205,22 +205,22 @@ public class Hall implements LevelComponent {
 			}
 		}
 		
-		if (endRoomPosition.x > maxX) {
-			maxX = endRoomPosition.x;
+		if (this.endRoomPosition.x > maxX) {
+			maxX = this.endRoomPosition.x;
 		}
-		if (endRoomPosition.y > maxY) {
-			maxY = endRoomPosition.y;
+		if (this.endRoomPosition.y > maxY) {
+			maxY = this.endRoomPosition.y;
 		}
 		
 		return new Point(maxX, maxY);
 	}
 
 	@Override
-	public EntityType getEntityType(Entity entity) {
+	public EntityType getEntityType(Tile tile) {
 		
-		EntityType generalType = entity.getEntityType();
+		EntityType generalType = tile.getEntityType();
 		
-		//If the Entity is a SPACE, return the HALL_SPACE EntityType
+		//If the EntityType is a SPACE, return the HALL_SPACE EntityType
 		switch (generalType) {
 			case SPACE:
 				return EntityType.HALL_SPACE;
@@ -240,9 +240,9 @@ public class Hall implements LevelComponent {
 	}
 
 	@Override
-	public Entity getDestinationEntity(Point point) {
+	public Tile getDestinationTile(Point point) {
 		int hallIndex = getHallwayIndex(point);
-		return componentMap.get(hallIndex);
+		return this.componentMap.get(hallIndex);
 	}
 
 	/**
@@ -271,10 +271,10 @@ public class Hall implements LevelComponent {
 		//Take one step into the hall in the direction of the nextDestination
 		currentPosition = stepTowardDestination(currentPosition, nextDestination);
 		
-		//Iterate through each entity in the hall
+		//Iterate through each tile in the hall
 		for (int steps = 0; steps < this.componentMap.size(); steps++) {
 			
-			//If the current coordinate is the given point, return the Entity at this location
+			//If the current coordinate is the given point, return the Tile at this location
 			if (currentPosition.equals(point)) {
 				return steps;
 			}
@@ -295,7 +295,7 @@ public class Hall implements LevelComponent {
 			currentPosition = stepTowardDestination(currentPosition, nextDestination);
 		}
 
-		//If the Entity is not located, throw the corresponding error
+		//If the Tile is not located, throw the corresponding error
 		throw new IllegalArgumentException("Point not in component");
 	}
 	
@@ -332,13 +332,13 @@ public class Hall implements LevelComponent {
 
 	@Override
 	public void removeActor(Actor actor) {
-		int actorIndex = findEntity(actor);
-		componentMap.set(actorIndex, new Space());			
+		int actorIndex = findActor(actor);
+		this.componentMap.set(actorIndex, new Space());			
 	}
 	
 	@Override
-	public Point findEntityLocation(Entity entity) {
-		int entityIndex = findEntity(entity);
+	public Point findActorLocation(Actor actor) {
+		int tileIndex = findActor(actor);
 
 		int length = 0;
 
@@ -351,10 +351,10 @@ public class Hall implements LevelComponent {
 			nextDestination = this.waypoints.get(0);
 		}
 		//Step into the hall
-		Point prevWaypoint  = stepTowardDestination(startRoomPosition, nextDestination);
+		Point prevWaypoint  = stepTowardDestination(this.startRoomPosition, nextDestination);
 
 		//Calculate the distance for each waypoint
-		for (int waypointCount = 0; waypointCount <= waypoints.size(); waypointCount++) {
+		for (int waypointCount = 0; waypointCount <= this.waypoints.size(); waypointCount++) {
 			//If we have reached the end of the waypoints, the nextDestination is the EndRoom
 			if (this.waypoints.size() <= waypointCount) {
 				//Step into the hall
@@ -366,8 +366,8 @@ public class Hall implements LevelComponent {
 			
 			//If the index is located between the current position and the next destination,
 			//find the location of the entity
-			if ((length + prevWaypoint.distance(nextDestination)) > entityIndex) {
-				int distFromWaypoint = entityIndex - length;
+			if ((length + prevWaypoint.distance(nextDestination)) > tileIndex) {
+				int distFromWaypoint = tileIndex - length;
 				Point currPosition = prevWaypoint;
 				for (int i = 0; i < distFromWaypoint; i++) {
 					currPosition = stepTowardDestination(currPosition, nextDestination);
@@ -378,45 +378,41 @@ public class Hall implements LevelComponent {
 			prevWaypoint = nextDestination;
 		}
 
-		throw new IllegalArgumentException("Entity is not in this component");
+		throw new IllegalArgumentException("Actor is not in this component");
 
 	}
 	
 	/**
-	 * Finds the location of the entity within the componentMap
-	 * @param entity - the entity to be found
-	 * @return the index in the hall that the entity is located at 
-	 * @throws IllegalArgumentException if the entity is not in the hall
+	 * Finds the location of the actor within the componentMap
+	 * @param actor - the actor to be found
+	 * @return the index in the hall that the actor is located at 
+	 * @throws IllegalArgumentException if the actor is not in the hall
 	 */
-	private int findEntity(Entity entity) {
-		for (int i = 0; i < componentMap.size(); i++) {
-			if (componentMap.get(i).equals(entity)) {
+	private int findActor(Actor actor) {
+		for (int i = 0; i < this.componentMap.size(); i++) {
+			Actor tileActor = this.componentMap.get(i).getActor();
+			if (tileActor.equals(actor)) {
 				return i;
 			}
 		}
-		throw new IllegalArgumentException("Entity is not in this component");
+		throw new IllegalArgumentException("Actor is not in this component");
 	}
 
 	@Override
 	public void placeActor(Actor actor, Point destination) {
 		int hallIndex = getHallwayIndex(destination);
-		componentMap.set(hallIndex, actor);
+		Tile tile = this.componentMap.get(hallIndex);
+		tile.placeActor(actor);
+		this.componentMap.set(hallIndex, tile);
 	}
 
 	@Override
-	public void placeKey(Key key) {
-		if (this.getDestinationEntity(key.location).equals(new Space())) {
-			int hallIndex = getHallwayIndex(key.location);
-			componentMap.set(hallIndex, key);		
-		}	
-	}
-
-	@Override
-	public void placeExit(Exit exit) {
-		if (this.getDestinationEntity(exit.location).equals(new Space())) {
-			int hallIndex = getHallwayIndex(exit.location);
-			componentMap.set(hallIndex, exit);		
-		}	
+	public void placeItem(Item item) {
+		Point destination = item.getLocation();
+		int hallIndex = getHallwayIndex(destination);
+		Tile tile = this.componentMap.get(hallIndex);
+		tile.placeItem(item);
+		this.componentMap.set(hallIndex, tile);		
 	}
 
 	/**
@@ -459,11 +455,11 @@ public class Hall implements LevelComponent {
         Hall hall = (Hall) obj;
         return hall.checkSameFields(
         		this.waypoints,
-						this.componentMap,
-						this.startRoom,
-						this.endRoom,
-						this.startRoomPosition,
-						this.endRoomPosition
+				this.componentMap,
+				this.startRoom,
+				this.endRoom,
+				this.startRoomPosition,
+				this.endRoomPosition
 						);
 	}
 
@@ -480,7 +476,7 @@ public class Hall implements LevelComponent {
 	 */
 	private boolean checkSameFields(
 			List<Point> waypoints,
-			List<Entity> componentMap,
+			List<Tile> componentMap,
 			Room startRoom,
 			Room endRoom,
 			Point startRoomPosition,

@@ -9,7 +9,7 @@ import Game.modelView.EntityType;
  * An instance of a Wall is considered to be the
  * same as any other Wall
  */
-public class Wall implements Entity {
+public class Wall implements Tile {
 
   @Override
   public EntityType getEntityType() {
@@ -25,4 +25,20 @@ public class Wall implements Entity {
   public boolean equals(Object obj) {
     return obj instanceof Wall;
   }
+
+  @Override
+  public Actor getActor() {
+	  throw new IllegalArgumentException("Actor does not exist on a wall");
+  }
+  
+  @Override
+  public void placeActor(Actor actor) {
+	throw new IllegalArgumentException("Actor cannot be placed on a wall");
+  }
+  
+  @Override
+  public void placeItem(Item item) {
+	throw new IllegalArgumentException("Item cannot be placed on a wall");
+  }
+  
 }

@@ -22,7 +22,7 @@ import Game.modelView.EntityType;
  *         X...X
  *         XXXXX
  *
- * Where each Entity corresponds to the following:
+ * Where each EntityType corresponds to the following:
  * - Wall (X)
  * - Space (.)
  * - Hall Space (*)
@@ -57,17 +57,8 @@ public class LevelImpl implements Level {
 	//True if at least one player has exited the level
 	private Boolean levelExited;
 	
-	//Key within the level, stores its own position
-	private Key key;
-	
-	//Room that the key is located in
-	private LevelComponent keyRoom;
-	
-	//Exit within the level, stores its own position
-	private Exit exit;
-	
-	//Room that the exit is located in
-	private LevelComponent exitRoom;
+	//All items in the level
+	private List<Item> items;
 	
 	/** 
 	 * Initializes a new level. This constructor is used primarily for testing 
@@ -75,7 +66,7 @@ public class LevelImpl implements Level {
 	 * @param key - the key within the level
 	 * @param exit - the exit within the level
 	 */
-	public LevelImpl(List<LevelComponent> levelMap, Key key, Exit exit) {
+	public LevelImpl(List<LevelComponent> levelMap, List<Item> items) {
 		/**
 		 * A level is comprised of a series of rooms connected by hallways.
 		 * A level is valid if no two rooms overlap, no two hallways overlap,
@@ -89,22 +80,12 @@ public class LevelImpl implements Level {
 		this.levelExited = false;
 		this.playerLocations = new LinkedHashMap<>();
 		this.adversaryLocations = new LinkedHashMap<>();
+		this.items = items;
 		
-		this.key = key;
-		if (this.key == null) {
-			this.keyRoom = null;
-		} else {
-			this.keyRoom = findComponent(this.key.location);
-			placeKey();
+		for (Item item : this.items) {	
+			placeItem(item);
 		}
 		
-		this.exit = exit;
-		if (this.exit == null) {
-			this.exitRoom = null;
-		} else {
-			this.exitRoom = findComponent(this.exit.location);
-			placeExit();
-		}
 	}
 	
 	/** 
@@ -118,7 +99,7 @@ public class LevelImpl implements Level {
 	 * @param exit - the exit within the level
 	 */
 	public LevelImpl(List<Player> players, List<Adversary> adversaries, 
-			List<LevelComponent> levelMap, Key key, Exit exit) {
+			List<LevelComponent> levelMap, List<Item> items) {
 		if (levelMap.isEmpty()) {
 			throw new IllegalArgumentException("Level map does not have any components");
 		}
@@ -129,20 +110,10 @@ public class LevelImpl implements Level {
 		this.levelExited = false;
 		this.playerLocations = new LinkedHashMap<>();
 		this.adversaryLocations = new LinkedHashMap<>();
-		this.key = key;
-		if (this.key == null) {
-			this.keyRoom = null;
-		} else {
-			this.keyRoom = findComponent(this.key.location);
-			placeKey();
-		}
-
-		this.exit = exit;
-		if (this.exit == null) {
-			this.exitRoom = null;
-		} else {
-			this.exitRoom = findComponent(this.exit.location);
-			placeExit();
+		this.items = items;
+		
+		for (Item item : this.items) {	
+			placeItem(item);
 		}
 
 		placeActors(players, adversaries);
@@ -164,8 +135,7 @@ public class LevelImpl implements Level {
 			List<LevelComponent> levelMap,
 			boolean exitUnlocked,
 			boolean levelExited,
-			Key key, 
-			Exit exit
+			List<Item> items
 	)
 	{
 		if (levelMap.isEmpty()) {
@@ -178,20 +148,10 @@ public class LevelImpl implements Level {
 		this.levelExited = levelExited;
 		this.playerLocations = new LinkedHashMap<>();
 		this.adversaryLocations = new LinkedHashMap<>();
-		this.key = key;
-		if (this.key == null) {
-			this.keyRoom = null;
-		} else {
-			this.keyRoom = findComponent(this.key.location);
-			placeKey();
-		}
-
-		this.exit = exit;
-		if (this.exit == null) {
-			this.exitRoom = null;
-		} else {
-			this.exitRoom = findComponent(this.exit.location);
-			placeExit();
+		this.items = items;
+		
+		for (Item item : this.items) {	
+			placeItem(item);
 		}
 
 		//Add players to the corresponding LevelComponent
@@ -204,8 +164,9 @@ public class LevelImpl implements Level {
 			
 			//Check that the destination of the player is a space and place the actor
 			//If the location is not a space, throw the corresponding error
-			Entity destinationEntity = component.getDestinationEntity(entry.getValue());
-			if (!(destinationEntity instanceof Space)) {
+			Tile destinationTile = component.getDestinationTile(entry.getValue());
+			EntityType destinationEntity = component.getEntityType(destinationTile);
+			if (!(destinationEntity.equals(EntityType.SPACE))) {
 				throw new IllegalArgumentException("Cannot place player, destination is not a space"); 
 			}
 			component.placeActor(entry.getKey(), entry.getValue());
@@ -220,34 +181,23 @@ public class LevelImpl implements Level {
 			
 			//Check that the destination of the adversary is a space and place the actor
 			//If the location is not a space, throw the corresponding error
-			Entity destinationEntity = component.getDestinationEntity(entry.getValue());
-			if (!(destinationEntity instanceof Space)) {
+			Tile destinationTile = component.getDestinationTile(entry.getValue());
+			EntityType destinationEntity = component.getEntityType(destinationTile);
+			if (!(destinationEntity.equals(EntityType.SPACE))) {
 				throw new IllegalArgumentException("Cannot place adversary, destination is not a space"); 
 			}
 			component.placeActor(entry.getKey(), entry.getValue());
 		}
 	}
 
-
-	//TODO combine these to just placeObject
 	/**
-	 * Places the key for this level in its position as determined by its field. If the position is
-	 * occupied it will simply not place the key. This function will be called when the level is
-	 * created.
+	 * TODO Add comment here
+	 * @param item
 	 */
-	private void placeKey() {
-		LevelComponent component = findComponent(this.key.location);
-		component.placeKey(this.key);
-	}
-
-	/**
-	 * Places the exit for this level in its position as determined by its field. If the position is
-	 * occupied it will simply not place the exit. This function will be called when the level is
-	 * created and also any time an actor moves off the exit.
-	 */
-	private void placeExit() {
-		LevelComponent component = findComponent(this.exit.location);
-		component.placeExit(this.exit);	
+	private void placeItem(Item item) {
+		LevelComponent component = findComponent(item.getLocation());
+		component.placeItem(item);
+		
 	}
 
 	@Override
@@ -344,8 +294,9 @@ public class LevelImpl implements Level {
 				Point currPoint = new Point(col, row);
 				try {
 					//If the position contains a space, place the actor here
-					Entity destEntity = room.getDestinationEntity(currPoint);
-					if (destEntity instanceof Space) {
+					Tile destinationTile = room.getDestinationTile(currPoint);
+					EntityType destinationEntity = room.getEntityType(destinationTile);
+					if (destinationEntity.equals(EntityType.SPACE)) {
 						room.placeActor(actor, currPoint);
 						return;
 					}
@@ -459,7 +410,7 @@ public class LevelImpl implements Level {
 	}
 
 	/**
-	 * Adds each Entity within a LevelComponent to the viewableMap
+	 * Adds each EntityType within a LevelComponent to the viewableMap
 	 * @param component - the LevelComponent to add to the viewableMap
 	 * @param topLeftBound - top left bound of viewable level
 	 * @param bottomRightBound - bottom right bound of viewable level
@@ -470,12 +421,12 @@ public class LevelImpl implements Level {
 		for (int i = topLeftBound.y; i <= bottomRightBound.y; i++) {
 			for (int j = topLeftBound.x; j <= bottomRightBound.x; j++) {
 				try {
-					//Check if an Entity exists at the given coordinates in the LevelComponent
+					//Check if a Tile exists at the given coordinates in the LevelComponent
 					//If these coordinates are not available for this LevelComponent, no changes are made
-					Entity destEntity = component.getDestinationEntity(new Point(j, i));
+					Tile destTile = component.getDestinationTile(new Point(j, i));
 					
-					//Get the EntityType of the entity at these coordinates
-					EntityType destEntityDrawable = component.getEntityType(destEntity);
+					//Get the EntityType of the tile at these coordinates
+					EntityType destEntityDrawable = component.getEntityType(destTile);
 					
 					//Add the EntityType to the viewableMap
 					int croppedYIndex = i - topLeftBound.y;
@@ -503,8 +454,8 @@ public class LevelImpl implements Level {
 		}
 		
 		//Determine the EntityType at the destination and the resulting interaction
-		Entity destinationEntity = destinationComponent.getDestinationEntity(destination);
-		EntityType destinationType = destinationComponent.getEntityType(destinationEntity);
+		Tile destinationTile = destinationComponent.getDestinationTile(destination);
+		EntityType destinationType = destinationComponent.getEntityType(destinationTile);
 		InteractionResult interaction = player.getInteractionResult(destinationType);
 
 		if (interaction.equals(InteractionResult.EXIT) && !exitUnlocked) {
@@ -529,10 +480,6 @@ public class LevelImpl implements Level {
 			this.playerLocations.replace(player, destinationComponent);	
 		} else {
 			this.playerLocations.remove(player);
-		}
-
-		if (sourceComponent.equals(exitRoom) && !this.exitUnlocked) {
-			sourceComponent.placeExit(this.exit);
 		}
 
 		if (interaction.equals(InteractionResult.EXIT)) {
@@ -560,8 +507,8 @@ public class LevelImpl implements Level {
 		}
 		
 		//Determine the EntityType at the destination and the resulting interaction
-		Entity destinationEntity = destinationComponent.getDestinationEntity(destination);
-		EntityType destinationType = destinationComponent.getEntityType(destinationEntity);
+		Tile destinationTile = destinationComponent.getDestinationTile(destination);
+		EntityType destinationType = destinationComponent.getEntityType(destinationTile);
 		InteractionResult interaction = adversary.getInteractionResult(destinationType);
 			
 		//If adversary is moving to a new room, remove them from the source room
@@ -570,22 +517,16 @@ public class LevelImpl implements Level {
 			sourceComponent.removeActor(adversary);
 		} else {
 			destinationComponent.removeActor(adversary);
-		}
-		
-		//Place the adversary and update their location
-		destinationComponent.placeActor(adversary, destination);
-		this.adversaryLocations.replace(adversary, destinationComponent);	
+		}	
 	
 		//If the adversary interacts with a player, remove the player from the level
 		if (interaction.equals(InteractionResult.REMOVE_PLAYER)) {
-			this.playerLocations.remove(destinationEntity);
+			this.playerLocations.remove(destinationTile.getActor());
 		}	
 		
-		if (sourceComponent.equals(keyRoom) && !this.exitUnlocked) {
-			sourceComponent.placeKey(this.key);
-		} else if (sourceComponent.equals(exitRoom)) {
-			sourceComponent.placeExit(this.exit);			
-		}
+		//Place the adversary and update their location
+		destinationComponent.placeActor(adversary, destination);
+		this.adversaryLocations.replace(adversary, destinationComponent);
 
 		return interaction;
 	}
@@ -620,7 +561,7 @@ public class LevelImpl implements Level {
 		}
 		
 		//Find the point that the actor is located at
-		Point source = sourceComponent.findEntityLocation(actor);
+		Point source = sourceComponent.findActorLocation(actor);
 		
 		//Check that the actor is moving a valid distance
 		if (!actor.checkValidMoveDistance(source, destination)) {
@@ -658,8 +599,8 @@ public class LevelImpl implements Level {
 				//If the point is not in a LevelComponent, it is the EMPTY EntityType
 				try {
 					LevelComponent destinationComponent = findComponent(currPoint);
-					Entity currEntity = destinationComponent.getDestinationEntity(currPoint);
-					currType = destinationComponent.getEntityType(currEntity);
+					Tile currTile = destinationComponent.getDestinationTile(currPoint);
+					currType = destinationComponent.getEntityType(currTile);
 				} catch (IllegalArgumentException e) {
 					currType = EntityType.EMPTY;
 				}
@@ -674,14 +615,45 @@ public class LevelImpl implements Level {
 	public Boolean checkValidLevelState(List<Player> players, List<Adversary> adversaries) {
 		if (this.levelExited && !this.exitUnlocked) {
 			return false;
-		} //TODO Additional checking may be needed for the key and exit in the level constructor 
-		else if (this.key == null || this.exit == null) {
+		} 
+		else if (!checkValidItems()) {
 			return false;		
 		} else if (!checkValidActors(players, adversaries)) {
 			return false;
 		} else {
 			return true;
 		}
+	}
+	
+	/**
+	 * TODO Add comment here
+	 * @return
+	 */
+	private Boolean checkValidItems() {
+		int exitCount = 0;
+		int keyCount = 0;
+		List<Point> positions = new ArrayList<>();
+		//Check that there is at exactly one exit
+		//Check if there is exactly one key or if the exit is unlocked
+		for (Item item : this.items) {
+			if (positions.contains(item.getLocation())) {
+				return false;
+			} else {
+				positions.add(item.getLocation());
+			}
+			
+			if (item instanceof Exit) {
+				exitCount++;
+			} else if (item instanceof Key) {
+				keyCount++;
+			} else {
+				//Return false if the level contains an invalid item
+				return false;
+			}
+		}
+		
+		return exitCount == 1 && (keyCount == 1 || (keyCount == 0 && this.exitUnlocked));
+		
 	}
 	
 	/**
@@ -712,7 +684,7 @@ public class LevelImpl implements Level {
 	@Override
 	public List<List<EntityType>> getPlayerMap(Player player) {
 		LevelComponent sourceComponent = playerLocations.get(player);
-		Point playerLocation = sourceComponent.findEntityLocation(player);
+		Point playerLocation = sourceComponent.findActorLocation(player);
 		
 		List<List<EntityType>> fullLevel = getMap();
 		//Crop map based on player's location

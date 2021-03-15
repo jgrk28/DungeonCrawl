@@ -9,20 +9,74 @@ import Game.modelView.EntityType;
  * An instance of a Space is considered to be the
  * same as any other Space
  */
-public class Space implements Entity {
+public class Space implements Tile {
+	
+  private Item item;
+  private Actor actor;
+  
+  public Space() {
+	  this.item = null;
+	  this.actor = null;
+  }
+  
+  public Space(Item item, Actor actor) {
+	  this.item = item;
+	  this.actor = actor;
+  }
 
   @Override
   public EntityType getEntityType() {
+	if (actor != null) {
+		return actor.getEntityType();
+	} 
+	if (item != null) {
+		return item.getEntityType();
+	}
     return EntityType.SPACE;
   }
 
   @Override
   public int hashCode() {
-    return 1;
+    return this.item.hashCode() * this.actor.hashCode();
   }
 
   @Override
   public boolean equals(Object obj) {
-    return obj instanceof Space;
+      if (obj == this) { 
+          return true; 
+      } 
+      if (!(obj instanceof Space)) { 
+          return false; 
+      } 
+      
+      Space space = (Space) obj;
+      return space.checkSameFields(this.item, this.actor);
   }
+  
+  /** 
+   * Add comment here
+   * @param items
+   * @param actor
+   * @return
+   */
+  private Boolean checkSameFields(Item item, Actor actor) {
+	  return item.equals(this.item) && actor.equals(this.actor);
+	   
+  }
+
+  @Override
+  public Actor getActor() {
+	  return this.actor;
+  }
+
+  @Override
+  public void placeActor(Actor actor) {
+	this.actor = actor;	
+  }
+  
+  @Override
+  public void placeItem(Item item) {
+	this.item = item;	
+  }
+  
 }

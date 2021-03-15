@@ -8,7 +8,13 @@ import Game.modelView.EntityType;
 /**
  * Represents an entity that has the ability to move and interact.
  */
-public interface Actor extends Entity {
+public interface Actor {
+	
+	/** 
+	 * Returns the EntityType that corresponds to this entity
+	 * @return The type of entity 
+	 */
+	EntityType getEntityType();
 
 	/**
 	 * Returns the InteractionResult that corresponds to this actor moving into
