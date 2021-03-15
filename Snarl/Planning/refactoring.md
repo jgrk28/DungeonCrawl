@@ -17,7 +17,7 @@ Main Goals:
 * Refactor PlayerClient so that it has knowledge of its location relative to the levels origin
 * Confirm if player can jump over another player and fix code if it can
 3) Abstracting code and breaking up large methods to make things easier to read/understand
-* Unify test setup of all the model structures to test and make them easily accessable
+* Unify test setup of all the model structures to test and make them easily accessible
 * Refactor playerAction and adversaryAction
   * If we don't end up using moveActor, remove it
 * In general reduce long function into smaller subcomponents
