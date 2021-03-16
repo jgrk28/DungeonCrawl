@@ -3,8 +3,6 @@ package Game.modelView;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import Game.modelView.DungeonModelView;
-import Game.modelView.EntityType;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -19,7 +17,6 @@ import Game.model.Ghost;
 import Game.model.Key;
 import Game.model.Level;
 import Game.model.LevelImpl;
-import Game.model.LevelMap;
 import Game.model.Player;
 import Game.model.Zombie;
 

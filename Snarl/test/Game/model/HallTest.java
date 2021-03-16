@@ -6,44 +6,23 @@ import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import org.junit.Before;
 import org.junit.Test;
 
 //Tests for the Hall class
 public class HallTest {
   Hall hall1;
   Hall hall2;
-  Room fakeRoom1;
-  Room fakeRoom2;
-  Space space = new Space();
-  Player player = new Player();
-  Zombie zombie = new Zombie();
-  Ghost ghost = new Ghost();
+  Room dummyRoom1;
+  Room dummyRoom2;
 
-  private void initHall1() {
-    //Hall goes (2,11) -> (5,11) -> (5,8)
-    List<Entity> componentMap = Arrays.asList(space, space, space, space, space, space, space);
-    List<Point> waypoints = new ArrayList<Point>();
-    waypoints.add(new Point(5,11));
-
-    this.hall1 = new Hall(componentMap, waypoints);
-
-    //Doors for hall1
-    hall1.connectRooms(new Point(1,11), fakeRoom1, new Point(5,7), fakeRoom2);
-  }
-
-  private void initHall2() {
-    //Hall goes (4,3) -> (5,3) -> (5,6) -> (2,6) -> (2,10)
-    List<Entity> componentMap = Arrays.asList(space, space, space, space, player, space, space,
-        space, zombie, ghost, space, space);
-    List<Point> waypoints = new ArrayList<Point>();
-    waypoints.add(new Point(5,3));
-    waypoints.add(new Point(5,6));
-    waypoints.add(new Point(2,6));
-
-    this.hall2 = new Hall(componentMap, waypoints);
-
-    //Doors for hall1
-    hall2.connectRooms(new Point(3,3), fakeRoom2, new Point(2,11), fakeRoom1);
+  @Before
+  public void initEntities() {
+    ModelCreator creator = new ModelCreator();
+    this.hall1 = creator.initializeHall4();
+    this.hall1 = creator.initializeHall5();
+    this.dummyRoom1 = creator.getDummyRoom1();
+    this.dummyRoom2 = creator.getDummyRoom2();
   }
 
   //Constructor and connectRooms tested by initializing hallways
@@ -52,8 +31,6 @@ public class HallTest {
   //into the constructor.
   @Test
   public void testHall1Constructor() {
-    initHall1();
-
     String expectedOut = ""
         + "     \n"
         + "    *\n"
@@ -66,8 +43,6 @@ public class HallTest {
 
   @Test
   public void testHall2Constructor() {
-    initHall2();
-
     String expectedOut = ""
         + "  **\n"
         + "   *\n"
@@ -86,20 +61,16 @@ public class HallTest {
   //and the returned room should be pointing to the same thing that we passed into the constructor.
   @Test
   public void testGetStartRoom() {
-    initHall1();
-    initHall2();
-    assertEquals(this.fakeRoom1, this.hall1.getStartRoom());
-    assertEquals(this.fakeRoom2, this.hall2.getStartRoom());
+    assertEquals(this.dummyRoom1, this.hall1.getStartRoom());
+    assertEquals(this.dummyRoom2, this.hall2.getStartRoom());
   }
 
   //Tests that the ending rooms are initialized properly. This is done in the constructor
   //and the returned room should be pointing to the same thing that we passed into the constructor.
   @Test
   public void testGetEndRoom() {
-    initHall1();
-    initHall2();
-    assertEquals(this.fakeRoom2, this.hall1.getEndRoom());
-    assertEquals(this.fakeRoom1, this.hall2.getEndRoom());
+    assertEquals(this.dummyRoom2, this.hall1.getEndRoom());
+    assertEquals(this.dummyRoom1, this.hall2.getEndRoom());
   }
 
 }

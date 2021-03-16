@@ -6,8 +6,6 @@ import java.awt.Point;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import Game.modelView.EntityType;
 import Game.modelView.LevelModelView;
 import org.junit.Before;
@@ -25,9 +23,7 @@ public class LevelComponentTest {
     //Create a new ModelView containing just the room that was passed in
     ArrayList<LevelComponent> levelMap = new ArrayList<LevelComponent>();
     levelMap.add(component);
-    Key key = null;
-    Exit exit = null;
-    LevelModelView modelView = new LevelImpl(levelMap, key, exit);
+    LevelModelView modelView = new LevelImpl(levelMap, new ArrayList<>());
 
     //Make print stream to go into view
     ByteArrayOutputStream output = new ByteArrayOutputStream();
@@ -56,70 +52,14 @@ public class LevelComponentTest {
   private Zombie zombie = new Zombie();
   private Ghost ghost = new Ghost();
 
-  private void initRoom1() {
-    //Simple 4x4 room
-    List<List<Entity>> componentMap = new ArrayList<List<Entity>>();
-    componentMap.add(Arrays.asList(wall, wall, wall, wall));
-    componentMap.add(Arrays.asList(wall, key, player, wall));
-    componentMap.add(Arrays.asList(wall, space, space, wall));
-    componentMap.add(Arrays.asList(wall, ghost, wall, wall));
-
-    this.room1 = new Room(new Point(0,0), componentMap);
-  }
-
-  private void initRoom2() {
-    //Weird 2x2 room
-    List<List<Entity>> componentMap = new ArrayList<List<Entity>>();
-    componentMap.add(Arrays.asList(space, wall));
-    componentMap.add(Arrays.asList(wall, exit));
-
-    this.room2 = new Room(new Point(15,7), componentMap);
-  }
-
-  private void initRoom3() {
-    //3x3 room that start at a negative position
-    List<List<Entity>> componentMap = new ArrayList<List<Entity>>();
-    componentMap.add(Arrays.asList(wall, wall, wall));
-    componentMap.add(Arrays.asList(wall, space, wall));
-    componentMap.add(Arrays.asList(wall, zombie, wall));
-
-    this.room3 = new Room(new Point(-5,-1), componentMap);
-  }
-
-  private void initHall1() {
-    //Hall goes (2,11) -> (5,11) -> (5,8)
-    List<Entity> componentMap = Arrays.asList(space, space, player, space, space, space, space);
-    List<Point> waypoints = new ArrayList<Point>();
-    waypoints.add(new Point(5,11));
-
-    this.hall1 = new Hall(componentMap, waypoints);
-
-    //Doors for hall1
-    hall1.connectRooms(new Point(1,11), room1, new Point(5,7), room2);
-  }
-
-  private void initHall2() {
-    //Hall goes (4,3) -> (5,3) -> (5,6) -> (2,6) -> (2,10)
-    List<Entity> componentMap = Arrays.asList(zombie, ghost, space, space, space, space, space,
-        space, space, space, space, space);
-    List<Point> waypoints = new ArrayList<Point>();
-    waypoints.add(new Point(5,3));
-    waypoints.add(new Point(5,6));
-    waypoints.add(new Point(2,6));
-
-    this.hall2 = new Hall(componentMap, waypoints);
-
-    //Doors for hall2
-    hall2.connectRooms(new Point(3,3), room1, new Point(2,11), room2);
-  }
-
   @Before
   public void initEntities() {
-    initRoom1();
-    initRoom2();
-    initRoom3();
-    initHall1();
-    initHall2();
+    ModelCreator creator = new ModelCreator();
+    this.room1 = creator.initializeRoom5();
+    this.room2 = creator.initializeRoom6();
+    this.room3 = creator.initializeRoom7();
+    this.hall1 = creator.initializeHall4();
+    this.hall2 = creator.initializeHall5();
   }
 
   @Test

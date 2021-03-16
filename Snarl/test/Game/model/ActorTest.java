@@ -211,24 +211,11 @@ public class ActorTest {
   }
   
   //Tests for cropViewableMap
-  
-  //Generates the full level map
-  public List<List<EntityType>> generateLevelMap() {
-	  LevelMap map = new LevelMap();
-	  List<LevelComponent> levelMap = map.initializeLevelMap();
-	    
-	  Key key = new Key(new Point(4, 17));
-	  Exit exit = new Exit(new Point(7, 11));
-	  
-	  //Initialize ModelView
-	  LevelModelView modelView = new LevelImpl(levelMap, key, exit);
-	  List<List<EntityType>> fullLevelMap = modelView.getMap();
-	  return fullLevelMap;	  
-  }
-  
+
   @Test 
   public void cropViewableMapPlayer1() {
-	  List<List<EntityType>> fullLevelMap =  generateLevelMap();
+    ModelCreator creator = new ModelCreator();
+	  List<List<EntityType>> fullLevelMap = creator.initializeLevel1ViewableMap();
 	  
 	  List<List<EntityType>> expectedMap = Arrays.asList(
 	          Arrays.asList(w, w, e, e, e),
@@ -244,7 +231,8 @@ public class ActorTest {
   
   @Test 
   public void cropViewableMapPlayer2() {
-	  List<List<EntityType>> fullLevelMap =  generateLevelMap();
+    ModelCreator creator = new ModelCreator();
+    List<List<EntityType>> fullLevelMap = creator.initializeLevel1ViewableMap();
 	  
 	  List<List<EntityType>> expectedMap = Arrays.asList(
 	          Arrays.asList(w, s, s, w, e),
@@ -260,7 +248,8 @@ public class ActorTest {
   
   @Test 
   public void cropViewableMapPlayer3() {
-	  List<List<EntityType>> fullLevelMap =  generateLevelMap();
+    ModelCreator creator = new ModelCreator();
+    List<List<EntityType>> fullLevelMap = creator.initializeLevel1ViewableMap();
 	  
 	  List<List<EntityType>> expectedMap = Arrays.asList(
 	          Arrays.asList(s, s, s, s, w),

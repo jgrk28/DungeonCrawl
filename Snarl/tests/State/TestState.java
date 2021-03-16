@@ -8,7 +8,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import Game.model.Adversary;
-import Game.model.Entity;
 import Game.model.Exit;
 import Game.model.Ghost;
 import Game.model.InteractionResult;
