@@ -106,10 +106,9 @@ public class GameManager {
       for (Map.Entry<Player, PlayerClient> currPlayer : playerClients.entrySet()) {
         Point playerDestination = currPlayer.getValue().takeTurn();
         
-        //Keep prompting the user to take a turn if the given turn is not valid
-        while (!this.ruleChecker.checkValidMove(currPlayer.getKey(), playerDestination)) {
+        //If user entered invalid move notify them and skip their turn
+        if (!this.ruleChecker.checkValidMove(currPlayer.getKey(), playerDestination)) {
           //TODO Need to notify the playerClient that their move is invalid
-          playerDestination = currPlayer.getValue().takeTurn();
         }
         //Execute the move and corresponding interaction
         level.playerAction(currPlayer.getKey(), playerDestination);

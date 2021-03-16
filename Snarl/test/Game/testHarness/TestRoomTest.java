@@ -1,5 +1,6 @@
 package Game.testHarness;
 
+import Game.model.Tile;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -15,7 +16,6 @@ import java.nio.charset.Charset;
 import org.junit.Test;
 
 import Room.TestRoom;
-import Game.model.Entity;
 import Game.model.Room;
 import Game.model.Space;
 import Game.model.Wall;
@@ -28,8 +28,8 @@ import org.json.JSONTokener;
 // Tests that the methods for TestRoom work as expected
 public class TestRoomTest {
 	
-	Space space = new Space();
-	Wall wall = new Wall();
+	Tile space = new Space();
+	Tile wall = new Wall();
 	
 	//Check that an exception is thrown when invalid input is provided
 	@Test(expected = IllegalArgumentException.class)
@@ -306,11 +306,11 @@ public class TestRoomTest {
 		Room room = testRoom.parseRoom(JSONInput);
 		
 		
-		List<Entity> row1 = new ArrayList<>(Arrays.asList(wall, wall, space, wall));
-		List<Entity> row2 = new ArrayList<>(Arrays.asList(wall, space, space, wall));
-		List<Entity> row3 = new ArrayList<>(Arrays.asList(wall, space, space, wall));
-		List<Entity> row4 = new ArrayList<>(Arrays.asList(wall, space, wall, wall));
-		List<List<Entity>> componentMap = new ArrayList<>(Arrays.asList(row1, row2, row3, row4));
+		List<Tile> row1 = new ArrayList<>(Arrays.asList(wall, wall, space, wall));
+		List<Tile> row2 = new ArrayList<>(Arrays.asList(wall, space, space, wall));
+		List<Tile> row3 = new ArrayList<>(Arrays.asList(wall, space, space, wall));
+		List<Tile> row4 = new ArrayList<>(Arrays.asList(wall, space, wall, wall));
+		List<List<Tile>> componentMap = new ArrayList<>(Arrays.asList(row1, row2, row3, row4));
 		Room expectedRoom = new Room(new Point(1,3), componentMap);
 		
 		assertEquals(expectedRoom, room);
@@ -335,12 +335,12 @@ public class TestRoomTest {
 		TestRoom testRoom = new TestRoom();
 		Room room = testRoom.parseRoom(JSONInput);
 		
-		List<Entity> row1 = new ArrayList<>(Arrays.asList(wall, wall, wall, wall, wall));
-		List<Entity> row2 = new ArrayList<>(Arrays.asList(wall, space, space, space, wall));
-		List<Entity> row3 = new ArrayList<>(Arrays.asList(space, space, space, space, wall));
-		List<Entity> row4 = new ArrayList<>(Arrays.asList(wall, space, space, space, wall));
-		List<Entity> row5 = new ArrayList<>(Arrays.asList(wall, wall, wall, wall, wall));
-		List<List<Entity>> componentMap = new ArrayList<>(Arrays.asList(row1, row2, row3, row4, row5));
+		List<Tile> row1 = new ArrayList<>(Arrays.asList(wall, wall, wall, wall, wall));
+		List<Tile> row2 = new ArrayList<>(Arrays.asList(wall, space, space, space, wall));
+		List<Tile> row3 = new ArrayList<>(Arrays.asList(space, space, space, space, wall));
+		List<Tile> row4 = new ArrayList<>(Arrays.asList(wall, space, space, space, wall));
+		List<Tile> row5 = new ArrayList<>(Arrays.asList(wall, wall, wall, wall, wall));
+		List<List<Tile>> componentMap = new ArrayList<>(Arrays.asList(row1, row2, row3, row4, row5));
 		Room expectedRoom = new Room(new Point(5,10), componentMap);
 		
 		assertEquals(expectedRoom, room);
@@ -365,12 +365,12 @@ public class TestRoomTest {
 		TestRoom testRoom = new TestRoom();
 		Room room = testRoom.parseRoom(JSONInput);
 		
-		List<Entity> row1 = new ArrayList<>(Arrays.asList(wall, wall, space, wall, wall));
-		List<Entity> row2 = new ArrayList<>(Arrays.asList(wall, space, space, space, wall));
-		List<Entity> row3 = new ArrayList<>(Arrays.asList(wall, space, space, space, wall));
-		List<Entity> row4 = new ArrayList<>(Arrays.asList(wall, space, space, space, wall));
-		List<Entity> row5 = new ArrayList<>(Arrays.asList(wall, wall, wall, wall, wall));
-		List<List<Entity>> componentMap = new ArrayList<>(Arrays.asList(row1, row2, row3, row4, row5));
+		List<Tile> row1 = new ArrayList<>(Arrays.asList(wall, wall, space, wall, wall));
+		List<Tile> row2 = new ArrayList<>(Arrays.asList(wall, space, space, space, wall));
+		List<Tile> row3 = new ArrayList<>(Arrays.asList(wall, space, space, space, wall));
+		List<Tile> row4 = new ArrayList<>(Arrays.asList(wall, space, space, space, wall));
+		List<Tile> row5 = new ArrayList<>(Arrays.asList(wall, wall, wall, wall, wall));
+		List<List<Tile>> componentMap = new ArrayList<>(Arrays.asList(row1, row2, row3, row4, row5));
 		Room expectedRoom = new Room(new Point(14,4), componentMap);
 		
 		assertEquals(expectedRoom, room);

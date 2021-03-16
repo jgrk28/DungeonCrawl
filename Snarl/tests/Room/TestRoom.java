@@ -2,6 +2,8 @@ package Room;
 
 import static Utils.ParseUtils.parsePoint;
 
+import Game.model.Tile;
+import Game.modelView.EntityType;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -14,7 +16,6 @@ import org.json.JSONTokener;
 import Game.model.Room;
 import Game.model.Space;
 import Game.model.Wall;
-import Game.model.Entity;
 
 /**
  * Tests that rooms can be created based on the 
@@ -100,14 +101,14 @@ public class TestRoom {
 	 * @return a Room that meets these specifications
 	 */
 	private Room generateRoom(Point origin, int rows, int columns, JSONArray layout) {
-		List<List<Entity>> componentMap = new ArrayList<>();
-		Wall wall = new Wall();
-		Space space = new Space();
+		List<List<Tile>> componentMap = new ArrayList<>();
+		Tile wall = new Wall();
+		Tile space = new Space();
 		
 		//Create a componentMap based on the layout of the room
 		for (int i = 0; i < rows; i++) {
 			JSONArray JSONRow = layout.getJSONArray(i);
-			List<Entity> componentRow = new ArrayList<>();
+			List<Tile> componentRow = new ArrayList<>();
 			for (int j = 0; j < columns; j++) {
 				int cellValue = JSONRow.getInt(j);
 				switch (cellValue) {
@@ -150,9 +151,16 @@ public class TestRoom {
 		
 		for (Point destination : moves) {
 			//If the destination is not in the component, or is not a space, the move is invalid
-			if (!this.room.inComponent(destination)
-				|| !(this.room.getDestinationEntity(destination) instanceof Space)) {
-				invalidMoves.add(destination);				
+			if (!this.room.inComponent(destination)) {
+				invalidMoves.add(destination);
+			} else {
+				Tile destTile = this.room.getDestinationTile(destination);
+				EntityType destEntityType = this.room.getEntityType(destTile);
+				if (!(destEntityType.equals(EntityType.SPACE)
+						|| destEntityType.equals(EntityType.KEY)
+						|| destEntityType.equals(EntityType.EXIT))) {
+					invalidMoves.add(destination);
+				}
 			}
 		}
 		

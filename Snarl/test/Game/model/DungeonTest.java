@@ -22,14 +22,6 @@ public class DungeonTest {
 	private List<Player> players;
 	private List<Adversary> adversaries;
 	private List<Level> levels;
-	
-	//Fields for a level
-	private Key key1;
-	private Exit exit1;
-	private Key key2;
-	private Exit exit2;
-	private Key key3;
-	private Exit exit3;
 
 	//Initialize all model components for use
 	@Before

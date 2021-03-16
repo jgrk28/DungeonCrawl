@@ -18,13 +18,6 @@ public class RoomTest {
   Room room1;
   Room room2;
   Room room3;
-  Wall wall = new Wall();
-  Space space = new Space();
-  Key key = new Key(new Point(-1, 1));
-  Exit exit = new Exit(new Point(17, 9));
-  Player player = new Player();
-  Ghost ghost = new Ghost();
-  Zombie zombie = new Zombie();
 
   @Before
   public void initEntities() {

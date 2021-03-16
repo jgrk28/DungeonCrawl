@@ -2,12 +2,14 @@ package Level;
 
 import static Utils.ParseUtils.parsePoint;
 
+import Game.model.Item;
+import Game.model.Tile;
+import Game.modelView.EntityType;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
 
 import java.util.Map;
-import Game.model.Entity;
 import Game.model.Space;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -37,8 +39,7 @@ public class TestLevel {
 	private Point point;
 	private List<LevelComponent> levelMap;
 	private Level level;
-	private Key key;
-	private Exit exit;
+	private List<Item> items;
 
 	//Fields for the output
 	private boolean traversable;
@@ -96,11 +97,10 @@ public class TestLevel {
 	 */
 	private Level parseLevel(JSONObject JSONLevel) {
 		this.levelMap = parseLevelMap(JSONLevel);
-		this.key = parseKey(JSONLevel);
-		this.exit = parseExit(JSONLevel);
+		this.items = parseObjects(JSONLevel);
 
 		
-		return new LevelImpl(this.levelMap, key, exit);
+		return new LevelImpl(this.levelMap, this.items);
 	}
 
 	/**
@@ -138,39 +138,27 @@ public class TestLevel {
 	}
 
 	/**
-	 * Parses the given JSON input for a Level. Identifies the
-	 * the key for this level.
+	 * Parses the given JSON input for a Level. Identifies all the
+	 * objects for this level.
 	 * @param JSONLevel - the JSON object that defines a level
-	 * @return the first key found in the list of objects if no exit found, returns null
+	 * @return a list of all objects (items) found in the list of objects
 	 */
-	public static Key parseKey(JSONObject JSONLevel) {
+	public static List<Item> parseObjects(JSONObject JSONLevel) {
+		List<Item> items = new ArrayList<>();
 		JSONArray JSONObjects = JSONLevel.getJSONArray("objects");
 		for (int i = 0; i < JSONObjects.length(); i++) {
 			JSONObject JSONObj = JSONObjects.getJSONObject(i);
 			if (JSONObj.getString("type").equals("key")) {
 				Point keyLocation = parsePoint(JSONObj.getJSONArray("position"));
-				return new Key(keyLocation);
-			}
-		}
-		return null;
-	}
-
-	/**
-	 * Parses the given JSON input for a Level. Identifies the
-	 * the exit for this level.
-	 * @param JSONLevel - the JSON object that defines a level
-	 * @return the first exit found in the list of objects if no exit found, returns null
-	 */
-	public static Exit parseExit(JSONObject JSONLevel) {
-		JSONArray JSONObjects = JSONLevel.getJSONArray("objects");
-		for (int i = 0; i < JSONObjects.length(); i++) {
-			JSONObject JSONObj = JSONObjects.getJSONObject(i);
-			if (JSONObj.getString("type").equals("exit")) {
+				items.add(new Key(keyLocation));
+			} else if (JSONObj.getString("type").equals("exit")) {
 				Point exitLocation = parsePoint(JSONObj.getJSONArray("position"));
-				return new Exit(exitLocation);
+				items.add(new Exit(exitLocation));
+			} else {
+				throw new IllegalArgumentException("Object type not supported");
 			}
 		}
-		return null;
+		return items;
 	}
 
 	/**
@@ -204,10 +192,11 @@ public class TestLevel {
 	 * @return true if the location is traversable, false otherwise
 	 */
 	private boolean isTravesable(LevelComponent currComponent) {
-		Entity destEntity = currComponent.getDestinationEntity(this.point);
-		return destEntity.equals(new Space()) || 
-				destEntity.equals(key) ||
-				destEntity.equals(exit);
+		Tile destTile = currComponent.getDestinationTile(this.point);
+		EntityType destEntityType = currComponent.getEntityType(destTile);
+		return destEntityType.equals(EntityType.SPACE)
+				|| destEntityType.equals(EntityType.KEY)
+				|| destEntityType.equals(EntityType.EXIT);
 	}
 
 	/**
@@ -216,13 +205,16 @@ public class TestLevel {
 	 * object is at this location, null otherwise
 	 */
 	private String getObjectType() {
-		if (this.point.equals(key.location)) {
-			return "key";
-		} else if (this.point.equals(exit.location)) {
-			return "exit";
-		} else {
-			return null;
+		for (Item item : this.items) {
+			if (item.getLocation().equals(this.point)) {
+				if (item instanceof Key) {
+					return "key";
+				} else if (item instanceof Exit) {
+					return "exit";
+				}
+			}
 		}
+		return null;
 	}
 
 	/**

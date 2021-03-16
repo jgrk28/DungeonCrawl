@@ -2,6 +2,8 @@ package State;
 
 import static Utils.ParseUtils.parsePoint;
 
+import Game.model.Item;
+import Game.model.Tile;
 import Level.TestLevel;
 import java.awt.Point;
 import java.util.HashMap;
@@ -77,8 +79,7 @@ public class TestState {
   private Level parseState(JSONObject JSONState) {
     JSONObject JSONLevel = JSONState.getJSONObject("level");
     List<LevelComponent> levelMap = TestLevel.parseLevelMap(JSONLevel);
-    Key key = TestLevel.parseKey(JSONLevel);
-    Exit exit = TestLevel.parseExit(JSONLevel);
+    List<Item> items = TestLevel.parseObjects(JSONLevel);
 
     JSONArray JSONPlayers = JSONState.getJSONArray("players");
     Map<Player, Point> players = parsePlayers(JSONPlayers);
@@ -87,7 +88,7 @@ public class TestState {
 
     Boolean exitLocked = JSONState.getBoolean("exit-locked");
 
-    return new LevelImpl(players, adversaries, levelMap, !exitLocked, false, key, exit);
+    return new LevelImpl(players, adversaries, levelMap, !exitLocked, false, items);
   }
 
   /**
@@ -155,8 +156,8 @@ public class TestState {
       throw new IllegalArgumentException("No Player");
     }
     LevelComponent destComponent = this.level.findComponent(this.point);
-    Entity destEntity = destComponent.getDestinationEntity(this.point);
-    EntityType destEntType = destComponent.getEntityType(destEntity);
+    Tile destTile = destComponent.getDestinationTile(this.point);
+    EntityType destEntType = destComponent.getEntityType(destTile);
     if (!player.isTraversable(destEntType)) {
       throw new IllegalArgumentException("Bad Destination");
     }
