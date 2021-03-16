@@ -195,6 +195,7 @@ public class TestLevel {
 		Tile destTile = currComponent.getDestinationTile(this.point);
 		EntityType destEntityType = currComponent.getEntityType(destTile);
 		return destEntityType.equals(EntityType.SPACE)
+				|| destEntityType.equals(EntityType.HALL_SPACE)
 				|| destEntityType.equals(EntityType.KEY)
 				|| destEntityType.equals(EntityType.EXIT);
 	}

@@ -103,7 +103,6 @@ public class TestRoom {
 	private Room generateRoom(Point origin, int rows, int columns, JSONArray layout) {
 		List<List<Tile>> componentMap = new ArrayList<>();
 		Tile wall = new Wall();
-		Tile space = new Space();
 		
 		//Create a componentMap based on the layout of the room
 		for (int i = 0; i < rows; i++) {
@@ -118,11 +117,11 @@ public class TestRoom {
 					break;
 				//Traversable Space
 				case 1:
-					componentRow.add(space);
+					componentRow.add(new Space());
 					break;
 				//Traversable Door tile
 				case 2:
-					componentRow.add(space);
+					componentRow.add(new Space());
 					break;
 				default:
 					throw new IllegalArgumentException("Invalid entity type in JSON");

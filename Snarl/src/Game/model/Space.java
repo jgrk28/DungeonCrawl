@@ -60,7 +60,21 @@ public class Space implements Tile {
    * @return
    */
   private Boolean checkSameFields(Item item, Actor actor) {
-	  return item.equals(this.item) && actor.equals(this.actor);
+	  Boolean sameItem;
+	  Boolean sameActor;
+	  
+	  if (item != null) {
+		  sameItem = item.equals(this.item);
+	  } else {
+		  sameItem = (this.item == null);
+	  }
+	  if (actor != null) {
+		  sameActor = actor.equals(this.actor);
+	  } else {
+		  sameActor = (this.actor == null);
+	  }
+	  
+	  return sameItem && sameActor;
 	   
   }
 

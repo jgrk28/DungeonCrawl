@@ -166,7 +166,7 @@ public class LevelImpl implements Level {
 			//If the location is not a space, throw the corresponding error
 			Tile destinationTile = component.getDestinationTile(entry.getValue());
 			EntityType destinationEntity = component.getEntityType(destinationTile);
-			if (!(destinationEntity.equals(EntityType.SPACE))) {
+			if (!(entry.getKey().isTraversable(destinationEntity))) {
 				throw new IllegalArgumentException("Cannot place player, destination is not a space"); 
 			}
 			component.placeActor(entry.getKey(), entry.getValue());
@@ -183,7 +183,7 @@ public class LevelImpl implements Level {
 			//If the location is not a space, throw the corresponding error
 			Tile destinationTile = component.getDestinationTile(entry.getValue());
 			EntityType destinationEntity = component.getEntityType(destinationTile);
-			if (!(destinationEntity.equals(EntityType.SPACE))) {
+			if (!(entry.getKey().isTraversable(destinationEntity))) {
 				throw new IllegalArgumentException("Cannot place adversary, destination is not a space"); 
 			}
 			component.placeActor(entry.getKey(), entry.getValue());

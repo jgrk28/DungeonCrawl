@@ -148,9 +148,13 @@ public class Room implements LevelComponent {
 			List<Tile> tileRow = componentMap.get(i);
 			for (int j = 0; j < tileRow.size(); j++) {
 				Tile currTile = tileRow.get(j);
-				Actor tileActor = currTile.getActor();
-				if (tileActor.equals(actor)) {
-					return new Point(j + position.x, i + position.y);
+				try {
+					Actor tileActor = currTile.getActor();
+					if (tileActor != null && tileActor.equals(actor)) {
+						return new Point(j + position.x, i + position.y);
+					}
+				} catch (IllegalArgumentException e) {
+					continue;
 				}
 			}
 		}
