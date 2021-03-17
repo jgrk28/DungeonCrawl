@@ -91,52 +91,68 @@ public class LevelComponentTest {
   }
 
   @Test
-  public void testGetDestinationEntity() {
-    assertEquals(wall, this.room1.getDestinationEntity(new Point(0,0)));
-    assertEquals(space, this.room1.getDestinationEntity(new Point(1,2)));
-    assertEquals(key, this.room1.getDestinationEntity(new Point(1,1)));
-    assertEquals(player, this.room1.getDestinationEntity(new Point(2,1)));
-    assertEquals(ghost, this.room1.getDestinationEntity(new Point(1,3)));
-    assertEquals(exit, this.room2.getDestinationEntity(new Point(16,8)));
-    assertEquals(zombie, this.room3.getDestinationEntity(new Point(-4,1)));
+  public void testGetDestinationTile() {
+    assertEquals(wall, this.room1.getDestinationTile(new Point(0,0)));
+    assertEquals(space, this.room1.getDestinationTile(new Point(1,2)));
+  
+    Tile keyTile = this.room1.getDestinationTile(new Point(1,1));
+    assertEquals(key, keyTile.getItem());
+    
+    Tile playerTile = this.room1.getDestinationTile(new Point(2,1));
+    assertEquals(player, playerTile.getActor());
+    
+    Tile ghostTile = this.room1.getDestinationTile(new Point(1,3));
+    assertEquals(ghost, ghostTile.getActor());
+    
+    Tile exitTile = this.room2.getDestinationTile(new Point(16,8));
+    assertEquals(exit, exitTile.getItem());
+    
+    Tile zombieTile = this.room3.getDestinationTile(new Point(-4,1));
+    assertEquals(zombie, zombieTile.getActor());
 
-    assertEquals(space, this.hall1.getDestinationEntity(new Point(5,11)));
-    assertEquals(player, this.hall1.getDestinationEntity(new Point(4,11)));
-    assertEquals(space, this.hall2.getDestinationEntity(new Point(5,5)));
-    assertEquals(zombie, this.hall2.getDestinationEntity(new Point(4,3)));
-    assertEquals(ghost, this.hall2.getDestinationEntity(new Point(5,3)));
+    assertEquals(space, this.hall1.getDestinationTile(new Point(5,11)));
+    assertEquals(space, this.hall2.getDestinationTile(new Point(5,5)));
+   
+    Tile hallPlayerTile = this.hall1.getDestinationTile(new Point(4,11));
+    assertEquals(player, hallPlayerTile.getActor());
+    
+    Tile hallZombieTile = this.hall2.getDestinationTile(new Point(4,3));
+    assertEquals(zombie, hallZombieTile.getActor());
+    
+    Tile hallGhostTile = this.hall2.getDestinationTile(new Point(5,3));
+    assertEquals(ghost, hallGhostTile.getActor());
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void testDestinationEntityDoesNotExistRoomLow() {
-    this.room1.getDestinationEntity(new Point(0,5));
+    this.room1.getDestinationTile(new Point(0,5));
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void testDestinationEntityDoesNotExistRoomHigh() {
-    this.room3.getDestinationEntity(new Point(-4,-2));
+    this.room3.getDestinationTile(new Point(-4,-2));
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void testDestinationEntityDoesNotExistRoomRight() {
-    this.room2.getDestinationEntity(new Point(17,7));
+    this.room2.getDestinationTile(new Point(17,7));
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void testDestinationEntityDoesNotExistRoomLeft() {
-    this.room1.getDestinationEntity(new Point(-100,3));
+    this.room1.getDestinationTile(new Point(-100,3));
   }
 
   //Destination is not within bounding box of hall
   @Test(expected = IllegalArgumentException.class)
   public void testDestinationEntityDoesNotExistHallOutBound() {
-    this.hall1.getDestinationEntity(new Point(7,3));
+    this.hall1.getDestinationTile(new Point(7,3));
   }
 
   //Destination is not within bounding box of hall but hall does not hit that point
   @Test(expected = IllegalArgumentException.class)
   public void testDestinationEntityDoesNotExistHallInBound() {
-    this.hall2.getDestinationEntity(new Point(4,4));
+    this.hall2.getDestinationTile(new Point(4,4));
   }
 
   @Test
@@ -160,35 +176,47 @@ public class LevelComponentTest {
   public void testGetEntityType() {
     assertEquals(EntityType.WALL, this.room1.getEntityType(new Wall()));
     assertEquals(EntityType.SPACE, this.room1.getEntityType(new Space()));
-    assertEquals(EntityType.KEY, this.room1.getEntityType(new Key(new Point(1, 1))));
-    assertEquals(EntityType.EXIT, this.room1.getEntityType(new Exit(new Point(16, 8))));
-    assertEquals(EntityType.PLAYER, this.room1.getEntityType(new Player()));
-    assertEquals(EntityType.GHOST, this.room1.getEntityType(new Ghost()));
-    assertEquals(EntityType.ZOMBIE, this.room1.getEntityType(new Zombie()));
+    
+    Tile keyTile = new Space(this.key, null);
+    assertEquals(EntityType.KEY, this.room1.getEntityType(keyTile));
+    
+    Tile exitTile = new Space(this.exit, null);
+    assertEquals(EntityType.EXIT, this.room1.getEntityType(exitTile));
+    
+    Tile playerTile = new Space(null, this.player);
+    assertEquals(EntityType.PLAYER, this.room1.getEntityType(playerTile));
+    
+    Tile ghostTile = new Space(null, this.ghost);
+    assertEquals(EntityType.GHOST, this.room1.getEntityType(ghostTile));
+    
+    Tile zombieTile = new Space(null, this.zombie);
+    assertEquals(EntityType.ZOMBIE, this.room1.getEntityType(zombieTile));
 
-    assertEquals(EntityType.WALL, this.hall1.getEntityType(new Wall()));
-    assertEquals(EntityType.PLAYER, this.hall1.getEntityType(new Player()));
-    assertEquals(EntityType.GHOST, this.hall1.getEntityType(new Ghost()));
-    assertEquals(EntityType.ZOMBIE, this.hall1.getEntityType(new Zombie()));
     //Hall space is a special type as it will be displayed differently
     assertEquals(EntityType.HALL_SPACE, this.hall1.getEntityType(new Space()));
+    assertEquals(EntityType.WALL, this.hall1.getEntityType(new Wall()));
+    
+    assertEquals(EntityType.PLAYER, this.hall1.getEntityType(playerTile));
+    assertEquals(EntityType.GHOST, this.hall1.getEntityType(ghostTile));
+    assertEquals(EntityType.ZOMBIE, this.hall1.getEntityType(zombieTile));
+
   }
 
   //PlaceActor does not check which entity is being overridden as long as it is in a room
   @Test
   public void testPlaceActor() {
+	  
     Player player2 = new Player();
-    assertEquals(space, this.room1.getDestinationEntity(new Point(1, 2)));
+    
+    Tile room1SpaceTile = this.room1.getDestinationTile(new Point(1, 2));
+    assertEquals(null, room1SpaceTile.getActor()); 
     this.room1.placeActor(player2, new Point(1,2));
-    assertEquals(player2, this.room1.getDestinationEntity(new Point(1, 2)));
+    assertEquals(player2, room1SpaceTile.getActor());
 
-    assertEquals(wall, this.room1.getDestinationEntity(new Point(0, 0)));
-    this.room1.placeActor(player2, new Point(1,2));
-    assertEquals(player2, this.room1.getDestinationEntity(new Point(1, 2)));
-
-    assertEquals(space, this.hall1.getDestinationEntity(new Point(5,11)));
+    Tile hall1SpaceTile = this.hall1.getDestinationTile(new Point(5,11));
+    assertEquals(null, hall1SpaceTile.getActor());   
     this.hall1.placeActor(player2, new Point(5,11));
-    assertEquals(player2, this.hall1.getDestinationEntity(new Point(5,11)));
+    assertEquals(player2, hall1SpaceTile.getActor());
   }
 
   //PlaceActor outside bounds of room
@@ -206,13 +234,15 @@ public class LevelComponentTest {
   //Check that player exists then remove and check that they are replaced with a space
   @Test
   public void testRemoveActor() {
-    assertEquals(player, this.room1.getDestinationEntity(new Point(2, 1)));
+	Tile room1Tile = this.room1.getDestinationTile(new Point(2, 1));
+    assertEquals(player, room1Tile.getActor());
     this.room1.removeActor(player);
-    assertEquals(space, this.room1.getDestinationEntity(new Point(2, 1)));
+    assertEquals(null, room1Tile.getActor());
 
-    assertEquals(player, this.hall1.getDestinationEntity(new Point(4, 11)));
+    Tile hall1Tile = this.hall1.getDestinationTile(new Point(4, 11));
+    assertEquals(player, hall1Tile.getActor());
     this.hall1.removeActor(player);
-    assertEquals(space, this.hall1.getDestinationEntity(new Point(4, 11)));
+    assertEquals(null, hall1Tile.getActor());
   }
 
   //Remove a player that is no longer in the room
@@ -232,74 +262,67 @@ public class LevelComponentTest {
   //We can test MoveActor if it is used
 
   //Tests that a key can be placed. If the keys location is a space the key should be placed.
-  //If not this function should have no effect.
   @Test
   public void testPlaceKey() {
-    Key newKey1 = new Key(new Point(15, 8));
-    Key newKey2 = new Key(new Point(2, 2));
-
-    assertEquals(wall, this.room2.getDestinationEntity(new Point(15, 8)));
-    this.room2.placeKey(newKey1);
-    assertEquals(wall, this.room2.getDestinationEntity(new Point(15, 8)));
-
-    assertEquals(space, this.room1.getDestinationEntity(new Point(2, 2)));
-    this.room1.placeKey(newKey2);
-    assertEquals(newKey2, this.room1.getDestinationEntity(new Point(2, 2)));
+    Key newKey = new Key(new Point(2, 2));
+    Tile room1Tile = this.room1.getDestinationTile(new Point(2, 2));
+    assertEquals(null, room1Tile.getItem());
+    this.room1.placeItem(newKey);
+    assertEquals(newKey, room1Tile.getItem());
+  }
+  
+  //If the location that the key is being placed is a wall, an exception
+  //will be thrown
+  @Test (expected = IllegalArgumentException.class)
+  public void testPlaceKeyException() {
+    Key newKey = new Key(new Point(15, 8));
+    Tile room2Tile = this.room2.getDestinationTile(new Point(15, 8));
+    assertEquals(wall, room2Tile);
+    this.room2.placeItem(newKey);
   }
 
   //Tests that a exit can be placed. If the exits location is a space the exit should be placed.
   //If not this function should have no effect.
   @Test
   public void testPlaceExit() {
-    Exit newExit1 = new Exit(new Point(0, 0));
-    Exit newExit2 = new Exit(new Point(15, 7));
+    Exit newExit = new Exit(new Point(15, 7));
+    Tile room2Tile = this.room2.getDestinationTile(new Point(15, 7));
+    assertEquals(null, room2Tile.getItem());
+    this.room2.placeItem(newExit);
+    assertEquals(newExit, room2Tile.getItem());
 
-    assertEquals(wall, this.room1.getDestinationEntity(new Point(0, 0)));
-    this.room1.placeExit(newExit1);
-    assertEquals(wall, this.room1.getDestinationEntity(new Point(0, 0)));
-
-    assertEquals(space, this.room2.getDestinationEntity(new Point(15, 7)));
-    this.room2.placeExit(newExit2);
-    assertEquals(newExit2, this.room2.getDestinationEntity(new Point(15, 7)));
-
+  }
+  
+  //If the location that the exit is being placed is a wall, an exception
+  //will be thrown
+  @Test (expected = IllegalArgumentException.class)
+  public void testPlaceExitException() {
+	Exit newExit = new Exit(new Point(0, 0));
+	Tile room1Tile = this.room1.getDestinationTile(new Point(0, 0));
+	assertEquals(wall, room1Tile);
+	this.room1.placeItem(newExit);
   }
 
   @Test
   public void testFindEntityLocationSimple() {
-    assertEquals(new Point(2, 1), this.room1.findEntityLocation(this.player));
-    assertEquals(new Point(1, 1), this.room1.findEntityLocation(this.key));
-    assertEquals(new Point(1, 3), this.room1.findEntityLocation(this.ghost));
-    assertEquals(new Point(16, 8), this.room2.findEntityLocation(this.exit));
-    assertEquals(new Point(4, 11), this.hall1.findEntityLocation(this.player));
-    assertEquals(new Point(4, 3), this.hall2.findEntityLocation(this.zombie));
-  }
-
-  @Test
-  public void testFindEntityLocationMultiple() {
-    assertEquals(new Point(0, 0), this.room1.findEntityLocation(this.wall));
-    assertEquals(new Point(1, 2), this.room1.findEntityLocation(this.space));
-    assertEquals(new Point(16, 7), this.room2.findEntityLocation(this.wall));
-    assertEquals(new Point(2, 11), this.hall1.findEntityLocation(this.space));
-    assertEquals(new Point(5, 4), this.hall2.findEntityLocation(this.space));
+    assertEquals(new Point(2, 1), this.room1.findActorLocation(this.player));
+    assertEquals(new Point(1, 3), this.room1.findActorLocation(this.ghost));
+    assertEquals(new Point(4, 11), this.hall1.findActorLocation(this.player));
+    assertEquals(new Point(4, 3), this.hall2.findActorLocation(this.zombie));
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void testFindEntityLocationNotInComponent1() {
-    this.room1.findEntityLocation(this.zombie);
+    this.room1.findActorLocation(this.zombie);
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void testFindEntityLocationNotInComponent2() {
-    this.room2.findEntityLocation(this.player);
+    this.room2.findActorLocation(this.player);
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void testFindEntityLocationNotInComponent3() {
-    this.hall1.findEntityLocation(this.ghost);
-  }
-  
-  @Test(expected = IllegalArgumentException.class)
-  public void testFindEntityLocationNotInComponent4() {
-    this.hall2.findEntityLocation(this.wall);
+    this.hall1.findActorLocation(this.ghost);
   }
 }

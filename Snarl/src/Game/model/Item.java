@@ -26,6 +26,10 @@ public abstract class Item {
 	 */
 	public abstract EntityType getEntityType();
 	
+	/**
+	 * TODO add comment here
+	 * @return
+	 */
 	public Point getLocation() {
 		return this.location;
 	}

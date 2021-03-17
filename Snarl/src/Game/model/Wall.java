@@ -32,6 +32,11 @@ public class Wall implements Tile {
   }
   
   @Override
+  public Item getItem() {
+	  throw new IllegalArgumentException("Item does not exist on a wall");
+  }
+  
+  @Override
   public void placeActor(Actor actor) {
 	throw new IllegalArgumentException("Actor cannot be placed on a wall");
   }

@@ -24,6 +24,39 @@ public class ActorTest {
   private EntityType z = EntityType.ZOMBIE;
   private EntityType p = EntityType.PLAYER;
   
+  //Tests for Equals
+  @Test
+  public void testZombieEqual() {
+	Adversary zombie = new Zombie();
+    assertEquals(true, zombie.equals(zombie));
+    assertEquals(false, zombie.equals(new Zombie()));
+  }
+
+  @Test
+  public void testGhostEqual() {
+	Adversary ghost = new Ghost(); 
+    assertEquals(true, ghost.equals(ghost));
+    assertEquals(false, ghost.equals(new Ghost()));
+  }
+
+  @Test
+  public void testPlayerEqual() {
+	Player player = new Player();
+    assertEquals(true, player.equals(player));
+    assertEquals(false, player.equals(new Player()));
+  }
+  
+  //Tests for getEntityType
+  public void testGetEntityType() {
+	  Player player = new Player();
+	  Zombie zombie = new Zombie();
+	  Ghost ghost = new Ghost();
+	  
+	  assertEquals(EntityType.PLAYER, player.getEntityType());
+	  assertEquals(EntityType.GHOST, ghost.getEntityType());
+      assertEquals(EntityType.ZOMBIE, zombie.getEntityType());
+  }
+   
   //Testing interaction results for players
   @Test
   public void testPlayerInteractionResult() {

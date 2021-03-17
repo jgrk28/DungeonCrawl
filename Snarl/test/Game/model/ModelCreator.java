@@ -32,7 +32,7 @@ public class ModelCreator {
   private Ghost buster = new Ghost("Buster");
   private Zombie brainy = new Zombie("Brainy");
   private Zombie dracula = new Zombie("Dracula");
-
+  
   private Room dummyRoom1 = new Room(new Point(0, 0), new ArrayList<>());
   private Room dummyRoom2 = new Room(new Point(10, 5), new ArrayList<>());
 

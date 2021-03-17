@@ -28,6 +28,11 @@ public interface Tile {
 	/**
 	 * TODO Add comment here
 	 */
+	Item getItem();
+	
+	/**
+	 * TODO Add comment here
+	 */
 	void placeActor(Actor actor);
 	
 	/**

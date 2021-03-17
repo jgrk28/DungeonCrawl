@@ -82,6 +82,11 @@ public class Space implements Tile {
   public Actor getActor() {
 	  return this.actor;
   }
+  
+  @Override
+  public Item getItem() {
+	return this.item;
+  }
 
   @Override
   public void placeActor(Actor actor) {
