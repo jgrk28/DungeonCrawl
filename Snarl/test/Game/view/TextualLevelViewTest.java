@@ -1,32 +1,27 @@
 package Game.view;
 
 import Game.model.Adversary;
-import Game.model.Entity;
 import Game.model.Exit;
 import Game.model.Ghost;
 import Game.model.Hall;
 import Game.model.Key;
-import Game.model.LevelComponent;
+import Game.model.Level;
 import Game.model.LevelImpl;
+import Game.model.ModelCreator;
 import Game.model.Player;
 import Game.model.Room;
-import Game.model.Space;
-import Game.model.Wall;
 import Game.model.Zombie;
 import Game.modelView.LevelModelView;
-import Game.view.TextualLevelView;
-import Game.view.View;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 //Tests for the TextualLevelView class. This class displays a level in ASCII art with
 //X for wall, . for space, * for hallways, P for player, G for ghost, and Z for zombie
@@ -46,15 +41,12 @@ public class TextualLevelViewTest {
 		//Check that level was drawn as expected
 		assertEquals(expectedOut, output.toString());
 	}
-	
-	private List<LevelComponent> levelMap;
-	private Entity space = new Space();
-	private Entity wall = new Wall();
+
 	private Key key;
 	private Exit exit;
-	private Player player = new Player();
-	private Adversary ghost = new Ghost();
-	private Adversary zombie = new Zombie();
+
+	private List<Player> players;
+	private List<Adversary> adversaries;
 
 	private Room room1;
 	private Room room2;
@@ -67,272 +59,38 @@ public class TextualLevelViewTest {
 	private Hall hall1HallBrush;
 	private Hall hall2;
 	private Hall hall3;
-	
-	//Simple 4x4 room with one space for a possible door
-	private void initializeRoom1() {
-		List<List<Entity>> componentMap = new ArrayList<List<Entity>>();
-		componentMap.add(Arrays.asList(wall, wall, wall, wall));
-		componentMap.add(Arrays.asList(wall, player, space, wall));
-		componentMap.add(Arrays.asList(wall, space, space, space));
-		componentMap.add(Arrays.asList(wall, wall, wall, wall));
-
-		room1 = new Room(new Point(0,0), componentMap);
-	}
-	
-	//4x6 room with three spaces for possible doors
-	private void initializeRoom2() {
-		List<List<Entity>> componentMap = new ArrayList<List<Entity>>();
-		componentMap.add(Arrays.asList(wall, space, wall, wall));
-		componentMap.add(Arrays.asList(wall, space, space, wall));
-		componentMap.add(Arrays.asList(wall, space, space, wall));
-		componentMap.add(Arrays.asList(wall, space, space, wall));
-		componentMap.add(Arrays.asList(space, space, space, space));
-		componentMap.add(Arrays.asList(wall, wall, wall, wall));
-		
-		room2 = new Room(new Point(5,7), componentMap);
-	}
-
-	//6x5 room with one spaces for a possible door
-	private void initializeRoom3() {
-		List<List<Entity>> componentMap = new ArrayList<List<Entity>>();
-		componentMap.add(Arrays.asList(wall, wall, space, wall, wall, wall));
-		componentMap.add(Arrays.asList(wall, space, space, space, space, wall));
-		componentMap.add(Arrays.asList(wall, space, space, space, space, wall));
-		componentMap.add(Arrays.asList(wall, space, space, space, space, wall));
-		componentMap.add(Arrays.asList(wall, wall, wall, wall, wall, wall));
-		
-		room3 = new Room(new Point(0,14), componentMap);
-	}
-	
-	//5x6 room with one space for a possible door
-	private void initializeRoom4() {
-		List<List<Entity>> componentMap = new ArrayList<List<Entity>>();
-		componentMap.add(Arrays.asList(wall, wall, wall, wall, wall));
-		componentMap.add(Arrays.asList(ghost, zombie, space, space, wall));
-		componentMap.add(Arrays.asList(wall, space, space, space, wall));
-		componentMap.add(Arrays.asList(wall, space, space, space, wall));
-		componentMap.add(Arrays.asList(wall, space, space, space, wall));
-		componentMap.add(Arrays.asList(wall, wall, wall, wall, wall));
-		
-		room4 = new Room(new Point(13,10), componentMap);
-	}
-
-	//Hall that can connect room1 to room2
-	private void initializeHall1() {
-		List<Entity> componentMap = Arrays.asList(space, space, space, space, space, space, space);
-		List<Point> waypoints = new ArrayList<Point>();
-		waypoints.add(new Point(6,2));
-		
-		hall1 = new Hall(componentMap, waypoints);
-	}
-
-	//Hall to replace hall1 that makes multiple turns
-	private void initializeHall1Snake() {
-		List<Entity> componentMap = Arrays.asList(space, space, space, space, space, space, space,
-				space, space, space, space, space, space);
-		List<Point> waypoints = new ArrayList<Point>();
-		waypoints.add(new Point(9,2));
-		waypoints.add(new Point(9,4));
-		waypoints.add(new Point(6,4));
-
-		hall1Snake = new Hall(componentMap, waypoints);
-	}
-
-	//Hall to replace hall1 that travels directly next to a room
-	private void initializeHall1RoomBrush() {
-		List<Entity> componentMap = Arrays.asList(space, space, space, space, space, space, space,
-				space, space, space, space, space, space);
-		List<Point> waypoints = new ArrayList<Point>();
-		waypoints.add(new Point(9,2));
-		waypoints.add(new Point(9,6));
-		waypoints.add(new Point(6,6));
-
-		hall1RoomBrush = new Hall(componentMap, waypoints);
-	}
-
-	//Hall to replace hall1 that travels directly next to other halls and itself
-	//(12,2), (12,10), (9,10), (9,3), (6,3).
-	private void initializeHall1HallBrush() {
-		List<Entity> componentMap = Arrays.asList(space, space, space, space, space, space, space,
-				space, space, space, space, space, space, space, space, space, space, space, space, space,
-				space, space, space, space, space, space, space, space, space, space, space, space, space);
-		List<Point> waypoints = new ArrayList<Point>();
-		waypoints.add(new Point(12,2));
-		waypoints.add(new Point(12,10));
-		waypoints.add(new Point(9,10));
-		waypoints.add(new Point(9,3));
-		waypoints.add(new Point(6,3));
-
-		hall1HallBrush = new Hall(componentMap, waypoints);
-	}
-	
-	//Hall that can connect room2 to room3
-	private void initializeHall2() {
-		List<Entity> componentMap = Arrays.asList(space, space, space, space, space);
-		List<Point> waypoints = new ArrayList<Point>();
-		waypoints.add(new Point(2,11));
-		
-		hall2 = new Hall(componentMap, waypoints);
-	}
-	
-	//Hall that can connect room2 to room4
-	private void initializeHall3() {
-		List<Entity> componentMap = Arrays.asList(space, space, space, space);
-		List<Point> waypoints = new ArrayList<Point>();
-		
-		hall3 = new Hall(componentMap, waypoints);
-	}
-
-	//Doors for hall1
-	private void initializeDoorsHall1() {
-		room1.connectHall(new Point(3,2), hall1);
-		room2.connectHall(new Point(6,7), hall1);
-		hall1.connectRooms(new Point(3,2), room1, new Point(6,7), room2);
-	}
-
-	//Doors for hall2
-	private void initializeDoorsHall2() {
-		room2.connectHall(new Point(5,11), hall2);
-		room3.connectHall(new Point(2,14), hall2);
-		hall2.connectRooms(new Point(2,14), room3, new Point(5,11), room2);
-	}
-
-	//Doors for hall3
-	private void initializeDoorsHall3() {
-		room2.connectHall(new Point(8,11), hall3);
-		room4.connectHall(new Point(13,11), hall3);
-		hall3.connectRooms(new Point(8,11), room2, new Point(13,11), room4);
-	}
-	
-	//Connects hall1, hall2, and hall3 to the normal 4 rooms
-	private void initializeLevelMap() {
-		initializeDoorsHall1();
-		initializeDoorsHall2();
-		initializeDoorsHall3();
-
-		levelMap = new ArrayList<LevelComponent>();
-		
-		levelMap.add(room1);
-		levelMap.add(room2);
-		levelMap.add(room3);
-		levelMap.add(room4);
-		
-		levelMap.add(hall1);
-		levelMap.add(hall2);
-		levelMap.add(hall3);
-	}
-
-	//Only connects hall3 between room2 and room4
-	//This map does not have have a room at the origin (0,0)
-	private void initializeLevelMapSmall() {
-		initializeDoorsHall3();
-
-		levelMap = new ArrayList<LevelComponent>();
-
-		levelMap.add(room2);
-		levelMap.add(room4);
-		levelMap.add(hall3);
-	}
-
-	//Doors for hall1Snake
-	private void initializeDoorsHall1Snake() {
-		room1.connectHall(new Point(3,2), hall1Snake);
-		room2.connectHall(new Point(6,7), hall1Snake);
-		hall1Snake.connectRooms(new Point(3,2), room1, new Point(6,7), room2);
-	}
-
-	//Initializes normal level replacing hall1 for hall1Snake
-	private void initializeLevelMapSnake() {
-		initializeDoorsHall1Snake();
-		initializeDoorsHall2();
-		initializeDoorsHall3();
-
-		levelMap = new ArrayList<LevelComponent>();
-
-		levelMap.add(room1);
-		levelMap.add(room2);
-		levelMap.add(room3);
-		levelMap.add(room4);
-
-		levelMap.add(hall1Snake);
-		levelMap.add(hall2);
-		levelMap.add(hall3);
-	}
-
-	//Doors for hall1RoomBrush
-	private void initializeDoorsHall1RoomBrush() {
-		room1.connectHall(new Point(3,2), hall1RoomBrush);
-		room2.connectHall(new Point(6,7), hall1RoomBrush);
-		hall1RoomBrush.connectRooms(new Point(3,2), room1, new Point(6,7), room2);
-	}
-
-	//Initializes normal level replacing hall1 for hall1RoomBrush
-	private void initializeLevelMapRoomBrush() {
-		initializeDoorsHall1RoomBrush();
-		initializeDoorsHall2();
-		initializeDoorsHall3();
-
-		levelMap = new ArrayList<LevelComponent>();
-
-		levelMap.add(room1);
-		levelMap.add(room2);
-		levelMap.add(room3);
-		levelMap.add(room4);
-
-		levelMap.add(hall1RoomBrush);
-		levelMap.add(hall2);
-		levelMap.add(hall3);
-	}
-
-	//Doors for hall1HallBrush
-	private void initializeDoorsHall1HallBrush() {
-		room1.connectHall(new Point(3,2), hall1HallBrush);
-		room2.connectHall(new Point(6,7), hall1HallBrush);
-		hall1HallBrush.connectRooms(new Point(3,2), room1, new Point(6,7), room2);
-	}
-
-	//Initializes normal level replacing hall1 for hall1HallBrush
-	private void initializeLevelMapHallBrush() {
-		initializeDoorsHall1HallBrush();
-		initializeDoorsHall2();
-		initializeDoorsHall3();
-
-		levelMap = new ArrayList<LevelComponent>();
-
-		levelMap.add(room1);
-		levelMap.add(room2);
-		levelMap.add(room3);
-		levelMap.add(room4);
-
-		levelMap.add(hall1HallBrush);
-		levelMap.add(hall2);
-		levelMap.add(hall3);
-	}
 
 	//Initialize all components for use
 	//They have not been added to a level but they are available for use
 	@Before
 	public void initLevelComponents() {
-		this.key = new Key(new Point(4, 17));
-		this.exit = new Exit(new Point(7, 11));
-		initializeRoom1();
-		initializeRoom1();
-		initializeRoom2();
-		initializeRoom3();
-		initializeRoom4();
+		ModelCreator creator = new ModelCreator();
+		this.key = creator.getLevel1Key();
+		this.exit = creator.getLevel1Exit();
+		this.room1 = creator.initializeRoom1();
+		this.room2 = creator.initializeRoom2();
+		this.room3 = creator.initializeRoom3();
+		this.room4 = creator.initializeRoom4();
 
-		initializeHall1();
-		initializeHall1Snake();
-		initializeHall1RoomBrush();
-		initializeHall1HallBrush();
-		initializeHall2();
-		initializeHall3();
+		this.hall1 = creator.initializeHall1();
+		this.hall1Snake = creator.initializeHall1Snake();
+		this.hall1RoomBrush = creator.initializeHall1RoomBrush();
+		this.hall1HallBrush = creator.initializeHall1HallBrush();
+		this.hall2 = creator.initializeHall2();
+		this.hall3 = creator.initializeHall3();
+		this.players = new ArrayList<>(Arrays.asList(creator.getPlayer1()));
+		this.adversaries = new ArrayList<>(Arrays.asList(creator.getGhost1(), creator.getZombie1()));
 	}
 
 	//Tests drawing a normal room
 	@Test
 	public void testDrawLevelNormal() {
-		initializeLevelMap();
+		Level normalLevel = new LevelImpl(
+				new ArrayList<>(Arrays.asList(room1, room2, room3, room4, hall1, hall2, hall3)),
+				new ArrayList<>(Arrays.asList(key, exit))
+		);
+
+		normalLevel.placeActors(players, adversaries);
 
 		String expectedOut = ""
 				+ "XXXX              \n"
@@ -355,13 +113,17 @@ public class TextualLevelViewTest {
 				+ "X...!X            \n"
 				+ "XXXXXX            \n";
 
-		testDrawLevel(new LevelImpl(this.levelMap, this.key, this.exit), expectedOut);
+		testDrawLevel(normalLevel, expectedOut);
 	}
 
 	//Check drawing when right and top do not line up with 0
 	@Test
 	public void testDrawLevelSmall() {
-		initializeLevelMapSmall();
+		Level smallLevel = new LevelImpl(
+				new ArrayList<>(Arrays.asList(room2, room4, hall3)),
+				new ArrayList<>(Arrays.asList(exit))
+		);
+		smallLevel.placeActors(new ArrayList<>(), adversaries);
 
 		String expectedOut = ""
 				+ "X.XX         \n"
@@ -374,16 +136,19 @@ public class TextualLevelViewTest {
 				+ "        X...X\n"
 				+ "        XXXXX\n";
 
-		//Room with key is not in this level
-		//TODO can't put in no key
-		testDrawLevel(new LevelImpl(this.levelMap, null, this.exit), expectedOut);
+		testDrawLevel(smallLevel, expectedOut);
 
 	}
 
 	//Tests drawing with curvy halls
 	@Test
 	public void testDrawLevelSnake() {
-		initializeLevelMapSnake();
+		Level snakeLevel = new LevelImpl(
+				new ArrayList<>(Arrays.asList(room1, room2, room3, room4, hall1Snake, hall2, hall3)),
+				new ArrayList<>(Arrays.asList(key, exit))
+		);
+
+		snakeLevel.placeActors(players, adversaries);
 
 		String expectedOut = ""
 				+ "XXXX              \n"
@@ -406,13 +171,18 @@ public class TextualLevelViewTest {
 				+ "X...!X            \n"
 				+ "XXXXXX            \n";
 
-		testDrawLevel(new LevelImpl(this.levelMap, this.key, this.exit), expectedOut);
+		testDrawLevel(snakeLevel, expectedOut);
 	}
 
 	//Tests drawing with hall directly next to a room
 	@Test
 	public void testDrawLevelRoomBrush() {
-		initializeLevelMapRoomBrush();
+		Level roomBrushLevel = new LevelImpl(
+				new ArrayList<>(Arrays.asList(room1, room2, room3, room4, hall1RoomBrush, hall2, hall3)),
+				new ArrayList<>(Arrays.asList(key, exit))
+		);
+
+		roomBrushLevel.placeActors(players, adversaries);
 
 		String expectedOut = ""
 				+ "XXXX              \n"
@@ -435,13 +205,18 @@ public class TextualLevelViewTest {
 				+ "X...!X            \n"
 				+ "XXXXXX            \n";
 
-		testDrawLevel(new LevelImpl(this.levelMap, this.key, this.exit), expectedOut);
+		testDrawLevel(roomBrushLevel, expectedOut);
 	}
 
 	//Tests drawing with hall directly next to another hall or itself
 	@Test
 	public void testDrawLevelHallBrush() {
-		initializeLevelMapHallBrush();
+		Level hallBrushLevel = new LevelImpl(
+				new ArrayList<>(Arrays.asList(room1, room2, room3, room4, hall1HallBrush, hall2, hall3)),
+				new ArrayList<>(Arrays.asList(key, exit))
+		);
+
+		hallBrushLevel.placeActors(players, adversaries);
 		
 		String expectedOut = ""
 				+ "XXXX              \n"
@@ -464,7 +239,7 @@ public class TextualLevelViewTest {
 				+ "X...!X            \n"
 				+ "XXXXXX            \n";
 
-		testDrawLevel(new LevelImpl(this.levelMap, this.key, this.exit), expectedOut);
+		testDrawLevel(hallBrushLevel, expectedOut);
 	}
 
 }

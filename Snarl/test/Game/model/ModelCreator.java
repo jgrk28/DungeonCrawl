@@ -14,7 +14,6 @@ import java.util.Map;
  */
 public class ModelCreator {
   private Tile wall = new Wall();
-  private Tile space = new Space();
 
   private Key room5Key = new Key(new Point(1, 1));
   private Exit room6Exit = new Exit(new Point(16, 8));
@@ -32,9 +31,11 @@ public class ModelCreator {
   private Ghost buster = new Ghost("Buster");
   private Zombie brainy = new Zombie("Brainy");
   private Zombie dracula = new Zombie("Dracula");
-  
-  private Room dummyRoom1 = new Room(new Point(0, 0), new ArrayList<>());
-  private Room dummyRoom2 = new Room(new Point(10, 5), new ArrayList<>());
+
+  private Room dummyRoom1 = new Room(new Point(0, 0),
+      new ArrayList<>(Arrays.asList(Arrays.asList(wall))));
+  private Room dummyRoom2 = new Room(new Point(10, 5),
+      new ArrayList<>(Arrays.asList(Arrays.asList(wall))));
 
   public Player getPlayer1() {
     return jacob;
@@ -76,8 +77,8 @@ public class ModelCreator {
   public Room initializeRoom1() {
     List<List<Tile>> componentMap = new ArrayList<>();
     componentMap.add(Arrays.asList(wall, wall, wall, wall));
-    componentMap.add(Arrays.asList(wall, space, space, wall));
-    componentMap.add(Arrays.asList(wall, space, space, space));
+    componentMap.add(Arrays.asList(wall, new Space(), new Space(), wall));
+    componentMap.add(Arrays.asList(wall, new Space(), new Space(), new Space()));
     componentMap.add(Arrays.asList(wall, wall, wall, wall));
 
     return new Room(new Point(0,0), componentMap);
@@ -86,11 +87,11 @@ public class ModelCreator {
   //4x6 room with three spaces for possible doors
   public Room initializeRoom2() {
     List<List<Tile>> componentMap = new ArrayList<>();
-    componentMap.add(Arrays.asList(wall, space, wall, wall));
-    componentMap.add(Arrays.asList(wall, space, space, wall));
-    componentMap.add(Arrays.asList(wall, space, space, wall));
-    componentMap.add(Arrays.asList(wall, space, space, wall));
-    componentMap.add(Arrays.asList(space, space, space, space));
+    componentMap.add(Arrays.asList(wall, new Space(), wall, wall));
+    componentMap.add(Arrays.asList(wall, new Space(), new Space(), wall));
+    componentMap.add(Arrays.asList(wall, new Space(), new Space(), wall));
+    componentMap.add(Arrays.asList(wall, new Space(), new Space(), wall));
+    componentMap.add(Arrays.asList(new Space(), new Space(), new Space(), new Space()));
     componentMap.add(Arrays.asList(wall, wall, wall, wall));
 
     return new Room(new Point(5,7), componentMap);
@@ -99,10 +100,10 @@ public class ModelCreator {
   //6x5 room with one spaces for a possible door
   public Room initializeRoom3() {
     List<List<Tile>> componentMap = new ArrayList<>();
-    componentMap.add(Arrays.asList(wall, wall, space, wall, wall, wall));
-    componentMap.add(Arrays.asList(wall, space, space, space, space, wall));
-    componentMap.add(Arrays.asList(wall, space, space, space, space, wall));
-    componentMap.add(Arrays.asList(wall, space, space, space, space, wall));
+    componentMap.add(Arrays.asList(wall, wall, new Space(), wall, wall, wall));
+    componentMap.add(Arrays.asList(wall, new Space(), new Space(), new Space(), new Space(), wall));
+    componentMap.add(Arrays.asList(wall, new Space(), new Space(), new Space(), new Space(), wall));
+    componentMap.add(Arrays.asList(wall, new Space(), new Space(), new Space(), new Space(), wall));
     componentMap.add(Arrays.asList(wall, wall, wall, wall, wall, wall));
 
     return new Room(new Point(0,14), componentMap);
@@ -112,10 +113,10 @@ public class ModelCreator {
   public Room initializeRoom4() {
     List<List<Tile>> componentMap = new ArrayList<>();
     componentMap.add(Arrays.asList(wall, wall, wall, wall, wall));
-    componentMap.add(Arrays.asList(space, space, space, space, wall));
-    componentMap.add(Arrays.asList(wall, space, space, space, wall));
-    componentMap.add(Arrays.asList(wall, space, space, space, wall));
-    componentMap.add(Arrays.asList(wall, space, space, space, wall));
+    componentMap.add(Arrays.asList(new Space(), new Space(), new Space(), new Space(), wall));
+    componentMap.add(Arrays.asList(wall, new Space(), new Space(), new Space(), wall));
+    componentMap.add(Arrays.asList(wall, new Space(), new Space(), new Space(), wall));
+    componentMap.add(Arrays.asList(wall, new Space(), new Space(), new Space(), wall));
     componentMap.add(Arrays.asList(wall, wall, wall, wall, wall));
 
     return new Room(new Point(13,10), componentMap);
@@ -125,9 +126,9 @@ public class ModelCreator {
     //Simple 4x4 room
     List<List<Tile>> componentMap = new ArrayList<>();
     componentMap.add(Arrays.asList(wall, wall, wall, wall));
-    componentMap.add(Arrays.asList(wall, space, space, wall));
-    componentMap.add(Arrays.asList(wall, space, space, wall));
-    componentMap.add(Arrays.asList(wall, space, wall, wall));
+    componentMap.add(Arrays.asList(wall, new Space(), new Space(), wall));
+    componentMap.add(Arrays.asList(wall, new Space(), new Space(), wall));
+    componentMap.add(Arrays.asList(wall, new Space(), wall, wall));
 
     Room room5 = new Room(new Point(0,0), componentMap);
     room5.placeItem(room5Key);
@@ -139,8 +140,8 @@ public class ModelCreator {
   public Room initializeRoom6() {
     //Weird 2x2 room
     List<List<Tile>> componentMap = new ArrayList<>();
-    componentMap.add(Arrays.asList(space, wall));
-    componentMap.add(Arrays.asList(wall, space));
+    componentMap.add(Arrays.asList(new Space(), wall));
+    componentMap.add(Arrays.asList(wall, new Space()));
 
     Room room6 = new Room(new Point(15,7), componentMap);
     room6.placeItem(room6Exit);
@@ -151,8 +152,8 @@ public class ModelCreator {
     //3x3 room that start at a negative position
     List<List<Tile>> componentMap = new ArrayList<>();
     componentMap.add(Arrays.asList(wall, wall, wall));
-    componentMap.add(Arrays.asList(wall, space, wall));
-    componentMap.add(Arrays.asList(wall, space, wall));
+    componentMap.add(Arrays.asList(wall, new Space(), wall));
+    componentMap.add(Arrays.asList(wall, new Space(), wall));
 
     Room room7 = new Room(new Point(-5,-1), componentMap);
     room7.placeActor(brainy, new Point(-4, 1));
@@ -174,6 +175,60 @@ public class ModelCreator {
 
     List<Point> waypoints = new ArrayList<Point>();
     waypoints.add(new Point(6,2));
+
+    Hall hall1 = new Hall(new Point(3,2), startRoom, new Point(6,7), endRoom, waypoints);
+    startRoom.connectHall(new Point(3,2), hall1); //room1
+    endRoom.connectHall(new Point(6,7), hall1); //room2
+
+    return hall1;
+  }
+
+  //Hall to replace hall1 that makes multiple turns
+  public Hall initializeHall1Snake() {
+    Room startRoom = initializeRoom1();
+    Room endRoom = initializeRoom2();
+
+    List<Point> waypoints = new ArrayList<Point>();
+    waypoints.add(new Point(9,2));
+    waypoints.add(new Point(9,4));
+    waypoints.add(new Point(6,4));
+
+    Hall hall1 = new Hall(new Point(3,2), startRoom, new Point(6,7), endRoom, waypoints);
+    startRoom.connectHall(new Point(3,2), hall1); //room1
+    endRoom.connectHall(new Point(6,7), hall1); //room2
+
+    return hall1;
+  }
+
+  //Hall to replace hall1 that travels directly next to a room
+  public Hall initializeHall1RoomBrush() {
+    Room startRoom = initializeRoom1();
+    Room endRoom = initializeRoom2();
+
+    List<Point> waypoints = new ArrayList<Point>();
+    waypoints.add(new Point(9,2));
+    waypoints.add(new Point(9,6));
+    waypoints.add(new Point(6,6));
+
+    Hall hall1 = new Hall(new Point(3,2), startRoom, new Point(6,7), endRoom, waypoints);
+    startRoom.connectHall(new Point(3,2), hall1); //room1
+    endRoom.connectHall(new Point(6,7), hall1); //room2
+
+    return hall1;
+  }
+
+  //Hall to replace hall1 that travels directly next to other halls and itself
+  //(12,2), (12,10), (9,10), (9,3), (6,3).
+  public Hall initializeHall1HallBrush() {
+    Room startRoom = initializeRoom1();
+    Room endRoom = initializeRoom2();
+
+    List<Point> waypoints = new ArrayList<Point>();
+    waypoints.add(new Point(12,2));
+    waypoints.add(new Point(12,10));
+    waypoints.add(new Point(9,10));
+    waypoints.add(new Point(9,3));
+    waypoints.add(new Point(6,3));
 
     Hall hall1 = new Hall(new Point(3,2), startRoom, new Point(6,7), endRoom, waypoints);
     startRoom.connectHall(new Point(3,2), hall1); //room1
