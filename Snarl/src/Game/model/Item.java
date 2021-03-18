@@ -10,7 +10,7 @@ import Game.modelView.EntityType;
  */
 public abstract class Item {
 	
-	private Point location;
+	protected Point location;
 	
 	/**    
 	 * Initialize the item with a location
@@ -34,4 +34,8 @@ public abstract class Item {
 		return this.location;
 	}
 
+	@Override
+	public int hashCode() {
+		return this.location.hashCode();
+	}
 }

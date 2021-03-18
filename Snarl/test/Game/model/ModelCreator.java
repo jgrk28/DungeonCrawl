@@ -32,11 +32,6 @@ public class ModelCreator {
   private Zombie brainy = new Zombie("Brainy");
   private Zombie dracula = new Zombie("Dracula");
 
-  private Room dummyRoom1 = new Room(new Point(0, 0),
-      new ArrayList<>(Arrays.asList(Arrays.asList(wall))));
-  private Room dummyRoom2 = new Room(new Point(10, 5),
-      new ArrayList<>(Arrays.asList(Arrays.asList(wall))));
-
   public Player getPlayer1() {
     return jacob;
   }
@@ -160,12 +155,53 @@ public class ModelCreator {
     return room7;
   }
 
-  public Room getDummyRoom1() {
-    return dummyRoom1;
+  public Room initializeRoom8() {
+    //2x3 room
+    List<List<Tile>> componentMap = new ArrayList<>();
+
+    componentMap.add(Arrays.asList(wall, new Space()));
+    componentMap.add(Arrays.asList(wall, new Space()));
+    componentMap.add(Arrays.asList(wall, wall));
+
+    Room room8 = new Room(new Point(0,11), componentMap);
+    return room8;
   }
 
-  public Room getDummyRoom2() {
-    return dummyRoom2;
+  public Room initializeRoom9() {
+    //3x2 room
+    List<List<Tile>> componentMap = new ArrayList<>();
+
+    componentMap.add(Arrays.asList(wall, new Space(), wall));
+    componentMap.add(Arrays.asList(wall, new Space(), wall));
+
+    Room room9 = new Room(new Point(4,6), componentMap);
+    return room9;
+  }
+
+  public Room initializeRoom10() {
+    //4x4 room
+    List<List<Tile>> componentMap = new ArrayList<>();
+
+    componentMap.add(Arrays.asList(wall, new Space(), wall, wall));
+    componentMap.add(Arrays.asList(wall, new Space(), new Space(), wall));
+    componentMap.add(Arrays.asList(wall, new Space(), new Space(), wall));
+    componentMap.add(Arrays.asList(wall, wall, new Space(), new Space()));
+
+    Room room10 = new Room(new Point(0,0), componentMap);
+    return room10;
+  }
+
+  public Room initializeRoom11() {
+    //4x4 room
+    List<List<Tile>> componentMap = new ArrayList<>();
+
+    componentMap.add(Arrays.asList(wall, new Space(), wall, wall));
+    componentMap.add(Arrays.asList(wall, new Space(), new Space(), wall));
+    componentMap.add(Arrays.asList(wall, new Space(), new Space(), wall));
+    componentMap.add(Arrays.asList(wall, wall, new Space(), new Space()));
+
+    Room room11 = new Room(new Point(1,11), componentMap);
+    return room11;
   }
 
   //Hall that can connect room1 to room2
@@ -267,24 +303,30 @@ public class ModelCreator {
   }
 
   public Hall initializeHall4() {
+    Room startRoom = initializeRoom8();
+    Room endRoom = initializeRoom9();
+
     //Hall goes (2,11) -> (5,11) -> (5,8)
     List<Point> waypoints = new ArrayList<Point>();
     waypoints.add(new Point(5,11));
 
-    Hall hall4 = new Hall(new Point(1,11), dummyRoom1, new Point(5,7), dummyRoom2, waypoints);
+    Hall hall4 = new Hall(new Point(1,11), startRoom, new Point(5,7), endRoom, waypoints);
 
     hall4.placeActor(juliette, new Point(4, 11));
     return hall4;
   }
 
   public Hall initializeHall5() {
+    Room startRoom = initializeRoom10();
+    Room endRoom = initializeRoom11();
+
     //Hall goes (4,3) -> (5,3) -> (5,6) -> (2,6) -> (2,10)
     List<Point> waypoints = new ArrayList<Point>();
     waypoints.add(new Point(5,3));
     waypoints.add(new Point(5,6));
     waypoints.add(new Point(2,6));
 
-    Hall hall5 = new Hall(new Point(3,3), dummyRoom2, new Point(2,11), dummyRoom1, waypoints);
+    Hall hall5 = new Hall(new Point(3,3), startRoom, new Point(2,11), endRoom, waypoints);
 
     hall5.placeActor(dracula, new Point(4, 3));
     hall5.placeActor(buster, new Point(5, 3));

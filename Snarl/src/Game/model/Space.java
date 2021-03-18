@@ -37,7 +37,15 @@ public class Space implements Tile {
 
   @Override
   public int hashCode() {
-    return this.item.hashCode() * this.actor.hashCode();
+    int itemHash = 1;
+    int actorHash = 1;
+    if (item != null) {
+      itemHash = this.item.hashCode();
+    }
+    if (actor != null) {
+      actorHash = this.actor.hashCode();
+    }
+    return itemHash * actorHash;
   }
 
   @Override
@@ -55,7 +63,7 @@ public class Space implements Tile {
   
   /** 
    * Add comment here
-   * @param items
+   * @param item
    * @param actor
    * @return
    */

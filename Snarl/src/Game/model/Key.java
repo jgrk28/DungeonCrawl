@@ -22,4 +22,17 @@ public class Key extends Item {
   public EntityType getEntityType() {
     return EntityType.KEY;
   }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (obj == this) {
+      return true;
+    }
+    if (!(obj instanceof Key)) {
+      return false;
+    }
+
+    Key otherKey = (Key) obj;
+    return this.location.equals(otherKey.location);
+  }
 }

@@ -22,4 +22,18 @@ public class Exit extends Item {
   public EntityType getEntityType() {
     return EntityType.EXIT;
   }
+
+
+  @Override
+  public boolean equals(Object obj) {
+    if (obj == this) {
+      return true;
+    }
+    if (!(obj instanceof Exit)) {
+      return false;
+    }
+
+    Exit otherExit = (Exit) obj;
+    return this.location.equals(otherExit.location);
+  }
 }

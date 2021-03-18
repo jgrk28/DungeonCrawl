@@ -391,7 +391,7 @@ public class Hall implements LevelComponent {
 	private int findActor(Actor actor) {
 		for (int i = 0; i < this.componentMap.size(); i++) {
 			Actor tileActor = this.componentMap.get(i).getActor();
-			if (tileActor.equals(actor)) {
+			if (tileActor != null && tileActor.equals(actor)) {
 				return i;
 			}
 		}

@@ -73,8 +73,8 @@ public class RoomTest {
   public void testGetDoors() {
     Hall fakeHall1 = new Hall(new ArrayList<>(), new ArrayList<>()); //Dummy variables to test doors
     Hall fakeHall2 = new Hall(new ArrayList<>(), new ArrayList<>());
-    Point door1 = new  Point(16, 7);
-    Point door2 = new  Point(19, 10);
+    Point door1 = new  Point(15, 7);
+    Point door2 = new  Point(16, 8);
 
     Map<Point, Hall> doors = new HashMap<>();
     doors.put(door1, fakeHall1);

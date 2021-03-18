@@ -253,11 +253,11 @@ public class ActorTest {
 	  List<List<EntityType>> expectedMap = Arrays.asList(
 	          Arrays.asList(w, w, e, e, e),
 	          Arrays.asList(s, w, e, e, e),
-	          Arrays.asList(s, s, h, h, h),
+	          Arrays.asList(s, s, p, h, h),
 	          Arrays.asList(w, w, e, e, h),
 	          Arrays.asList(e, e, e, e, h));
 	  
-	  Player player = new Player();
+	  Player player = creator.getPlayer1();
 
 	  assertEquals(expectedMap, player.cropViewableMap(fullLevelMap, new Point(4,2)));	    	    
   }
@@ -268,13 +268,13 @@ public class ActorTest {
     List<List<EntityType>> fullLevelMap = creator.initializeLevel1ViewableMap();
 	  
 	  List<List<EntityType>> expectedMap = Arrays.asList(
+	          Arrays.asList(w, s, g, w, e),
 	          Arrays.asList(w, s, s, w, e),
-	          Arrays.asList(w, s, s, w, e),
-	          Arrays.asList(w, s, s, w, e),
+	          Arrays.asList(w, s, p, w, e),
 	          Arrays.asList(s, s, x, s, h),
 	          Arrays.asList(w, w, w, w, e));
 	  
-	  Player player = new Player();
+	  Player player = creator.getPlayer2();
 
 	  assertEquals(expectedMap, player.cropViewableMap(fullLevelMap, new Point(7,10)));	    	    
   }
@@ -287,11 +287,11 @@ public class ActorTest {
 	  List<List<EntityType>> expectedMap = Arrays.asList(
 	          Arrays.asList(s, s, s, s, w),
 	          Arrays.asList(s, s, s, s, w),
-	          Arrays.asList(s, s, s, k, w),
+	          Arrays.asList(s, z, p, k, w),
 	          Arrays.asList(w, w, w, w, w),
 	          Arrays.asList());
 	  
-	  Player player = new Player();
+	  Player player = creator.getPlayer3();
 
 	  assertEquals(expectedMap, player.cropViewableMap(fullLevelMap, new Point(3,17)));	    	    
   }
