@@ -105,8 +105,9 @@ public class Dungeon implements RuleChecker, DungeonModelView {
 
 	/**
 	 * A level is invalid if the level has been exited while the exit is 
-	 * locked, if there is not exactly one key and exit, or if unknown players 
-	 * or adversaries are in the level
+	 * locked, if there is not exactly one key and exit, if there is a key
+	 * in the level but the exit is unlocked, or if unknown players or
+	 * adversaries are in the level
 	 */
 	@Override
 	public Boolean checkValidGameState() {

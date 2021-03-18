@@ -98,7 +98,6 @@ public interface Level extends LevelModelView {
 	 * @param name - the name of the player to get
 	 * @return the referenced player.
 	 * @throws IllegalArgumentException if there is no player with the given name
-	 * TODO needs tests
 	 */
 	Player getPlayer(String name);
 

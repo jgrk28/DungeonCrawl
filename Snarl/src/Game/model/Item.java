@@ -5,8 +5,9 @@ import java.awt.Point;
 import Game.modelView.EntityType;
 
 /**
- * TODO Add comment here
- *
+ * Represents an item within a game of Snarl.
+ * Contains all common fields and methods for 
+ * Items. An item can be a Key or an Exit
  */
 public abstract class Item {
 	
@@ -27,8 +28,8 @@ public abstract class Item {
 	public abstract EntityType getEntityType();
 	
 	/**
-	 * TODO add comment here
-	 * @return
+	 * Getter for the location of the Item
+	 * @return returns the location field of the item
 	 */
 	public Point getLocation() {
 		return this.location;

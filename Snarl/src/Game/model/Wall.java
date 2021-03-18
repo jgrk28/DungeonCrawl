@@ -17,16 +17,6 @@ public class Wall implements Tile {
   }
 
   @Override
-  public int hashCode() {
-    return 0;
-  }
-
-  @Override
-  public boolean equals(Object obj) {
-    return obj instanceof Wall;
-  }
-
-  @Override
   public Actor getActor() {
 	  throw new IllegalArgumentException("Actor does not exist on a wall");
   }
@@ -44,6 +34,16 @@ public class Wall implements Tile {
   @Override
   public void placeItem(Item item) {
 	throw new IllegalArgumentException("Item cannot be placed on a wall");
+  }
+  
+  @Override
+  public int hashCode() {
+    return 0;
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    return obj instanceof Wall;
   }
   
 }

@@ -9,7 +9,7 @@ import Game.modelView.EntityType;
 /** 
  * A LevelComponent that represents a Room within a Level
  * A room has an upper-left Cartesian position, and one or more doors
- * Entities, such as the key and the level exit, can be placed inside
+ * Items, such as the key and the level exit, can be placed inside
  * of a Room
  * 
  * An ASCII representation of the room may like this:

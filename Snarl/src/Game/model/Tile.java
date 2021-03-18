@@ -3,40 +3,45 @@ package Game.model;
 import Game.modelView.EntityType;
 
 /**
- * Add comment here
+ * Represents a Tile within a game of Snarl.
+ * Halls are composed of spaces, and rooms are 
+ * composed of spaces and walls
  * 
  * A Tile can be:
- * - Empty
  * - Space
  * - Wall
  */
 public interface Tile {
 	
 	/** 
-	  * Returns the EntityType that corresponds to this entity
+	  * Returns the EntityType that corresponds to the items
+	  * and actors located on the tile, based on what the user
+	  * should be able to view 
 	  * @return The type of entity 
 	  */
 	EntityType getEntityType();
 	
 	/**
-	 * TODO Add comment here
-	 * @param actor
-	 * @return
+	 * Gets the actor located at this tile
+	 * @return the actor at this tile, if there is one
 	 */
 	Actor getActor();
 	
 	/**
-	 * TODO Add comment here
+	 * Gets the item located at this tile
+	 * @return the item at this tile, if there is one
 	 */
 	Item getItem();
 	
 	/**
-	 * TODO Add comment here
+	 * Places the actor on this tile
+	 * @param actor - the actor to be placed
 	 */
 	void placeActor(Actor actor);
 	
 	/**
-	 * TODO Add comment here
+	 * Places the item on this tile
+	 * @param item - the item to be placed
 	 */
 	void placeItem(Item item);
 

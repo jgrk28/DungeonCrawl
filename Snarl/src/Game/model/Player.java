@@ -13,10 +13,17 @@ public class Player extends AbstractActor {
 	private static final int maxMoveDistance = 2;
 	private static final int sightBoxWidth = 2;
 
+	/**
+	 * Initialize a Player with a unique name
+	 * @param name - the name of the Player
+	 */
 	public Player(String name) {
 		super(name);
 	}
 
+	/**
+	 * Initialize a Player with a unique ID
+	 */
 	public Player() {
 		super();
 	}
@@ -180,7 +187,6 @@ public class Player extends AbstractActor {
 			croppedMap.add(croppedRow);
 		}
 		return croppedMap;
-
 	}
 
 }

@@ -8,10 +8,17 @@ import Game.modelView.EntityType;
  */
 public class Ghost extends Adversary {
 
+	/**
+	 * Initialize a Ghost with a unique name
+	 * @param name - the name of the Ghost
+	 */
 	public Ghost(String name) {
 		super(name);
 	}
 
+	/**
+	 * Initialize a Ghost with a unique ID
+	 */
 	public Ghost() {
 		super();
 	}

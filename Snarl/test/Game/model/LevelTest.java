@@ -824,5 +824,17 @@ public class LevelTest {
 
 	    assertEquals(expectedMap,level.getPlayerMap(this.player3));
 	}
+	
+	//Tests for getPlayer
+	@Test
+	public void testGetPlayer() {
+	    assertEquals(this.player1, level.getPlayer("Jacob"));
+	    assertEquals(this.player2, level.getPlayer("Juliette"));
+	    assertEquals(this.player3, level.getPlayer("SpiderMan"));
+	}
    
+	@Test (expected = IllegalArgumentException.class)
+	public void testGetPlayerException() {
+	    level.getPlayer("AJ");
+	}
 }

@@ -63,8 +63,7 @@ public class LevelImpl implements Level {
 	/** 
 	 * Initializes a new level. This constructor is used primarily for testing 
 	 * @param levelMap - the map of all LevelComponents within the level
-	 * @param key - the key within the level
-	 * @param exit - the exit within the level
+	 * @param items - all items in the level
 	 */
 	public LevelImpl(List<LevelComponent> levelMap, List<Item> items) {
 		/**
@@ -84,8 +83,7 @@ public class LevelImpl implements Level {
 		
 		for (Item item : this.items) {	
 			placeItem(item);
-		}
-		
+		}	
 	}
 	
 	/** 
@@ -95,8 +93,7 @@ public class LevelImpl implements Level {
 	 * @param players - list of all players in the level
 	 * @param adversaries - list of all adversaries in the level
 	 * @param levelMap - the map of all LevelComponents within the level
-	 * @param key - the key within the level
-	 * @param exit - the exit within the level
+	 * @param items - all items in the level
 	 */
 	public LevelImpl(List<Player> players, List<Adversary> adversaries, 
 			List<LevelComponent> levelMap, List<Item> items) {
@@ -126,8 +123,7 @@ public class LevelImpl implements Level {
 	 * @param levelMap - the map of all LevelComponents within the level
 	 * @param exitUnlocked - true if the exit has been unlocked
 	 * @param levelExited - true if a player has exited the level
-	 * @param key - the key within the level
-	 * @param exit - the exit within the level
+	 * @param items - all items in the level
 	 */
 	public LevelImpl(
 			Map<Player, Point> players,
@@ -191,8 +187,8 @@ public class LevelImpl implements Level {
 	}
 
 	/**
-	 * TODO Add comment here
-	 * @param item
+	 * Places the item (key or exit) in the level
+	 * @param item - the item to be placed
 	 */
 	private void placeItem(Item item) {
 		LevelComponent component = findComponent(item.getLocation());
@@ -626,8 +622,10 @@ public class LevelImpl implements Level {
 	}
 	
 	/**
-	 * TODO Add comment here
-	 * @return
+	 * Checks that the items in the level are valid. The items are valid if there
+	 * is exactly one exit and exactly one key. If the exit is unlocked, there 
+	 * should be no keys in the level
+	 * @return true if the items in the level are valid
 	 */
 	private Boolean checkValidItems() {
 		int exitCount = 0;

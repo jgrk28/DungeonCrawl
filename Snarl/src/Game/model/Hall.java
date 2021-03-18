@@ -402,7 +402,9 @@ public class Hall implements LevelComponent {
 	public void placeActor(Actor actor, Point destination) {
 		int hallIndex = getHallwayIndex(destination);
 		Tile tile = this.componentMap.get(hallIndex);
+		//Place the actor in the tile
 		tile.placeActor(actor);
+		//Update the componentMap
 		this.componentMap.set(hallIndex, tile);
 	}
 
@@ -411,7 +413,9 @@ public class Hall implements LevelComponent {
 		Point destination = item.getLocation();
 		int hallIndex = getHallwayIndex(destination);
 		Tile tile = this.componentMap.get(hallIndex);
+		//Place the item in the tile
 		tile.placeItem(item);
+		//Update the componentMap
 		this.componentMap.set(hallIndex, tile);		
 	}
 

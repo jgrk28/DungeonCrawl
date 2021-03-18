@@ -23,7 +23,6 @@ public class Exit extends Item {
     return EntityType.EXIT;
   }
 
-
   @Override
   public boolean equals(Object obj) {
     if (obj == this) {
