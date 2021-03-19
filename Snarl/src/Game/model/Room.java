@@ -246,7 +246,7 @@ public class Room implements LevelComponent {
 	) {
 		return position.equals(this.position)
 				&& componentMap.equals(this.componentMap)
-				&& doors.equals(this.doors);
+				&& doors.keySet().equals(this.doors.keySet());
 	}
 
 }

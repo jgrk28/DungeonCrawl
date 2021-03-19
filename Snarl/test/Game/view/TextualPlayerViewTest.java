@@ -10,9 +10,7 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
-import Game.model.Adversary;
 import Game.model.Dungeon;
-import Game.model.Level;
 import Game.model.Player;
 import Game.modelView.DungeonModelView;
 import Game.modelView.PlayerModelView;
@@ -31,16 +29,13 @@ public class TextualPlayerViewTest {
 	//Fields for the Dungeon
 	private Dungeon dungeon;
 	private List<Player> players;
-	private List<Adversary> adversaries;
-	private List<Level> levels;
 	
 	@Before
 	public void initializePlayerModelView() {
 		this.creator = new ModelCreator();
 		this.players = creator.initializeDungeonPlayers();
-		this.adversaries = creator.initializeDungeonAdversaries();
-		this.levels = creator.initializeDungeonLevels();
 		this.dungeon = creator.initializeDungeon();
+		this.dungeon.startCurrentLevel();
 		this.dungeonView = this.dungeon;
 		this.playerModelView0 = new PlayerModelView(this.players.get(0), dungeonView);
 		this.playerModelView1 = new PlayerModelView(this.players.get(1), dungeonView);

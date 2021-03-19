@@ -41,6 +41,7 @@ public class LevelImpl implements Level {
 	private List<LevelComponent> levelMap;
 
 	//The map of all EntityTypes used to render the Level
+	//TODO do we actually need this here
 	private List<List<EntityType>> viewableMap;
 	
 	//Ordered map of players that reflects the turn order 
@@ -699,4 +700,31 @@ public class LevelImpl implements Level {
 		throw new IllegalArgumentException("Actor does not exist in this level");
 	}
 
+	@Override
+	public int hashCode() {
+		return this.levelMap.hashCode()
+				* this.playerLocations.hashCode()
+				* this.adversaryLocations.hashCode()
+				* this.exitUnlocked.hashCode()
+				* this.levelExited.hashCode()
+				* this.items.hashCode();
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == this) {
+			return true;
+		}
+		if (!(obj instanceof LevelImpl)) {
+			return false;
+		}
+
+		LevelImpl otherLevel = (LevelImpl) obj;
+		return this.levelMap.equals(otherLevel.levelMap)
+				&& this.playerLocations.equals(otherLevel.playerLocations)
+				&& this.adversaryLocations.equals(otherLevel.adversaryLocations)
+				&& this.exitUnlocked.equals(otherLevel.exitUnlocked)
+				&& this.levelExited.equals(otherLevel.levelExited)
+				&& this.items.equals(otherLevel.items);
+	}
 }

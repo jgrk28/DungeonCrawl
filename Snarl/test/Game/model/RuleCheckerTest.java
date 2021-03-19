@@ -16,7 +16,9 @@ public class RuleCheckerTest {
 
 	private ModelCreator creator;
 	private Dungeon dungeon;
+	private Dungeon simpleDungeon;
 	private RuleChecker ruleChecker;
+	private RuleChecker simpleRuleChecker;
 	private List<Level> levels;
 
 	private Key key;
@@ -35,9 +37,12 @@ public class RuleCheckerTest {
 	@Before
 	public void initLevelComponents() {
 		this.creator = new ModelCreator();
-		this.dungeon = this.creator.initializeSimpleDungeon();
+		this.dungeon = this.creator.initializeDungeonStarted();
 		this.ruleChecker = this.dungeon;
-		this.levels = this.creator.initializeSimpleDungeonLevels();
+		this.simpleDungeon = this.creator.initializeSimpleDungeon();
+		this.simpleDungeon.startCurrentLevel();
+		this.simpleRuleChecker = this.simpleDungeon;
+		this.levels = this.creator.initializeDungeonLevelsStarted();
 		this.players = this.creator.initializeDungeonPlayers();
 		this.adversaries = this.creator.initializeDungeonAdversaries();
 		this.levelMap = this.creator.initializeLevel1Map();
@@ -152,102 +157,158 @@ public class RuleCheckerTest {
 
 		@Test
 		public void testIsLevelOverActive() {
-			Assert.assertEquals(GameState.ACTIVE, ruleChecker.isLevelOver());
+			Assert.assertEquals(GameState.ACTIVE, simpleRuleChecker.isLevelOver());
 
-			Level firstLevel = dungeon.getCurrentLevel();
+			Level firstLevel = simpleDungeon.getCurrentLevel();
 			beatLevel(firstLevel);
-			dungeon.getNextLevel();
 
-			assertEquals(GameState.ACTIVE, ruleChecker.isLevelOver());
+			Level secondLevel = simpleDungeon.getNextLevel();
+			simpleDungeon.startCurrentLevel();
+
+			assertEquals(GameState.ACTIVE, simpleRuleChecker.isLevelOver());
 		}
 
 	@Test
 	public void testIsLevelOverWon() {
-		Level firstLevel = dungeon.getCurrentLevel();
+		Level firstLevel = simpleDungeon.getCurrentLevel();
 		beatLevel(firstLevel);
 
-		assertEquals(GameState.WON, ruleChecker.isLevelOver());
+		assertEquals(GameState.WON, simpleRuleChecker.isLevelOver());
 	}
 
 	@Test
 	public void testIsLevelOverLost() {
-		Level firstLevel = dungeon.getCurrentLevel();
+		Level firstLevel = simpleDungeon.getCurrentLevel();
 		loseLevel(firstLevel);
 
-		assertEquals(GameState.LOST, ruleChecker.isLevelOver());
+		assertEquals(GameState.LOST, simpleRuleChecker.isLevelOver());
 	}
 
 	  @Test
 		public void testIsGameOverActive() {
-			assertEquals(GameState.ACTIVE, ruleChecker.isGameOver());
+			assertEquals(GameState.ACTIVE, simpleRuleChecker.isGameOver());
 
-			Level firstLevel = dungeon.getCurrentLevel();
+			Level firstLevel = simpleDungeon.getCurrentLevel();
 			beatLevel(firstLevel);
 
-			assertEquals(GameState.ACTIVE, ruleChecker.isGameOver());
+			assertEquals(GameState.ACTIVE, simpleRuleChecker.isGameOver());
 
-			dungeon.getNextLevel();
+			Level secondLevel = simpleDungeon.getNextLevel();
+			simpleDungeon.startCurrentLevel();
 
-			assertEquals(GameState.ACTIVE, ruleChecker.isGameOver());
+			assertEquals(GameState.ACTIVE, simpleRuleChecker.isGameOver());
 		}
 
 	@Test
 	public void testIsGameOverWon() {
-		Level secondLevel = dungeon.getNextLevel();
+		Level secondLevel = simpleDungeon.getNextLevel();
+		simpleDungeon.startCurrentLevel();
 		beatLevel(secondLevel);
 
-		assertEquals(GameState.WON, ruleChecker.isGameOver());
+		assertEquals(GameState.WON, simpleRuleChecker.isGameOver());
 	}
 
 	@Test
 	public void testIsGameOverLost() {
-		Level firstLevel = dungeon.getCurrentLevel();
+		Level firstLevel = simpleDungeon.getCurrentLevel();
 		loseLevel(firstLevel);
 
-		assertEquals(GameState.LOST, ruleChecker.isGameOver());
+		assertEquals(GameState.LOST, simpleRuleChecker.isGameOver());
 	}
 
 	@Test
 	public void testIsGameOverLostSecondLevel() {
-		Level firstLevel = dungeon.getCurrentLevel();
+		Level firstLevel = simpleDungeon.getCurrentLevel();
 		beatLevel(firstLevel);
 
-		Level secondLevel = dungeon.getNextLevel();
+		Level secondLevel = simpleDungeon.getNextLevel();
+		simpleDungeon.startCurrentLevel();
 		loseLevel(secondLevel);
 
-		assertEquals(GameState.LOST, ruleChecker.isGameOver());
+		assertEquals(GameState.LOST, simpleRuleChecker.isGameOver());
 	}
 
 	private void beatLevel(Level level) {
-		//Player3 get Key and die
+		//Player3 get key then exit
+		level.playerAction(player3, new Point(2, 2));
+		level.playerAction(player3, new Point(4, 2));
+		level.playerAction(player3, new Point(6, 2));
+		level.playerAction(player3, new Point(6, 4));
+		level.playerAction(player3, new Point(6, 6));
+		level.playerAction(player3, new Point(6, 8));
+		level.playerAction(player3, new Point(6, 10));
+		level.playerAction(player3, new Point(5, 11));
+		level.playerAction(player3, new Point(3, 11));
+		level.playerAction(player3, new Point(2, 12));
+		level.playerAction(player3, new Point(2, 14));
+		level.playerAction(player3, new Point(3, 15));
+		level.playerAction(player3, new Point(4, 16));
 		level.playerAction(player3, new Point(4, 17));
-		level.playerAction(player3, new Point(2, 17));
+		level.playerAction(player3, new Point(4, 16));
+		level.playerAction(player3, new Point(3, 15));
+		level.playerAction(player3, new Point(2, 14));
+		level.playerAction(player3, new Point(2, 12));
+		level.playerAction(player3, new Point(3, 11));
+		level.playerAction(player3, new Point(5, 11));
+		level.playerAction(player3, new Point(7, 11));
 
-		//Player 2 exit
+		//Player 2 win
+		level.playerAction(player2, new Point(2, 2));
+		level.playerAction(player2, new Point(4, 2));
+		level.playerAction(player2, new Point(6, 2));
+		level.playerAction(player2, new Point(6, 4));
+		level.playerAction(player2, new Point(6, 6));
+		level.playerAction(player2, new Point(6, 8));
+		level.playerAction(player2, new Point(6, 10));
 		level.playerAction(player2, new Point(7, 11));
 
-		//Player 1 die
+		//Player 1 win
+		level.playerAction(player1, new Point(2, 2));
+		level.playerAction(player1, new Point(4, 2));
 		level.playerAction(player1, new Point(6, 2));
 		level.playerAction(player1, new Point(6, 4));
 		level.playerAction(player1, new Point(6, 6));
 		level.playerAction(player1, new Point(6, 8));
-		level.playerAction(player1, new Point(7, 8));
+		level.playerAction(player1, new Point(6, 10));
+		level.playerAction(player1, new Point(7, 11));
 	}
 
 	private void loseLevel(Level level) {
-		//Player3 get Key and die
-		level.playerAction(player3, new Point(4, 17));
-		level.playerAction(player3, new Point(2, 17));
+		//Player3 die
+		level.playerAction(player3, new Point(2, 2));
+		level.playerAction(player3, new Point(4, 2));
+		level.playerAction(player3, new Point(6, 2));
+		level.playerAction(player3, new Point(6, 4));
+		level.playerAction(player3, new Point(6, 6));
+		level.playerAction(player3, new Point(6, 8));
+		level.playerAction(player3, new Point(6, 10));
+		level.playerAction(player3, new Point(7, 11));
+		level.playerAction(player3, new Point(9, 11));
+		level.playerAction(player3, new Point(13, 11));
 
 		//Player 2 die
-		level.playerAction(player2, new Point(7, 8));
+		level.playerAction(player2, new Point(2, 2));
+		level.playerAction(player2, new Point(4, 2));
+		level.playerAction(player2, new Point(6, 2));
+		level.playerAction(player2, new Point(6, 4));
+		level.playerAction(player2, new Point(6, 6));
+		level.playerAction(player2, new Point(6, 8));
+		level.playerAction(player2, new Point(6, 10));
+		level.playerAction(player2, new Point(7, 11));
+		level.playerAction(player2, new Point(9, 11));
+		level.playerAction(player2, new Point(13, 11));
 
 		//Player 1 die
+		level.playerAction(player1, new Point(2, 2));
+		level.playerAction(player1, new Point(4, 2));
 		level.playerAction(player1, new Point(6, 2));
 		level.playerAction(player1, new Point(6, 4));
 		level.playerAction(player1, new Point(6, 6));
 		level.playerAction(player1, new Point(6, 8));
-		level.playerAction(player1, new Point(7, 8));
+		level.playerAction(player1, new Point(6, 10));
+		level.playerAction(player1, new Point(7, 11));
+		level.playerAction(player1, new Point(9, 11));
+		level.playerAction(player1, new Point(13, 11));
 	}
 
 	@Test

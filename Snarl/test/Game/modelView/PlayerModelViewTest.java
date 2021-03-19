@@ -12,7 +12,6 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
-import Game.model.Adversary;
 import Game.model.Dungeon;
 import Game.model.Level;
 import Game.model.Player;
@@ -28,8 +27,6 @@ public class PlayerModelViewTest {
 	//Fields for the Dungeon
 	private Dungeon dungeon;
 	private List<Player> players;
-	private List<Adversary> adversaries;
-	private List<Level> levels;
 		
 	//Entity types
 	private EntityType w = EntityType.WALL;
@@ -45,9 +42,8 @@ public class PlayerModelViewTest {
 		ModelCreator creator = new ModelCreator();
 
 		this.players = creator.initializeDungeonPlayers();
-		this.adversaries = creator.initializeDungeonAdversaries();
-		this.levels = creator.initializeDungeonLevels();
 		this.dungeon = creator.initializeDungeon();
+		this.dungeon.startCurrentLevel();
 		this.dungeonView = this.dungeon;
 		this.playerModelView0 = new PlayerModelView(this.players.get(0), dungeonView);	
 		this.playerModelView1 = new PlayerModelView(this.players.get(1), dungeonView);	
@@ -81,7 +77,7 @@ public class PlayerModelViewTest {
 	//Tests for isPlayerAlive
 	@Test
 	public void testIsPlayerAliveFalse() {
-		Level firstLevel = levels.get(0);
+		Level firstLevel = dungeon.getCurrentLevel();
 		Player player0 = players.get(0);
 		firstLevel.playerAction(player0, new Point(2, 2));
 		firstLevel.playerAction(player0, new Point(4, 2));

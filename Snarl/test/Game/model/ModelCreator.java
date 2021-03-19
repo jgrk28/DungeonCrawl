@@ -92,6 +92,15 @@ public class ModelCreator {
     return new Room(new Point(5,7), componentMap);
   }
 
+  public Room initializeRoom2WithEntities() {
+    Room room2 = initializeRoom2();
+    room2.placeActor(this.juliette, new Point(7, 10));
+    room2.placeActor(this.boo, new Point(7, 8));
+    room2.placeItem(this.level1Exit);
+
+    return room2;
+  }
+
   //6x5 room with one spaces for a possible door
   public Room initializeRoom3() {
     List<List<Tile>> componentMap = new ArrayList<>();
@@ -102,6 +111,16 @@ public class ModelCreator {
     componentMap.add(Arrays.asList(wall, wall, wall, wall, wall, wall));
 
     return new Room(new Point(0,14), componentMap);
+  }
+
+  public Room initializeRoom3WithEntities() {
+    Room room3 = initializeRoom3();
+    room3.placeActor(this.spiderMan, new Point(3, 17));
+    room3.placeActor(this.brainy, new Point(2, 17));
+    room3.placeActor(this.buster, new Point(2, 14));
+    room3.placeItem(this.level1Key);
+
+    return room3;
   }
 
   //5x6 room with one space for a possible door
@@ -215,6 +234,13 @@ public class ModelCreator {
     Hall hall1 = new Hall(new Point(3,2), startRoom, new Point(6,7), endRoom, waypoints);
     startRoom.connectHall(new Point(3,2), hall1); //room1
     endRoom.connectHall(new Point(6,7), hall1); //room2
+
+    return hall1;
+  }
+
+  public Hall initializeHall1WithEntities() {
+    Hall hall1 = initializeHall1();
+    hall1.placeActor(this.jacob, new Point(4, 2));
 
     return hall1;
   }
@@ -392,6 +418,19 @@ public class ModelCreator {
     );
   }
 
+  //Places Actors and Items in the Level
+  public Level initializeLevel1NoActor() {
+    List<LevelComponent> level1Map = initializeLevel1Map();
+    List<Item> items = new ArrayList<>();
+    items.add(level1Exit);
+    items.add(level1Key);
+
+    return new LevelImpl(
+        level1Map,
+        items
+    );
+  }
+
   //Places Items in the Level2
   public Level initializeLevel2() {
     List<LevelComponent> level2Map = initializeLevel1Map();
@@ -428,6 +467,14 @@ public class ModelCreator {
 
   public List<Level> initializeDungeonLevels() {
     //List of levels in the Dungeon
+    Level level1 = initializeLevel1NoActor();
+    Level level2 = initializeLevel2();
+    Level level3 = initializeLevel3();
+    return new ArrayList<>(Arrays.asList(level1, level2, level3));
+  }
+
+  public List<Level> initializeDungeonLevelsStarted() {
+    //List of levels in the Dungeon
     Level level1 = initializeLevel1();
     Level level2 = initializeLevel2();
     Level level3 = initializeLevel3();
@@ -436,8 +483,8 @@ public class ModelCreator {
 
   public List<Level> initializeSimpleDungeonLevels() {
     //List of levels in the Dungeon
-    Level level1 = initializeLevel1();
-    Level level2 = initializeLevel1();
+    Level level1 = initializeLevel1NoActor();
+    Level level2 = initializeLevel1NoActor();
     return new ArrayList<>(Arrays.asList(level1, level2));
   }
 
@@ -446,6 +493,16 @@ public class ModelCreator {
     List<Player> players = initializeDungeonPlayers();
     List<Adversary> adversaries = initializeDungeonAdversaries();
     List<Level> levels = initializeDungeonLevels();
+    int startingLevel = 1;
+
+    return new Dungeon(players, adversaries, startingLevel, levels);
+  }
+
+  //Initialize Dungeon
+  public Dungeon initializeDungeonStarted() {
+    List<Player> players = initializeDungeonPlayers();
+    List<Adversary> adversaries = initializeDungeonAdversaries();
+    List<Level> levels = initializeDungeonLevelsStarted();
     int startingLevel = 1;
 
     return new Dungeon(players, adversaries, startingLevel, levels);

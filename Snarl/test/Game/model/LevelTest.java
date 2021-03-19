@@ -312,6 +312,7 @@ public class LevelTest {
 
   @Test
   public void testPlayerActionOntoLockedExit() {
+    //Need to call a Tile remove player instead of just making it a space
     level.playerAction(this.player2, new Point(7, 11));
     level.playerAction(this.player2, new Point(8, 11));
 
@@ -678,19 +679,19 @@ public class LevelTest {
   
   @Test
   public void testFindComponentKey() {
-    Room room3 = this.creator.initializeRoom3();
+    Room room3 = this.creator.initializeRoom3WithEntities();
 	  assertEquals(room3,level.findComponent(new Point(4, 17)));
   }
   
   @Test
   public void testFindComponentExit() {
-    Room room2 = this.creator.initializeRoom2();
+    Room room2 = this.creator.initializeRoom2WithEntities();
 	  assertEquals(room2,level.findComponent(new Point(7, 11)));
   }
   
   @Test
   public void testFindComponentPlayer() {
-    Hall hall1 = this.creator.initializeHall1();
+    Hall hall1 = this.creator.initializeHall1WithEntities();
 	  assertEquals(hall1,level.findComponent(new Point(4, 2)));
   }
   
@@ -703,7 +704,7 @@ public class LevelTest {
   //These two tests are hitting stack overflows in hashcode
   @Test
   public void testFindComponentAdversary() {
-    Room room2 = this.creator.initializeRoom2();
+    Room room2 = this.creator.initializeRoom2WithEntities();
 	  assertEquals(room2,level.findComponent(new Point(7, 8)));
   }
   
