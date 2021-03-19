@@ -36,6 +36,9 @@ public class PlayerModelViewTest {
 	private EntityType s = EntityType.SPACE;
 	private EntityType e = EntityType.EMPTY;
 	private EntityType p = EntityType.PLAYER;
+	private EntityType h = EntityType.HALL_SPACE;
+	private EntityType z = EntityType.ZOMBIE;
+	private EntityType k = EntityType.KEY;
 	
 	@Before
 	public void initializePlayerModelView() {
@@ -100,11 +103,11 @@ public class PlayerModelViewTest {
 	@Test 
 	public void testGetPlayer0Map() {
 		List<List<EntityType>> expectedMap = Arrays.asList(
-				Arrays.asList(),
-				Arrays.asList(w, w, w, w),
-		        Arrays.asList(w, p, p, w),
-		        Arrays.asList(w, p, s, s),
-		        Arrays.asList(w, w, w, w));
+				Arrays.asList(w, w, e, e, e),
+				Arrays.asList(s, w, e, e, e),
+		        Arrays.asList(s, s, p, h, h),
+		        Arrays.asList(w, w, e, e, h),
+		        Arrays.asList(e, e, e, e, h));
 			
 		assertEquals(expectedMap, playerModelView0.getMap());	
 			
@@ -113,11 +116,11 @@ public class PlayerModelViewTest {
 	@Test 
 	public void testGetPlayer2Map() {
 	    List<List<EntityType>> expectedMap = Arrays.asList(
-	            Arrays.asList(w, w, w, w),
-	            Arrays.asList(w, p, p, w),
-	            Arrays.asList(w, p, s, s),
-	            Arrays.asList(w, w, w, w),
-	            Arrays.asList(e, e, e, e));
+	            Arrays.asList(s, s, s, s, w),
+	            Arrays.asList(s, s, s, s, w),
+	            Arrays.asList(s, z, p, k, w),
+	            Arrays.asList(w, w, w, w, w),
+	            Arrays.asList(e, e, e, e, e));
 			
 		assertEquals(expectedMap, playerModelView2.getMap());			
 	}		

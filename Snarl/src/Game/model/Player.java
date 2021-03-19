@@ -182,6 +182,8 @@ public class Player extends AbstractActor {
 						&& fullLevelY <= fullLevel.get(0).size()) {
 					EntityType entityType = fullLevel.get(fullLevelY).get(fullLevelX);
 					croppedRow.add(entityType);
+				} else {
+					croppedRow.add(EntityType.EMPTY);
 				}
 			}
 			croppedMap.add(croppedRow);

@@ -69,11 +69,11 @@ public class DungeonModelViewTest {
 		dungeon.startCurrentLevel();
 		
 	    List<List<EntityType>> expectedMap = Arrays.asList(
-	    		Arrays.asList(),
-	            Arrays.asList(w, w, w, w),
-	            Arrays.asList(w, p, p, w),
-	            Arrays.asList(w, p, s, s),
-	            Arrays.asList(w, w, w, w));
+	    		Arrays.asList(e, e, e, e, e),
+	            Arrays.asList(e, w, w, w, w),
+	            Arrays.asList(e, w, p, p, w),
+	            Arrays.asList(e, w, p, s, s),
+	            Arrays.asList(e, w, w, w, w));
 		
 	    assertEquals(expectedMap,dungeonView.getPlayerMap(this.players.get(0)));
 		
@@ -84,11 +84,11 @@ public class DungeonModelViewTest {
 		dungeon.startCurrentLevel();
 		
 	    List<List<EntityType>> expectedMap = Arrays.asList(
-	            Arrays.asList(w, w, w, w),
-	            Arrays.asList(w, p, p, w),
-	            Arrays.asList(w, p, s, s),
-	            Arrays.asList(w, w, w, w),
-	            Arrays.asList(e, e, e, e));
+	            Arrays.asList(e, w, w, w, w),
+	            Arrays.asList(e, w, p, p, w),
+	            Arrays.asList(e, w, p, s, s),
+	            Arrays.asList(e, w, w, w, w),
+	            Arrays.asList(e, e, e, e, e));
 		
 	    assertEquals(expectedMap,dungeonView.getPlayerMap(this.players.get(2)));
 		
