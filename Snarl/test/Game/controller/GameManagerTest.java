@@ -3,23 +3,16 @@ package Game.controller;
 import static org.junit.Assert.assertEquals;
 
 import Game.model.ModelCreator;
-import java.awt.Point;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
 import Game.model.Adversary;
-import Game.model.Exit;
 import Game.model.GameState;
-import Game.model.Ghost;
-import Game.model.Key;
 import Game.model.Level;
-import Game.model.LevelImpl;
 import Game.model.Player;
-import Game.model.Zombie;
 
+//Tests for the GameManager
 public class GameManagerTest {
 	
 	private GameManager gameManager;

@@ -3,6 +3,9 @@ package Utils;
 import java.awt.Point;
 import org.json.JSONArray;
 
+/**
+ * Utility methods for the TestHarness
+ */
 public class ParseUtils {
   /**
    * Converts the JSONArray values for the location of a cell to a Point

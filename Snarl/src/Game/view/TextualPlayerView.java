@@ -12,11 +12,11 @@ import Game.modelView.PlayerModelView;
  * 
  * An textual view for a player may look like this
  * 
- * X.GX
- * X..X
- * X.PX
- * ..@.*
- * XXXX 
+ * X.G.X
+ * X...X
+ * X.P.X
+ * ..@..
+ * XXXXZ 
  *
  * Where each Entity corresponds to the following:
  * - Wall (X)
@@ -46,12 +46,12 @@ public class TextualPlayerView extends AbstractTextualView {
 		output.append("You are currently on level: " + currLevelIndex + "\n");
 		if (isAlive) {
 			output.append("You are active in the level\n");
+			this.output.print(output.toString());
+			List<List<EntityType>> level = playerModelView.getMap();
+			drawLevelMap(level);
 		} else {
 			output.append("You are no longer active in the level\n");
+			this.output.print(output.toString());
 		}
-		this.output.print(output.toString());
-
-		List<List<EntityType>> level = playerModelView.getMap();
-		drawLevelMap(level);
 	}
 }

@@ -18,6 +18,9 @@ import Game.modelView.DungeonModelView;
 import Game.modelView.PlayerModelView;
 
 public class TextualPlayerViewTest {
+	
+	private ModelCreator creator;
+	
 	//Fields for the PlayerModelView
 	private PlayerModelView playerModelView0;
 	private PlayerModelView playerModelView1;
@@ -33,7 +36,7 @@ public class TextualPlayerViewTest {
 	
 	@Before
 	public void initializePlayerModelView() {
-		ModelCreator creator = new ModelCreator();
+		this.creator = new ModelCreator();
 		this.players = creator.initializeDungeonPlayers();
 		this.adversaries = creator.initializeDungeonAdversaries();
 		this.levels = creator.initializeDungeonLevels();
@@ -64,12 +67,13 @@ public class TextualPlayerViewTest {
 		initializePlayerModelView();
 
 		String expectedOut = "You are currently on level: 1\n"
-				+ "You are active in the level\n\n"
-				+ "XXXX\n"
-				+ "XPPX\n"
-				+ "XP..\n"
-				+ "XXXX\n";
-
+				+ "You are active in the level\n"
+				+ "XX   \n"
+				+ ".X   \n"
+				+ "..P**\n"
+				+ "XX  *\n"
+				+ "    *\n";
+		
 		testDrawPlayerView(playerModelView0, expectedOut);
 	}
 	
@@ -78,10 +82,11 @@ public class TextualPlayerViewTest {
 		initializePlayerModelView();
 
 		String expectedOut = "You are currently on level: 1\n"
-				+ "You are active in the level\n\n"
-				+ "XXXX \n"
-				+ "XPPX \n"
-				+ "XP..*\n"
+				+ "You are active in the level\n"
+				+ "X.GX \n"
+				+ "X..X \n"
+				+ "X.PX \n"
+				+ "..@.*\n"
 				+ "XXXX \n";
 
 		testDrawPlayerView(playerModelView1, expectedOut);
@@ -90,18 +95,52 @@ public class TextualPlayerViewTest {
 	@Test
 	public void testDrawPlayer2View() {
 		initializePlayerModelView();
-
+		
 		String expectedOut = "You are currently on level: 1\n"
 				+ "You are active in the level\n"
-				+ "XXXX\n"
-				+ "XPPX\n"
-				+ "XP..\n"
-				+ "XXXX\n"
-				+ "    \n";
+				+ "....X\n"
+				+ "....X\n"
+				+ ".ZP!X\n"
+				+ "XXXXX\n"
+				+ "\n";
 
 		testDrawPlayerView(playerModelView2, expectedOut);
 	}
 	
-	//TODO add tests for when a player is no longer in the level
+	//Tests for when the player moves to the next level
+	@Test
+	public void testDrawLevel2() {
+		initializePlayerModelView();
+		Dungeon simpleDungeon = this.creator.initializeSimpleDungeon();
+		simpleDungeon.getNextLevel();
+		DungeonModelView view = simpleDungeon;
+		PlayerModelView playerModelView = new PlayerModelView(this.players.get(1), view);	
+		
+		String expectedOut = "You are currently on level: 2\n"
+				+ "You are active in the level\n"
+				+ "X.GX \n"
+				+ "X..X \n"
+				+ "X.PX \n"
+				+ "..@.*\n"
+				+ "XXXX \n";
+
+		testDrawPlayerView(playerModelView, expectedOut);
+	}
+	
+	
+	//Test for when a player is no longer in the level
+	@Test
+	public void testDrawNoLongerInLevel() {
+		initializePlayerModelView();
+		
+		this.dungeon.getNextLevel();
+		DungeonModelView view = this.dungeon;
+		PlayerModelView playerModelView = new PlayerModelView(this.players.get(2), view);	
+		
+		String expectedOut = "You are currently on level: 2\n"
+				+ "You are no longer active in the level\n";
+
+		testDrawPlayerView(playerModelView, expectedOut);
+	}
 
 }

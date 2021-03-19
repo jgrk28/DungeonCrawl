@@ -8,7 +8,6 @@ import java.util.List;
 import org.junit.Test;
 
 import Game.modelView.EntityType;
-import Game.modelView.LevelModelView;
 
 //Tests for the Actor class
 public class ActorTest {
@@ -212,7 +211,7 @@ public class ActorTest {
     assertTrue(player.checkValidMovePath(new Point(0,0), new Point(1, 1), goodMap1));
     assertTrue(player.checkValidMovePath(new Point(4,3), new Point(3, 2), goodMap2));
     //TODO confirm if players can jump over other players during a move
-    //assertTrue(player.checkValidMovePath(new Point(2,0), new Point(3, -1), goodMap3));
+    assertTrue(player.checkValidMovePath(new Point(2,0), new Point(3, -1), goodMap3));
     assertTrue(player.checkValidMovePath(new Point(5,5), new Point(6, 5), goodMap4));
     assertTrue(player.checkValidMovePath(new Point(5,5), new Point(5, 5), goodMap5));
   }

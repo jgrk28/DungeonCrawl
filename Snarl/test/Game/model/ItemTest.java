@@ -8,6 +8,7 @@ import org.junit.Test;
 
 import Game.modelView.EntityType;
 
+//Tests for Items 
 public class ItemTest {
 	
 	//Tests for equals

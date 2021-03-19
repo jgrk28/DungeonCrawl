@@ -5,9 +5,7 @@ import static org.junit.Assert.*;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -158,7 +156,7 @@ public class RuleCheckerTest {
 
 			Level firstLevel = dungeon.getCurrentLevel();
 			beatLevel(firstLevel);
-			Level secondLevel = dungeon.getNextLevel();
+			dungeon.getNextLevel();
 
 			assertEquals(GameState.ACTIVE, ruleChecker.isLevelOver());
 		}
@@ -188,7 +186,7 @@ public class RuleCheckerTest {
 
 			assertEquals(GameState.ACTIVE, ruleChecker.isGameOver());
 
-			Level secondLevel = dungeon.getNextLevel();
+			dungeon.getNextLevel();
 
 			assertEquals(GameState.ACTIVE, ruleChecker.isGameOver());
 		}

@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import java.util.Map;
-import Game.model.Space;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONTokener;
@@ -168,21 +167,17 @@ public class TestLevel {
 	 * the given LevelComponent. 
 	 */
 	private void getPointInfo() {
-		try {
-			
+		try {		
 			LevelComponent currComponent = this.level.findComponent(this.point);
 			this.traversable = isTravesable(currComponent);
 			this.objectType = getObjectType();
 			this.componentType = getComponentType(currComponent);
-			this.reachable = getReachableRooms(currComponent);
-			
-		} catch (IllegalArgumentException e) {
-			
+			this.reachable = getReachableRooms(currComponent);		
+		} catch (IllegalArgumentException e) {		
 			this.traversable = false;
 			this.objectType = null;
 			this.componentType = "void";
-			this.reachable = new ArrayList<>();
-			
+			this.reachable = new ArrayList<>();		
 		}
 	}
 

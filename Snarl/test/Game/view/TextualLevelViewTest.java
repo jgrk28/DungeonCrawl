@@ -2,7 +2,6 @@ package Game.view;
 
 import Game.model.Adversary;
 import Game.model.Exit;
-import Game.model.Ghost;
 import Game.model.Hall;
 import Game.model.Key;
 import Game.model.Level;
@@ -10,7 +9,6 @@ import Game.model.LevelImpl;
 import Game.model.ModelCreator;
 import Game.model.Player;
 import Game.model.Room;
-import Game.model.Zombie;
 import Game.modelView.LevelModelView;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;

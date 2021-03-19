@@ -358,7 +358,6 @@ public class ModelCreator {
     return level1Map;
   }
 
-
   //Generates the full level map
   public List<List<EntityType>> initializeLevel1ViewableMap() {
     Level level1 = initializeLevel1();
@@ -405,7 +404,6 @@ public class ModelCreator {
         items
     );
   }
-
 
   //Places Items in the Level3
   public Level initializeLevel3() {
