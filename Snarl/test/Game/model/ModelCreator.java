@@ -69,6 +69,10 @@ public class ModelCreator {
   }
 
   //Simple 4x4 room with one space for a possible door
+  //XXXX
+  //X..X
+  //X...
+  //XXXX
   public Room initializeRoom1() {
     List<List<Tile>> componentMap = new ArrayList<>();
     componentMap.add(Arrays.asList(wall, wall, wall, wall));
@@ -80,6 +84,12 @@ public class ModelCreator {
   }
 
   //4x6 room with three spaces for possible doors
+  //X.XX
+  //X..X
+  //X..X
+  //X..X
+  //....
+  //XXXX
   public Room initializeRoom2() {
     List<List<Tile>> componentMap = new ArrayList<>();
     componentMap.add(Arrays.asList(wall, new Space(), wall, wall));
@@ -92,6 +102,12 @@ public class ModelCreator {
     return new Room(new Point(5,7), componentMap);
   }
 
+  //X.XX
+  //X.GX
+  //X..X
+  //X.PX
+  //..@.
+  //XXXX
   public Room initializeRoom2WithEntities() {
     Room room2 = initializeRoom2();
     room2.placeActor(this.juliette, new Point(7, 10));
@@ -102,6 +118,12 @@ public class ModelCreator {
   }
 
   //6x5 room with one spaces for a possible door
+  //XX.XXX
+  //X....X
+  //X....X
+  //X....X
+  //X....X
+  //XXXXXX
   public Room initializeRoom3() {
     List<List<Tile>> componentMap = new ArrayList<>();
     componentMap.add(Arrays.asList(wall, wall, new Space(), wall, wall, wall));
@@ -113,6 +135,12 @@ public class ModelCreator {
     return new Room(new Point(0,14), componentMap);
   }
 
+  //XXGXXX
+  //X....X
+  //X....X
+  //X....X
+  //X.ZP!X
+  //XXXXXX
   public Room initializeRoom3WithEntities() {
     Room room3 = initializeRoom3();
     room3.placeActor(this.spiderMan, new Point(3, 17));
@@ -124,6 +152,12 @@ public class ModelCreator {
   }
 
   //5x6 room with one space for a possible door
+  //XXXXX
+  //....X
+  //X...X
+  //X...X
+  //X...X
+  //XXXXX
   public Room initializeRoom4() {
     List<List<Tile>> componentMap = new ArrayList<>();
     componentMap.add(Arrays.asList(wall, wall, wall, wall, wall));
@@ -136,8 +170,12 @@ public class ModelCreator {
     return new Room(new Point(13,10), componentMap);
   }
 
+  //Simple 4x4 room
+  //XXXX
+  //X!PX
+  //X..X
+  //XGXX
   public Room initializeRoom5() {
-    //Simple 4x4 room
     List<List<Tile>> componentMap = new ArrayList<>();
     componentMap.add(Arrays.asList(wall, wall, wall, wall));
     componentMap.add(Arrays.asList(wall, new Space(), new Space(), wall));
@@ -151,8 +189,10 @@ public class ModelCreator {
     return room5;
   }
 
+  //Weird 2x2 room
+  //.X
+  //X@
   public Room initializeRoom6() {
-    //Weird 2x2 room
     List<List<Tile>> componentMap = new ArrayList<>();
     componentMap.add(Arrays.asList(new Space(), wall));
     componentMap.add(Arrays.asList(wall, new Space()));
@@ -162,8 +202,11 @@ public class ModelCreator {
     return room6;
   }
 
+  //3x3 room that start at a negative position
+  //XXX
+  //X.X
+  //XZX
   public Room initializeRoom7() {
-    //3x3 room that start at a negative position
     List<List<Tile>> componentMap = new ArrayList<>();
     componentMap.add(Arrays.asList(wall, wall, wall));
     componentMap.add(Arrays.asList(wall, new Space(), wall));
@@ -174,8 +217,11 @@ public class ModelCreator {
     return room7;
   }
 
+  //2x3 room
+  //X.
+  //X.
+  //XX
   public Room initializeRoom8() {
-    //2x3 room
     List<List<Tile>> componentMap = new ArrayList<>();
 
     componentMap.add(Arrays.asList(wall, new Space()));
@@ -186,8 +232,10 @@ public class ModelCreator {
     return room8;
   }
 
+  //3x2 room
+  //X.X
+  //X.X
   public Room initializeRoom9() {
-    //3x2 room
     List<List<Tile>> componentMap = new ArrayList<>();
 
     componentMap.add(Arrays.asList(wall, new Space(), wall));
@@ -197,8 +245,12 @@ public class ModelCreator {
     return room9;
   }
 
+  //4x4 room
+  //X.XX
+  //X..X
+  //X..X
+  //XX..
   public Room initializeRoom10() {
-    //4x4 room
     List<List<Tile>> componentMap = new ArrayList<>();
 
     componentMap.add(Arrays.asList(wall, new Space(), wall, wall));
@@ -210,8 +262,12 @@ public class ModelCreator {
     return room10;
   }
 
+  //4x4 room
+  //X.XX
+  //X..X
+  //X..X
+  //XX..
   public Room initializeRoom11() {
-    //4x4 room
     List<List<Tile>> componentMap = new ArrayList<>();
 
     componentMap.add(Arrays.asList(wall, new Space(), wall, wall));
@@ -223,7 +279,8 @@ public class ModelCreator {
     return room11;
   }
 
-  //Hall that can connect room1 to room2
+  //Hall goes
+  //room1 -> (4,2) -> (6,2) -> (6,6) -> room2
   public Hall initializeHall1() {
     Room startRoom = initializeRoom1();
     Room endRoom = initializeRoom2();
@@ -238,6 +295,8 @@ public class ModelCreator {
     return hall1;
   }
 
+  //room1 -> (4,2) -> (6,2) -> (6,6) -> room2
+  //Player map [P......]
   public Hall initializeHall1WithEntities() {
     Hall hall1 = initializeHall1();
     hall1.placeActor(this.jacob, new Point(4, 2));
@@ -246,6 +305,8 @@ public class ModelCreator {
   }
 
   //Hall to replace hall1 that makes multiple turns
+  //Hall goes
+  //room1 -> (4,2) -> (9,2) -> (9,4) -> (6,4) -> (6,6) -> room2
   public Hall initializeHall1Snake() {
     Room startRoom = initializeRoom1();
     Room endRoom = initializeRoom2();
@@ -263,6 +324,8 @@ public class ModelCreator {
   }
 
   //Hall to replace hall1 that travels directly next to a room
+  //Hall goes
+  //room1 -> (4,2) -> (9,2) -> (9,6) -> (6,6) -> room2
   public Hall initializeHall1RoomBrush() {
     Room startRoom = initializeRoom1();
     Room endRoom = initializeRoom2();
@@ -281,6 +344,8 @@ public class ModelCreator {
 
   //Hall to replace hall1 that travels directly next to other halls and itself
   //(12,2), (12,10), (9,10), (9,3), (6,3).
+  //Hall goes
+  //room1 -> (4,2) -> (12,2) -> (12,10) -> (9,10) -> (9,3) -> (6,3) -> (6,6) -> room2
   public Hall initializeHall1HallBrush() {
     Room startRoom = initializeRoom1();
     Room endRoom = initializeRoom2();
@@ -299,7 +364,8 @@ public class ModelCreator {
     return hall1;
   }
 
-  //Hall that can connect room2 to room3
+  //Hall goes
+  //room3 -> (2,13) -> (2,11) -> (4,11) -> room2
   public Hall initializeHall2() {
     Room startRoom = initializeRoom3();
     Room endRoom = initializeRoom2();
@@ -314,7 +380,8 @@ public class ModelCreator {
     return hall2;
   }
 
-  //Hall that can connect room2 to room4
+  //Hall goes
+  //room2 -> (9,11) -> (12, 11) -> room4
   public Hall initializeHall3() {
     Room startRoom = initializeRoom2();
     Room endRoom = initializeRoom4();
@@ -328,11 +395,13 @@ public class ModelCreator {
     return hall3;
   }
 
+  //Hall goes
+  //room8 -> (2,11) -> (5,11) -> (5,8) -> room9
+  //Player map [..P....]
   public Hall initializeHall4() {
     Room startRoom = initializeRoom8();
     Room endRoom = initializeRoom9();
 
-    //Hall goes (2,11) -> (5,11) -> (5,8)
     List<Point> waypoints = new ArrayList<Point>();
     waypoints.add(new Point(5,11));
 
@@ -342,11 +411,13 @@ public class ModelCreator {
     return hall4;
   }
 
+  //Hall goes
+  //room10 -> (4,3) -> (5,3) -> (5,6) -> (2,6) -> (2,10) -> room11
+  //Player map [ZG.........]
   public Hall initializeHall5() {
     Room startRoom = initializeRoom10();
     Room endRoom = initializeRoom11();
 
-    //Hall goes (4,3) -> (5,3) -> (5,6) -> (2,6) -> (2,10)
     List<Point> waypoints = new ArrayList<Point>();
     waypoints.add(new Point(5,3));
     waypoints.add(new Point(5,6));
@@ -360,6 +431,7 @@ public class ModelCreator {
   }
 
   //Connects hall1, hall2, and hall3 to the normal 4 rooms
+  //All rooms and halls are empty
   public List<LevelComponent> initializeLevel1Map() {
     Room room1 = initializeRoom1();
     Room room2 = initializeRoom2();
@@ -384,13 +456,13 @@ public class ModelCreator {
     return level1Map;
   }
 
-  //Generates the full level map
+  //Generates the full level viewable map
   public List<List<EntityType>> initializeLevel1ViewableMap() {
     Level level1 = initializeLevel1();
     return level1.getMap();
   }
 
-  //Places Actors and Items in the Level
+  //Places Actors and Items in the first Level in an intermediate state
   public Level initializeLevel1() {
     List<LevelComponent> level1Map = initializeLevel1Map();
 
@@ -418,7 +490,7 @@ public class ModelCreator {
     );
   }
 
-  //Places Actors and Items in the Level
+  //Initialize the first level without placing any actors
   public Level initializeLevel1NoActor() {
     List<LevelComponent> level1Map = initializeLevel1Map();
     List<Item> items = new ArrayList<>();
@@ -431,7 +503,8 @@ public class ModelCreator {
     );
   }
 
-  //Places Items in the Level2
+  //Initialize the second level without placing any actors
+  //Same as the first level but the key and exit are in different positions
   public Level initializeLevel2() {
     List<LevelComponent> level2Map = initializeLevel1Map();
 
@@ -444,7 +517,8 @@ public class ModelCreator {
     );
   }
 
-  //Places Items in the Level3
+  //Initialize the third level without placing any actors
+  //Same as the first level but the key and exit are in different positions
   public Level initializeLevel3() {
     List<LevelComponent> level3Map = initializeLevel1Map();
 
@@ -457,38 +531,43 @@ public class ModelCreator {
     );
   }
 
+  //Return the list of players that are in out dungeon
   public List<Player> initializeDungeonPlayers() {
     return new ArrayList<>(Arrays.asList(jacob, juliette, spiderMan));
   }
 
+  //Return the list of adversaries that are in out dungeon
   public List<Adversary> initializeDungeonAdversaries() {
     return new ArrayList<>(Arrays.asList(boo, buster, brainy, dracula));
   }
 
+  //Return the list of levels that are in our dungeon
+  //There are no players in any level so the first level would need to be started
   public List<Level> initializeDungeonLevels() {
-    //List of levels in the Dungeon
     Level level1 = initializeLevel1NoActor();
     Level level2 = initializeLevel2();
     Level level3 = initializeLevel3();
     return new ArrayList<>(Arrays.asList(level1, level2, level3));
   }
 
+  //Return the list of levels that are in our dungeon
+  //There are players in the first level in an intermediate state
   public List<Level> initializeDungeonLevelsStarted() {
-    //List of levels in the Dungeon
     Level level1 = initializeLevel1();
     Level level2 = initializeLevel2();
     Level level3 = initializeLevel3();
     return new ArrayList<>(Arrays.asList(level1, level2, level3));
   }
 
+  //Return the list of levels that are in our simple dungeon
+  //There are no actors in this dungeon and both levels are identical
   public List<Level> initializeSimpleDungeonLevels() {
-    //List of levels in the Dungeon
     Level level1 = initializeLevel1NoActor();
     Level level2 = initializeLevel1NoActor();
     return new ArrayList<>(Arrays.asList(level1, level2));
   }
 
-  //Initialize Dungeon
+  //Initialize Dungeon with no level started
   public Dungeon initializeDungeon() {
     List<Player> players = initializeDungeonPlayers();
     List<Adversary> adversaries = initializeDungeonAdversaries();
@@ -498,7 +577,7 @@ public class ModelCreator {
     return new Dungeon(players, adversaries, startingLevel, levels);
   }
 
-  //Initialize Dungeon
+  //Initialize Dungeon with the first level started in an intermediate position
   public Dungeon initializeDungeonStarted() {
     List<Player> players = initializeDungeonPlayers();
     List<Adversary> adversaries = initializeDungeonAdversaries();
@@ -508,7 +587,7 @@ public class ModelCreator {
     return new Dungeon(players, adversaries, startingLevel, levels);
   }
 
-  //Initialize Dungeon
+  //Initialize simple Dungeon with no level started
   public Dungeon initializeSimpleDungeon() {
     List<Player> players = initializeDungeonPlayers();
     List<Adversary> adversaries = initializeDungeonAdversaries();
