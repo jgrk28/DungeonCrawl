@@ -108,12 +108,14 @@ public class Player extends AbstractActor {
 			//Get the entity at this location
 			EntityType entityType = intermediateTypes.get(point.y).get(point.x);
 			
-			//If the entity at this location is not traversable, keep looking
-			if (!isTraversable(entityType)) {
-				continue;
-			} 
-			else if (point.equals(destPoint)) {
+			//If the entity is at the destination, and the destination can be landed on,
+			//return true.
+			if (isTraversable(entityType) && point.equals(destPoint)) {
 				return true;
+			}
+			//Do not explore this node if the entity can not be landed on and is not a player
+			else if (!isTraversable(entityType) && !entityType.equals(EntityType.PLAYER)) {
+				continue;
 			} else {
 				if (depthFirstSearchRecursive(visited, point, destPoint, intermediateTypes)) {
 					return true;

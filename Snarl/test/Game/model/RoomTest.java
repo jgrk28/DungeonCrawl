@@ -59,13 +59,6 @@ public class RoomTest {
     LevelComponentTest.checkLevelComponentLooksLike(this.room3, expectedOut);
   }
 
-  @Test
-  public void testGetOrigin() {
-    assertEquals(new Point(0, 0), this.room1.getOrigin());
-    assertEquals(new Point(15, 7), this.room2.getOrigin());
-    assertEquals(new Point(-5, -1), this.room3.getOrigin());
-  }
-
   //Also tests connectHall
   @Test
   public void testGetDoors() {

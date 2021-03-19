@@ -325,12 +325,6 @@ public class Hall implements LevelComponent {
 	}
 
 	@Override
-	public void moveActor(Actor actor, Point destination) {
-		removeActor(actor);
-		placeActor(actor, destination);	
-	}
-
-	@Override
 	public void removeActor(Actor actor) {
 		int actorIndex = findActor(actor);
 		Tile tile = this.componentMap.get(actorIndex);

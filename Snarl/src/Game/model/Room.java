@@ -125,12 +125,6 @@ public class Room implements LevelComponent {
 	}
 
 	@Override
-	public void moveActor(Actor actor, Point destination) {
-		removeActor(actor);	
-		placeActor(actor, destination);
-	}
-	
-	@Override
 	public void removeActor(Actor actor) {
 		Point absoluteActorLocation = findActorLocation(actor);
 		//Find the relative location in the room
@@ -192,14 +186,6 @@ public class Room implements LevelComponent {
 		Tile tile = row.get(relativePos.x);
 		tile.placeItem(item);
 		row.set(relativePos.x, tile);
-	}
-
-	/**
-	 * Getter for the origin position of this room.
-	 * @return this room's origin point
-	 */
-	public Point getOrigin() {
-		return this.position;
 	}
 
 	/**

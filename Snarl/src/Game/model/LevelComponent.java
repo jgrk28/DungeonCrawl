@@ -48,16 +48,6 @@ public interface LevelComponent {
   Tile getDestinationTile(Point point);
   
   /**
-   * Moves the actor to the specified destination by removing them from
-   * their current location and placing them at the destination
-   * @param actor - the actor being moved
-   * @param destination - the destination point
-   */
-  //This may not be needed as we are currently just individually calling remove and place
-  //when moving an actor.
-  void moveActor(Actor actor, Point destination);
-  
-  /**
    * Removes the actor from the map of the LevelComponent
    * @param actor - the actor being removed from the LevelComponent
    */

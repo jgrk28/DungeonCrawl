@@ -257,8 +257,8 @@ public class TestLevel {
 		List<Point> reachableRooms = new ArrayList<>();
 		Room startRoom = hall.getStartRoom();
 		Room endRoom = hall.getEndRoom();
-		Point startOrigin = startRoom.getOrigin();
-		Point endOrigin = endRoom.getOrigin();
+		Point startOrigin = startRoom.getTopLeftBound();
+		Point endOrigin = endRoom.getTopLeftBound();
 		reachableRooms.add(startOrigin);
 		reachableRooms.add(endOrigin);
 		return reachableRooms;
@@ -279,10 +279,10 @@ public class TestLevel {
 
 			//Find current room and add the neighbor
 			if (startRoom.equals(room)) {
-				Point endOrigin = endRoom.getOrigin();
+				Point endOrigin = endRoom.getTopLeftBound();
 				reachableRooms.add(endOrigin);
 			} else if (endRoom.equals(room)) {
-				Point startOrigin = startRoom.getOrigin();
+				Point startOrigin = startRoom.getTopLeftBound();
 				reachableRooms.add(startOrigin);
 			}
 		}

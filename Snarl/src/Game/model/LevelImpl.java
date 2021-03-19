@@ -440,20 +440,8 @@ public class LevelImpl implements Level {
 	@Override
 	public InteractionResult playerAction(Player player, Point destination) {
 		LevelComponent sourceComponent = this.playerLocations.get(player);
-		LevelComponent destinationComponent;
-		
-		//If the player is not moving within the same LevelComponent, 
-		//find the destination LevelComponent
-		if (sourceComponent.inComponent(destination)) {
-			destinationComponent = sourceComponent;		
-		} else {
-			destinationComponent = findComponent(destination);
-		}
-		
-		//Determine the EntityType at the destination and the resulting interaction
-		Tile destinationTile = destinationComponent.getDestinationTile(destination);
-		EntityType destinationType = destinationComponent.getEntityType(destinationTile);
-		InteractionResult interaction = player.getInteractionResult(destinationType);
+		LevelComponent destinationComponent = findDestinationComponent(sourceComponent, destination);
+		InteractionResult interaction = getInteractionResult(player, destinationComponent, destination);
 
 		if (interaction.equals(InteractionResult.EXIT) && !exitUnlocked) {
 			interaction = InteractionResult.NONE;
@@ -493,20 +481,8 @@ public class LevelImpl implements Level {
 	@Override
 	public InteractionResult adversaryAction(Adversary adversary, Point destination) {
 		LevelComponent sourceComponent = this.adversaryLocations.get(adversary);
-		LevelComponent destinationComponent;
-		
-		//If the adversary is not moving within the same LevelComponent, 
-		//find the destination LevelComponent
-		if (sourceComponent.inComponent(destination)) {
-			destinationComponent = sourceComponent;		
-		} else {
-			destinationComponent = findComponent(destination);
-		}
-		
-		//Determine the EntityType at the destination and the resulting interaction
-		Tile destinationTile = destinationComponent.getDestinationTile(destination);
-		EntityType destinationType = destinationComponent.getEntityType(destinationTile);
-		InteractionResult interaction = adversary.getInteractionResult(destinationType);
+		LevelComponent destinationComponent = findDestinationComponent(sourceComponent, destination);
+		InteractionResult interaction = getInteractionResult(adversary, destinationComponent, destination);
 			
 		//If adversary is moving to a new room, remove them from the source room
 		//Otherwise, remove them from their current position
@@ -518,6 +494,7 @@ public class LevelImpl implements Level {
 	
 		//If the adversary interacts with a player, remove the player from the level
 		if (interaction.equals(InteractionResult.REMOVE_PLAYER)) {
+			Tile destinationTile = destinationComponent.getDestinationTile(destination);
 			this.playerLocations.remove(destinationTile.getActor());
 		}	
 		
@@ -526,6 +503,36 @@ public class LevelImpl implements Level {
 		this.adversaryLocations.replace(adversary, destinationComponent);
 
 		return interaction;
+	}
+	
+	/**
+	 * Finds the component that the destination point is in. It checks the source component first
+	 * @param sourceComponent - the component where the move originated
+	 * @param destination - the destination to move to
+	 * @return the LevelComponent that the destination point is in
+	 */
+	private LevelComponent findDestinationComponent(LevelComponent sourceComponent, Point destination) {		
+		//If the actor is not moving within the same LevelComponent, 
+		//find the destination LevelComponent
+		if (sourceComponent.inComponent(destination)) {
+			return sourceComponent;		
+		} else {
+			return findComponent(destination);
+		}
+	}
+	
+	/**
+	 * Determines the InteractionResult of an Actor moving to a destination
+	 * @param actor - the actor that is moving
+	 * @param destinationComponent - the component of the destination point
+	 * @param destination - the point that the actor is moving to
+	 * @return the resulting interaction at the destination 
+	 */
+	private InteractionResult getInteractionResult(Actor actor, LevelComponent destinationComponent, Point destination) {
+		//Determine the EntityType at the destination and the resulting interaction
+		Tile destinationTile = destinationComponent.getDestinationTile(destination);
+		EntityType destinationType = destinationComponent.getEntityType(destinationTile);
+		return actor.getInteractionResult(destinationType);	
 	}
 	
 	@Override
