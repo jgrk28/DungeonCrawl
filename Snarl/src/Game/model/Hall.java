@@ -333,7 +333,8 @@ public class Hall implements LevelComponent {
 	@Override
 	public void removeActor(Actor actor) {
 		int actorIndex = findActor(actor);
-		this.componentMap.set(actorIndex, new Space());			
+		Tile tile = this.componentMap.get(actorIndex);
+		tile.removeActor();
 	}
 	
 	@Override

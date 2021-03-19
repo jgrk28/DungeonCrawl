@@ -42,8 +42,7 @@ public class PlayerModelViewTest {
 		ModelCreator creator = new ModelCreator();
 
 		this.players = creator.initializeDungeonPlayers();
-		this.dungeon = creator.initializeDungeon();
-		this.dungeon.startCurrentLevel();
+		this.dungeon = creator.initializeDungeonStarted();
 		this.dungeonView = this.dungeon;
 		this.playerModelView0 = new PlayerModelView(this.players.get(0), dungeonView);	
 		this.playerModelView1 = new PlayerModelView(this.players.get(1), dungeonView);	
@@ -79,18 +78,12 @@ public class PlayerModelViewTest {
 	public void testIsPlayerAliveFalse() {
 		Level firstLevel = dungeon.getCurrentLevel();
 		Player player0 = players.get(0);
-		firstLevel.playerAction(player0, new Point(2, 2));
-		firstLevel.playerAction(player0, new Point(4, 2));
 		firstLevel.playerAction(player0, new Point(6, 2));
 		firstLevel.playerAction(player0, new Point(6, 4));
 		firstLevel.playerAction(player0, new Point(6, 6));
 		firstLevel.playerAction(player0, new Point(6, 8));
-		firstLevel.playerAction(player0, new Point(6, 10));
-		firstLevel.playerAction(player0, new Point(7, 11));
-		firstLevel.playerAction(player0, new Point(9, 11));
-		firstLevel.playerAction(player0, new Point(11, 11));
 		assertTrue(playerModelView0.isPlayerAlive());
-		firstLevel.playerAction(player0, new Point(13, 11));
+		firstLevel.playerAction(player0, new Point(7, 8));
 		assertFalse(playerModelView0.isPlayerAlive());
 	}
 		
@@ -101,9 +94,9 @@ public class PlayerModelViewTest {
 		List<List<EntityType>> expectedMap = Arrays.asList(
 				Arrays.asList(w, w, e, e, e),
 				Arrays.asList(s, w, e, e, e),
-		        Arrays.asList(s, s, p, h, h),
-		        Arrays.asList(w, w, e, e, h),
-		        Arrays.asList(e, e, e, e, h));
+		    Arrays.asList(s, s, p, h, h),
+		    Arrays.asList(w, w, e, e, h),
+		    Arrays.asList(e, e, e, e, h));
 			
 		assertEquals(expectedMap, playerModelView0.getMap());	
 			

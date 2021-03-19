@@ -821,7 +821,7 @@ public class LevelTest {
 	            Arrays.asList(s, s, s, s, w),
 	            Arrays.asList(s, z, p, k, w),
 	            Arrays.asList(w, w, w, w, w),
-	            Arrays.asList());
+	            Arrays.asList(e, e, e, e, e));
 
 	    assertEquals(expectedMap,level.getPlayerMap(this.player3));
 	}

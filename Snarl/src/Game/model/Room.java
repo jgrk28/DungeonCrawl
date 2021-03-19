@@ -137,7 +137,8 @@ public class Room implements LevelComponent {
 		Point relativeActorLocation = new Point(absoluteActorLocation.x - position.x,
 				absoluteActorLocation.y - position.y);
 		List<Tile> actorRow = componentMap.get(relativeActorLocation.y);
-		actorRow.set(relativeActorLocation.x, new Space());
+		Tile tile = actorRow.get(relativeActorLocation.x);
+		tile.removeActor();
 	}
 	
 	@Override

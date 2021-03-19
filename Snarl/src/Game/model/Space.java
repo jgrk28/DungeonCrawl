@@ -80,7 +80,10 @@ public class Space implements Tile {
   public void placeItem(Item item) {
 	this.item = item;	
   }
-  
+
+  @Override
+  public void removeActor() { this.actor = null; }
+
   @Override
   public int hashCode() {
     int itemHash = 1;

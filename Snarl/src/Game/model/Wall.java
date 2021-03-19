@@ -35,7 +35,12 @@ public class Wall implements Tile {
   public void placeItem(Item item) {
 	throw new IllegalArgumentException("Item cannot be placed on a wall");
   }
-  
+
+  @Override
+  public void removeActor() {
+    throw new IllegalArgumentException("Actor cannot be removed from a wall");
+  }
+
   @Override
   public int hashCode() {
     return 0;

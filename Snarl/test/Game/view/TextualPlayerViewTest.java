@@ -34,8 +34,7 @@ public class TextualPlayerViewTest {
 	public void initializePlayerModelView() {
 		this.creator = new ModelCreator();
 		this.players = creator.initializeDungeonPlayers();
-		this.dungeon = creator.initializeDungeon();
-		this.dungeon.startCurrentLevel();
+		this.dungeon = creator.initializeDungeonStarted();
 		this.dungeonView = this.dungeon;
 		this.playerModelView0 = new PlayerModelView(this.players.get(0), dungeonView);
 		this.playerModelView1 = new PlayerModelView(this.players.get(1), dungeonView);
@@ -97,7 +96,7 @@ public class TextualPlayerViewTest {
 				+ "....X\n"
 				+ ".ZP!X\n"
 				+ "XXXXX\n"
-				+ "\n";
+		    + "     \n";
 
 		testDrawPlayerView(playerModelView2, expectedOut);
 	}
@@ -108,15 +107,16 @@ public class TextualPlayerViewTest {
 		initializePlayerModelView();
 		Dungeon simpleDungeon = this.creator.initializeSimpleDungeon();
 		simpleDungeon.getNextLevel();
+		simpleDungeon.startCurrentLevel();
 		DungeonModelView view = simpleDungeon;
 		PlayerModelView playerModelView = new PlayerModelView(this.players.get(1), view);	
 		
 		String expectedOut = "You are currently on level: 2\n"
 				+ "You are active in the level\n"
-				+ "X.GX \n"
-				+ "X..X \n"
-				+ "X.PX \n"
-				+ "..@.*\n"
+				+ "     \n"
+				+ "XXXX \n"
+				+ "XPPX \n"
+				+ "XP..*\n"
 				+ "XXXX \n";
 
 		testDrawPlayerView(playerModelView, expectedOut);
