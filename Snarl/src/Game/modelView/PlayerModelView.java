@@ -1,5 +1,6 @@
 package Game.modelView;
 
+import java.awt.Point;
 import java.util.List;
 import Game.model.Player;
 
@@ -39,4 +40,10 @@ public class PlayerModelView {
    * @return true if the player is still active in the level
    */
   public Boolean isPlayerAlive() { return dungeonModelView.isPlayerAlive(this.player); }
+  
+  /**
+   * TODO Add comment here
+   * @return
+   */
+  public List<Point> getValidMoves() { return dungeonModelView.getValidMoves(this.player); }
 }

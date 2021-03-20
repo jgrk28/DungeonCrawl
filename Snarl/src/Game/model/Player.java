@@ -192,5 +192,11 @@ public class Player extends AbstractActor {
 		}
 		return croppedMap;
 	}
+	
+	
+	@Override
+	public int getMaxMoveDistance() {
+		return this.maxMoveDistance;
+	}
 
 }

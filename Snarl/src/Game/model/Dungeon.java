@@ -138,5 +138,11 @@ public class Dungeon implements RuleChecker, DungeonModelView {
 		Level currLevel = getCurrentLevel();
 		return currLevel.getPlayerMap(player);
 	}
+
+	@Override
+	public List<Point> getValidMoves(Player player) {
+		Level currLevel = getCurrentLevel();
+		return currLevel.getValidMoves(player);
+	}
  
 }

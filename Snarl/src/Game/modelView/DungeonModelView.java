@@ -1,5 +1,6 @@
 package Game.modelView;
 
+import java.awt.Point;
 import java.util.List;
 import Game.model.Player;
 
@@ -29,4 +30,11 @@ public interface DungeonModelView {
 	 * @return a map of all EntityTypes that the given player can see
 	 */
 	List<List<EntityType>> getPlayerMap(Player player);
+	
+	/**
+	 * TODO Add comment here
+	 * @param player
+	 * @return
+	 */
+	List<Point> getValidMoves(Player player);
 }

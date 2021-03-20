@@ -2,9 +2,9 @@ package Game.controller;
 
 import java.awt.Point;
 
-import Game.clients.PlayerClient;
+import Player.LocalPlayer;
 
-public class MockPlayerClient extends PlayerClient {
+public class MockPlayerClient extends LocalPlayer {
 	
 	int turnCount;
 	

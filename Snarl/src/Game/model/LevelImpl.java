@@ -706,6 +706,26 @@ public class LevelImpl implements Level {
 		}
 		throw new IllegalArgumentException("Actor does not exist in this level");
 	}
+	
+
+	@Override
+	public List<Point> getValidMoves(Player player) {
+		LevelComponent sourceComponent = playerLocations.get(player);
+		Point playerLocation = sourceComponent.findActorLocation(player);		
+		List<Point> allPotentialMoves = player.getPotentialMoves(playerLocation);	
+		List<Point> validMoves = new ArrayList<>();
+		
+		for (Point point : allPotentialMoves) {
+			
+			//Identify all intermediate EntityTypes between the source and the destination
+			//If a valid path exists, return true
+			List<List<EntityType>> intermediateTypes = getIntermediateTypes(playerLocation, point, sourceComponent);
+			if (player.checkValidMovePath(playerLocation, point, intermediateTypes)) {
+				validMoves.add(point);
+			}
+		}
+		return validMoves;
+	}
 
 	@Override
 	public int hashCode() {
@@ -734,4 +754,5 @@ public class LevelImpl implements Level {
 				&& this.levelExited.equals(otherLevel.levelExited)
 				&& this.items.equals(otherLevel.items);
 	}
+
 }

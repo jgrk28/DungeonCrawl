@@ -50,4 +50,9 @@ public abstract class Adversary extends AbstractActor {
 		
 		return isTraversable(intermediateTypes.get(relativeDestPoint.y).get(relativeDestPoint.x));		
 	}
+	
+	@Override
+	public int getMaxMoveDistance() {
+		return this.maxMoveDistance;
+	}
 }

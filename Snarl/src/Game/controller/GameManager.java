@@ -1,7 +1,5 @@
 package Game.controller;
 
-import Game.clients.AdversaryClient;
-import Game.clients.PlayerClient;
 import java.awt.Point;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
@@ -9,6 +7,9 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+
+import Adversary.LocalAdversary;
+import Common.Observer;
 import Game.model.Adversary;
 import Game.model.Dungeon;
 import Game.model.GameState;
@@ -18,6 +19,7 @@ import Game.model.RuleChecker;
 import Game.model.Zombie;
 import Game.modelView.PlayerModelView;
 import Game.view.TextualPlayerView;
+import Player.LocalPlayer;
 
 /**
  * The GameManager acts as the controller for our MVC design. It communicates 
@@ -30,48 +32,71 @@ public class GameManager {
   private RuleChecker ruleChecker;
   
   //Player and adversary Game.clients in the game
-  private Map<Player, PlayerClient> playerClients;
-  private Map<Adversary, AdversaryClient> adversaryClients;
+  private Map<Player, LocalPlayer> playerClients;
+  private Map<Adversary, LocalAdversary> adversaryClients;
+  
+  //All observers in the game to notify when the game state changes
+  private List<Observer> observers;
 
   public GameManager() {
     this.playerClients = new LinkedHashMap<>();
     this.adversaryClients = new LinkedHashMap<>();
+    this.observers = new ArrayList<>();
   }
-
+  
   /**
-   * Accept registrations for new players and adversaries and fills in Client maps
-   * @param numPlayers - the number of players in the game
-   * @param numAdversaries - the number of adversaries in the game
+   * TODO Add comments
+   * @param name
    */
-  //This method will need to change once we implement the PlayerClient over TCP
-  //This will open sockets and listen for registrations
-  public void registerActors(int numPlayers, int numAdversaries) {
-	//A game must have between 1 and 4 players
-    if (numPlayers > 4 || numPlayers < 1) {
-      throw new IllegalArgumentException("Illegal number of players");
-    }
-    
-    //Add each player and playerClient to the map
-    for (int i = 0; i < numPlayers; i++) {
-      Player player = new Player();
-      PlayerClient playerClient = new PlayerClient();
-      this.playerClients.put(player, playerClient);
-    }
-
-    //Add each adversary and adversaryClient to the map
-    for (int i = 0; i < numAdversaries; i++) {
-      Adversary adversary = new Zombie();
-      AdversaryClient adversaryClient = new AdversaryClient();
+  public void registerPlayer(String name) {
+	  if (playerClients.size() >= 4) {
+		  throw new IllegalArgumentException("No more players can be added to the game");
+	  }
+	  if (!checkUniqueName(name)) {
+		  throw new IllegalArgumentException("A unique name must be provided");
+	  }
+      Player player = new Player(name);
+      LocalPlayer playerClient = new LocalPlayer();
+      this.playerClients.put(player, playerClient);	  
+  }
+  
+  /**
+   * TODO Add comments
+   * @param name
+   */
+  public void registerAdversary(String name) {
+	  if (!checkUniqueName(name)) {
+		  throw new IllegalArgumentException("A unique name must be provided");
+	  }
+      Adversary adversary = new Zombie(name);
+      LocalAdversary adversaryClient = new LocalAdversary();
       this.adversaryClients.put(adversary, adversaryClient);
-    }
+  }
+  
+  private Boolean checkUniqueName(String name) {
+	  for (Player player : playerClients.keySet()) {
+		  if (player.hasName(name)) {
+			  return false;
+		  }
+	  }	  
+	  for (Adversary adversary : adversaryClients.keySet()) {
+		  if (adversary.hasName(name)) {
+			  return false;
+		  }
+	  }
+	  return true;
   }
 
   /**
    * Initializes a Dungeon with the provided levels with registered players 
    * and adversaries
    * @param levels - the list of levels that compose a game
+   * @throws IllegalArgumentException if no players are registered for the game
    */
   public void startGame(List<Level> levels) {
+	if (playerClients.size() < 1) {
+		throw new IllegalArgumentException("Cannot start game with no players");
+	}
     List<Player> players = new ArrayList<>(this.playerClients.keySet());
     List<Adversary> adversaries = new ArrayList<>(this.adversaryClients.keySet());
     this.dungeon = new Dungeon(players, adversaries, 1, levels);
@@ -90,6 +115,7 @@ public class GameManager {
     //If the first level was won, play all remaining levels in the game
     while (this.dungeon.isGameOver().equals(GameState.ACTIVE)) {
       currLevel = this.dungeon.getNextLevel();
+      this.dungeon.startCurrentLevel();
       playLevel(currLevel);
     }
     endGame(this.dungeon.isGameOver());
@@ -103,8 +129,10 @@ public class GameManager {
 	//While the level has not been won or lost, execute turns for each player
 	//and adversary
     while (level.isLevelOver().equals(GameState.ACTIVE)) {
-      for (Map.Entry<Player, PlayerClient> currPlayer : playerClients.entrySet()) {
-        Point playerDestination = currPlayer.getValue().takeTurn();
+      for (Map.Entry<Player, LocalPlayer> currPlayer : playerClients.entrySet()) {
+        PlayerModelView playerModelView = new PlayerModelView(currPlayer.getKey(), this.dungeon);
+    	List<Point> validMoves = playerModelView.getValidMoves();
+        Point playerDestination = currPlayer.getValue().takeTurn(validMoves);
         
         //If user entered invalid move notify them and skip their turn
         if (!this.ruleChecker.checkValidMove(currPlayer.getKey(), playerDestination)) {
@@ -126,14 +154,14 @@ public class GameManager {
    * Notifies each player of the new game state
    */
   private void notifyAllPlayers() {
-    for (Map.Entry<Player, PlayerClient> currPlayer : playerClients.entrySet()) {
+    for (Map.Entry<Player, LocalPlayer> currPlayer : playerClients.entrySet()) {
 
       ByteArrayOutputStream gameState = new ByteArrayOutputStream();
       PrintStream printStream = new PrintStream(gameState);
       PlayerModelView playerModelView = new PlayerModelView(currPlayer.getKey(), this.dungeon);
       TextualPlayerView playerView = new TextualPlayerView(playerModelView, printStream);
       playerView.draw();
-      currPlayer.getValue().displayGameState(gameState.toString());
+      currPlayer.getValue().displayMessage(gameState.toString());
     }
   }
 
@@ -142,7 +170,7 @@ public class GameManager {
    * @param gameOver - the result of the game
    */
   public void endGame(GameState gameOver) {
-    for (Map.Entry<Player, PlayerClient> currPlayer : playerClients.entrySet()) {
+    for (Map.Entry<Player, LocalPlayer> currPlayer : playerClients.entrySet()) {
       String gameResult;
       if (gameOver.equals(GameState.WON)) {
         gameResult = "Game is over. You Won!";
@@ -151,8 +179,34 @@ public class GameManager {
       } else {
         throw new IllegalArgumentException("Game is not over");
       }
-      currPlayer.getValue().displayGameState(gameResult);
+      currPlayer.getValue().displayMessage(gameResult);
     }
+  }
+  
+  /**
+   * TODO Add comments
+   * @param observer
+   */
+  //Adds the given Observer to the list of observers
+  public void attachObserver(Observer observer) {
+	  
+  }
+ 
+  /**
+   * TODO Add comments
+   * @param observer
+   */
+  //Removes the given Observer from the list of observers
+  public void detachObserver(Observer observer) {
+	  
+  }
+  
+  /**
+   * TODO Add comments
+   */
+  //Calls update() on all of the observers with the JSONObject from getState
+  public void notifyObservers() {
+	  
   }
 
 }

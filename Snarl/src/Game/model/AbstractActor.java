@@ -1,5 +1,10 @@
 package Game.model;
 
+import java.awt.Point;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 import Game.modelView.EntityType;
 
@@ -50,4 +55,38 @@ abstract public class AbstractActor implements Actor {
       return false;
     }
   }
+  
+   @Override
+   public List<Point> getPotentialMoves(Point actorLocation) {
+	   int maxMoveDistance = this.getMaxMoveDistance();
+	   Set<Point> potentialMoves = new HashSet<>();
+	   potentialMoves.add(actorLocation);
+	   for (int i = 0; i < maxMoveDistance; i++) {
+		   Set<Point> adjacentMoves = new HashSet<>();
+		   for (Point move : potentialMoves) {
+			   adjacentMoves.addAll(getAdjacentMoves(move));
+		   }
+		   potentialMoves.addAll(adjacentMoves);
+	   }
+	   return new ArrayList<>(potentialMoves);
+   }
+   
+   /**
+    * TODO Add comment
+    * @param point
+    * @return
+    */
+   private Set<Point> getAdjacentMoves(Point point) {
+	   Set<Point> moves = new HashSet<>();
+	   //Find all moves that 1 coordinate from point
+   }
 }
+
+
+
+
+
+
+
+
+

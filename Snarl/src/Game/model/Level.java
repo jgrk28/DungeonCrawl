@@ -101,4 +101,11 @@ public interface Level extends LevelModelView {
 	 */
 	Player getPlayer(String name);
 
+	/**
+	 * TODO Add comment here
+	 * @param player
+	 * @return
+	 */
+	List<Point> getValidMoves(Player player);
+
 }
