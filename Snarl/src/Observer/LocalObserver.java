@@ -8,9 +8,6 @@ import Common.Observer;
 public class LocalObserver implements Observer {
 
 	@Override
-	public void update(String gameState) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void update(String gameState) { System.out.println(gameState); }
 
 }

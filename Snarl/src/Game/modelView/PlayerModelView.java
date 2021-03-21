@@ -1,5 +1,6 @@
 package Game.modelView;
 
+import Game.model.GameState;
 import java.awt.Point;
 import java.util.List;
 import Game.model.Player;
@@ -46,4 +47,16 @@ public class PlayerModelView {
    * @return
    */
   public List<Point> getValidMoves() { return dungeonModelView.getValidMoves(this.player); }
+
+  /**
+   * TODO Add comment here
+   * @return
+   */
+  public GameState isLevelOver() { return dungeonModelView.isLevelOver(); }
+
+  /**
+   * TODO Add comment here
+   * @return
+   */
+  public GameState isGameOver() { return dungeonModelView.isGameOver(); }
 }

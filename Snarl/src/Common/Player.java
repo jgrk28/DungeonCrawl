@@ -6,18 +6,11 @@ import java.util.List;
 /**
  * TODO Add comments here
  */
-public interface Player {
+public interface Player extends Observer {
 	
 	/**
 	 * 
 	 * @return
 	 */
 	Point takeTurn(List<Point> validMove);
-	
-	/**
-	 * 
-	 * @param message
-	 */
-	void displayMessage(String message);
-	
 }

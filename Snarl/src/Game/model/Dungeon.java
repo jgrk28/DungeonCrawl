@@ -1,5 +1,6 @@
 package Game.model;
 
+import Game.modelView.LevelModelView;
 import java.awt.Point;
 import java.util.List;
 
@@ -92,6 +93,11 @@ public class Dungeon implements RuleChecker, DungeonModelView {
 	}
 
 	@Override
+	public LevelModelView getCurrentLevelModelView() {
+		return getCurrentLevel();
+	}
+
+	@Override
 	public GameState isLevelOver() {
 		Level level = getCurrentLevel();
 		return level.isLevelOver();
@@ -144,5 +150,5 @@ public class Dungeon implements RuleChecker, DungeonModelView {
 		Level currLevel = getCurrentLevel();
 		return currLevel.getValidMoves(player);
 	}
- 
+
 }

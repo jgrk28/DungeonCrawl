@@ -1,5 +1,7 @@
 package Game.controller;
 
+import Game.modelView.DungeonModelView;
+import Game.view.TextualDungeonView;
 import java.awt.Point;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
@@ -118,7 +120,8 @@ public class GameManager {
       this.dungeon.startCurrentLevel();
       playLevel(currLevel);
     }
-    endGame(this.dungeon.isGameOver());
+    //When the game is over notify all observers of the end state
+    notifyAllObservers();
   }
 
   /**
@@ -126,61 +129,31 @@ public class GameManager {
    * @param level - the level being played
    */
   public void playLevel(Level level) {
-	//While the level has not been won or lost, execute turns for each player
-	//and adversary
+	  //While the level has not been won or lost, execute turns for each player
+	  //and adversary
     while (level.isLevelOver().equals(GameState.ACTIVE)) {
       for (Map.Entry<Player, LocalPlayer> currPlayer : playerClients.entrySet()) {
         PlayerModelView playerModelView = new PlayerModelView(currPlayer.getKey(), this.dungeon);
-    	List<Point> validMoves = playerModelView.getValidMoves();
+    	  List<Point> validMoves = playerModelView.getValidMoves();
         Point playerDestination = currPlayer.getValue().takeTurn(validMoves);
-        
-        //If user entered invalid move notify them and skip their turn
-        if (!this.ruleChecker.checkValidMove(currPlayer.getKey(), playerDestination)) {
-          //TODO Need to notify the playerClient that their move is invalid
-        }
-        //Execute the move and corresponding interaction
-        level.playerAction(currPlayer.getKey(), playerDestination);
 
-        //Notify all players of the current game state for each turn
-        notifyAllPlayers();
+        if (this.ruleChecker.checkValidMove(currPlayer.getKey(), playerDestination)) {
+          //Execute the move and corresponding interaction
+          level.playerAction(currPlayer.getKey(), playerDestination);
+
+          //Notify all observers of the current game state for each turn
+          notifyAllObservers();
+        } else {
+          //If user entered invalid move notify them and skip their turn
+          currPlayer.getValue().update("Invalid move, turn skipped");
+        }
+
       }
 
       //Add adversary turns once we implement the AdversaryClient or at least a stub
     }
-    //We may want to add display to user when the level ends to provide result
-  }
-  
-  /**
-   * Notifies each player of the new game state
-   */
-  private void notifyAllPlayers() {
-    for (Map.Entry<Player, LocalPlayer> currPlayer : playerClients.entrySet()) {
-
-      ByteArrayOutputStream gameState = new ByteArrayOutputStream();
-      PrintStream printStream = new PrintStream(gameState);
-      PlayerModelView playerModelView = new PlayerModelView(currPlayer.getKey(), this.dungeon);
-      TextualPlayerView playerView = new TextualPlayerView(playerModelView, printStream);
-      playerView.draw();
-      currPlayer.getValue().displayMessage(gameState.toString());
-    }
-  }
-
-  /**
-   * Send results to players after a game has finished
-   * @param gameOver - the result of the game
-   */
-  public void endGame(GameState gameOver) {
-    for (Map.Entry<Player, LocalPlayer> currPlayer : playerClients.entrySet()) {
-      String gameResult;
-      if (gameOver.equals(GameState.WON)) {
-        gameResult = "Game is over. You Won!";
-      } else if (gameOver.equals(GameState.LOST)) {
-        gameResult = "Game is over. You Lost :(";
-      } else {
-        throw new IllegalArgumentException("Game is not over");
-      }
-      currPlayer.getValue().displayMessage(gameResult);
-    }
+    //Display to observers when the level ends to provide result
+    notifyAllObservers();
   }
   
   /**
@@ -189,7 +162,7 @@ public class GameManager {
    */
   //Adds the given Observer to the list of observers
   public void attachObserver(Observer observer) {
-	  
+    this.observers.add(observer);
   }
  
   /**
@@ -198,15 +171,31 @@ public class GameManager {
    */
   //Removes the given Observer from the list of observers
   public void detachObserver(Observer observer) {
-	  
+    this.observers.remove(observer);
   }
   
   /**
    * TODO Add comments
    */
   //Calls update() on all of the observers with the JSONObject from getState
-  public void notifyObservers() {
-	  
+  public void notifyAllObservers() {
+	  for (Observer observer : this.observers) {
+      ByteArrayOutputStream gameState = new ByteArrayOutputStream();
+      PrintStream printStream = new PrintStream(gameState);
+      DungeonModelView dungeonModelView = this.dungeon;
+      TextualDungeonView dungeonView = new TextualDungeonView(dungeonModelView, printStream);
+      dungeonView.draw();
+	    observer.update(gameState.toString());
+    }
+
+	  for (Map.Entry<Player, LocalPlayer> currPlayer : playerClients.entrySet()) {
+ 	    ByteArrayOutputStream gameState = new ByteArrayOutputStream();
+ 	    PrintStream printStream = new PrintStream(gameState);
+ 	    PlayerModelView playerModelView = new PlayerModelView(currPlayer.getKey(), this.dungeon);
+ 	    TextualPlayerView playerView = new TextualPlayerView(playerModelView, printStream);
+ 	    playerView.draw();
+ 	    currPlayer.getValue().update(gameState.toString());
+    }
   }
 
 }

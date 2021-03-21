@@ -66,7 +66,7 @@ abstract public class AbstractActor implements Actor {
 		   for (Point move : potentialMoves) {
 			   adjacentMoves.addAll(getAdjacentMoves(move));
 		   }
-		   potentialMoves.addAll(adjacentMoves);
+       potentialMoves.addAll(adjacentMoves);
 	   }
 	   return new ArrayList<>(potentialMoves);
    }
@@ -78,7 +78,11 @@ abstract public class AbstractActor implements Actor {
     */
    private Set<Point> getAdjacentMoves(Point point) {
 	   Set<Point> moves = new HashSet<>();
-	   //Find all moves that 1 coordinate from point
+	   moves.add(new Point(point.x + 1, point.y));
+     moves.add(new Point(point.x - 1, point.y));
+     moves.add(new Point(point.x, point.y + 1));
+     moves.add(new Point(point.x, point.y - 1));
+     return moves;
    }
 }
 

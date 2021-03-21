@@ -48,7 +48,7 @@ public class LocalPlayer implements Player {
 	//state of their immediate surroundings in string form. This allows us to 
 	//reduce the overhead of sending and parsing large JSONs
     @Override
-    public void displayMessage(String message) {
-    	System.out.println(message);
+    public void update(String gameState) {
+    	System.out.println(gameState);
     }
 }

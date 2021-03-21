@@ -1,5 +1,6 @@
 package Game.view;
 
+import Game.model.GameState;
 import java.io.PrintStream;
 import java.util.List;
 
@@ -40,18 +41,47 @@ public class TextualPlayerView extends AbstractTextualView {
 
 	@Override
 	public void draw() {
+		GameState gameStatus = playerModelView.isGameOver();
+		GameState levelStatus = playerModelView.isLevelOver();
+
+		StringBuilder toOutput = new StringBuilder();
+		switch (gameStatus) {
+			case WON:
+				toOutput.append("Congratulations! You Won!\n");
+				break;
+			case LOST:
+				toOutput.append("Sorry. You Lost. :(\n");
+				break;
+			case ACTIVE:
+				if (levelStatus.equals(GameState.WON)) {
+					toOutput.append("You beat the level! Continuing to next level.\n");
+				} else {
+					toOutput.append(drawActiveLevel());
+				}
+				break;
+			default:
+				throw new IllegalArgumentException("Unknown game state");
+		}
+		this.output.print(toOutput.toString());
+	}
+
+	/**
+	 * TODO add comment
+	 * @return
+	 */
+	private String drawActiveLevel() {
 		int currLevelIndex = playerModelView.getCurrentLevel();
 		Boolean isAlive = playerModelView.isPlayerAlive();
-		StringBuilder output = new StringBuilder();
-		output.append("You are currently on level: " + currLevelIndex + "\n");
+
+		StringBuilder toOutput = new StringBuilder();
+		toOutput.append("You are currently on level: " + currLevelIndex + "\n");
 		if (isAlive) {
-			output.append("You are active in the level\n");
-			this.output.print(output.toString());
+			toOutput.append("You are active in the level\n");
 			List<List<EntityType>> level = playerModelView.getMap();
 			drawLevelMap(level);
 		} else {
-			output.append("You are no longer active in the level\n");
-			this.output.print(output.toString());
+			toOutput.append("You are no longer active in the level\n");
 		}
+		return toOutput.toString();
 	}
 }
