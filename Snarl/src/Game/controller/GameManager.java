@@ -20,8 +20,6 @@ import Game.model.Player;
 import Game.model.RuleChecker;
 import Game.model.Zombie;
 import Game.modelView.PlayerModelView;
-import Game.view.TextualPlayerView;
-import Player.LocalPlayer;
 
 /**
  * The GameManager acts as the controller for our MVC design. It communicates 
@@ -47,8 +45,10 @@ public class GameManager {
   }
   
   /**
-   * TODO Add comments
-   * @param name
+   * Registers a player with the GameManager
+   * @param name - the name of the player
+   * @param playerClient - the client associated with this player that will be
+   * inputting moves
    */
   public void registerPlayer(String name, Common.Player playerClient) {
 	  if (playerClients.size() >= 4) {
@@ -62,8 +62,8 @@ public class GameManager {
   }
   
   /**
-   * TODO Add comments
-   * @param name
+   * Registers an adversary with the GameManager
+   * @param name - the name of the adversary
    */
   public void registerAdversary(String name) {
 	  if (!checkUniqueName(name)) {
@@ -74,6 +74,12 @@ public class GameManager {
       this.adversaryClients.put(adversary, adversaryClient);
   }
   
+  /**
+   * Checks that the name is unique based on existing players and adversaries in
+   * the game
+   * @param name - the name to check
+   * @return true if the name is unique
+   */
   private Boolean checkUniqueName(String name) {
 	  for (Player player : playerClients.keySet()) {
 		  if (player.hasName(name)) {
