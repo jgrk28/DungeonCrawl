@@ -97,7 +97,6 @@ public class TestLevel {
 	private Level parseLevel(JSONObject JSONLevel) {
 		this.levelMap = parseLevelMap(JSONLevel);
 		this.items = parseObjects(JSONLevel);
-
 		
 		return new LevelImpl(this.levelMap, this.items);
 	}

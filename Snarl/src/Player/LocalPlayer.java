@@ -1,10 +1,14 @@
 package Player;
 
 import java.awt.Point;
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 import java.util.List;
 import java.util.Scanner;
 
 import Common.Player;
+import Game.modelView.PlayerModelView;
+import Game.view.TextualPlayerView;
 
 /**
  * The PlayerClient runs on the user's side (locally or through TCP connection)
@@ -48,7 +52,15 @@ public class LocalPlayer implements Player {
 	//state of their immediate surroundings in string form. This allows us to 
 	//reduce the overhead of sending and parsing large JSONs
     @Override
-    public void update(String gameState) {
-    	System.out.println(gameState);
+    public void update(PlayerModelView gameState) {    	
+ 	    ByteArrayOutputStream output = new ByteArrayOutputStream();
+ 	    PrintStream printStream = new PrintStream(output);
+ 	    TextualPlayerView playerView = new TextualPlayerView(gameState, printStream);
+ 	    playerView.draw();
     }
+
+	@Override
+	public void displayMessage(String message) {
+		System.out.println(message);
+	}
 }

@@ -34,7 +34,7 @@ public class GameManager {
   private RuleChecker ruleChecker;
   
   //Player and adversary Game.clients in the game
-  private Map<Player, LocalPlayer> playerClients;
+  private Map<Player, Common.Player> playerClients;
   private Map<Adversary, LocalAdversary> adversaryClients;
   
   //All observers in the game to notify when the game state changes
@@ -50,7 +50,7 @@ public class GameManager {
    * TODO Add comments
    * @param name
    */
-  public void registerPlayer(String name) {
+  public void registerPlayer(String name, Common.Player playerClient) {
 	  if (playerClients.size() >= 4) {
 		  throw new IllegalArgumentException("No more players can be added to the game");
 	  }
@@ -58,7 +58,6 @@ public class GameManager {
 		  throw new IllegalArgumentException("A unique name must be provided");
 	  }
       Player player = new Player(name);
-      LocalPlayer playerClient = new LocalPlayer();
       this.playerClients.put(player, playerClient);	  
   }
   
@@ -132,9 +131,9 @@ public class GameManager {
 	  //While the level has not been won or lost, execute turns for each player
 	  //and adversary
     while (level.isLevelOver().equals(GameState.ACTIVE)) {
-      for (Map.Entry<Player, LocalPlayer> currPlayer : playerClients.entrySet()) {
+      for (Map.Entry<Player, Common.Player> currPlayer : playerClients.entrySet()) {
         PlayerModelView playerModelView = new PlayerModelView(currPlayer.getKey(), this.dungeon);
-    	  List<Point> validMoves = playerModelView.getValidMoves();
+    	List<Point> validMoves = playerModelView.getValidMoves();
         Point playerDestination = currPlayer.getValue().takeTurn(validMoves);
 
         if (this.ruleChecker.checkValidMove(currPlayer.getKey(), playerDestination)) {
@@ -145,7 +144,7 @@ public class GameManager {
           notifyAllObservers();
         } else {
           //If user entered invalid move notify them and skip their turn
-          currPlayer.getValue().update("Invalid move, turn skipped");
+          currPlayer.getValue().displayMessage("Invalid move, turn skipped");
         }
 
       }
@@ -188,13 +187,9 @@ public class GameManager {
 	    observer.update(gameState.toString());
     }
 
-	  for (Map.Entry<Player, LocalPlayer> currPlayer : playerClients.entrySet()) {
- 	    ByteArrayOutputStream gameState = new ByteArrayOutputStream();
- 	    PrintStream printStream = new PrintStream(gameState);
- 	    PlayerModelView playerModelView = new PlayerModelView(currPlayer.getKey(), this.dungeon);
- 	    TextualPlayerView playerView = new TextualPlayerView(playerModelView, printStream);
- 	    playerView.draw();
- 	    currPlayer.getValue().update(gameState.toString());
+	  for (Map.Entry<Player, Common.Player> currPlayer : playerClients.entrySet()) {
+	    PlayerModelView playerModelView = new PlayerModelView(currPlayer.getKey(), this.dungeon);
+ 	    currPlayer.getValue().update(playerModelView);
     }
   }
 
