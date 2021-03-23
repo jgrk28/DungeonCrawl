@@ -180,22 +180,21 @@ public class GameManager {
   }
   
   /**
-   * TODO Add comments
+   * Calls update() on all of the observers
    */
-  //Calls update() on all of the observers with the JSONObject from getState
   public void notifyAllObservers() {
 	  for (Observer observer : this.observers) {
-      ByteArrayOutputStream gameState = new ByteArrayOutputStream();
-      PrintStream printStream = new PrintStream(gameState);
-      DungeonModelView dungeonModelView = this.dungeon;
-      TextualDungeonView dungeonView = new TextualDungeonView(dungeonModelView, printStream);
-      dungeonView.draw();
-	    observer.update(gameState.toString());
-    }
+		  ByteArrayOutputStream gameState = new ByteArrayOutputStream();
+		  PrintStream printStream = new PrintStream(gameState);
+		  DungeonModelView dungeonModelView = this.dungeon;
+		  TextualDungeonView dungeonView = new TextualDungeonView(dungeonModelView, printStream);
+		  dungeonView.draw();
+		  observer.update(gameState.toString());
+	  }
 
 	  for (Map.Entry<Player, Common.Player> currPlayer : playerClients.entrySet()) {
-	    PlayerModelView playerModelView = new PlayerModelView(currPlayer.getKey(), this.dungeon);
- 	    currPlayer.getValue().update(playerModelView);
+		  PlayerModelView playerModelView = new PlayerModelView(currPlayer.getKey(), this.dungeon);
+		  currPlayer.getValue().update(playerModelView);
     }
   }
 
