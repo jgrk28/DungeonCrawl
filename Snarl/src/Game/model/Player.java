@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import Game.modelView.EntityType;
+import java.util.Set;
 
 /**
  * Represents a player within a game of Snarl
@@ -233,6 +234,23 @@ public class Player extends AbstractActor {
 			croppedMap.add(croppedRow);
 		}
 		return croppedMap;
+	}
+
+	/**
+	 * TODO add comment
+	 * @param allDoors
+	 * @return
+	 */
+	public List<Point> visibleDoors(Set<Point> allDoors, Point playerLocation) {
+		List<Point> visibleDoors = new ArrayList<>();
+		for (Point door : allDoors) {
+			int distance = Math.abs(door.x - playerLocation.x)
+					+ Math.abs(door.y - playerLocation.y);
+			if (distance <= this.sightBoxWidth) {
+				visibleDoors.add(door);
+			}
+		}
+		return visibleDoors;
 	}
 
 	@Override

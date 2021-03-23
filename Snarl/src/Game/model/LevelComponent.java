@@ -76,8 +76,4 @@ public interface LevelComponent {
    */
   Point findActorLocation(Actor actor);
 
-  /**
-   * TODO add comment
-   */
-  List<Point> getDoors();
 }

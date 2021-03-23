@@ -46,7 +46,7 @@ public class TestPlayer implements Player {
 	}
 
 	private JSONArray generateLayout(List<List<EntityType>> playerMap, Point position, List<Point> doors) {
-
+    return new JSONArray();
 	}
 
 	@Override

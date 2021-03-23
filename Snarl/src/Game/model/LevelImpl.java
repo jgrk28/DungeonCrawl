@@ -3,11 +3,13 @@ package Game.model;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 import Game.modelView.EntityType;
+import java.util.Set;
 
 /**
  * Represents a Level within a game of Snarl
@@ -743,13 +745,16 @@ public class LevelImpl implements Level {
 
 	@Override
 	public List<Point> getVisibleDoors(Player player) {
+		Point playerLocation = getActorPosition(player);
+		Set<Point> allDoors = new HashSet<>();
 		for (LevelComponent component : this.levelMap) {
-			//Get doors
-			//visibleDoors(player, doors)
-
-			//component(player)
+			if (component instanceof Room) {
+				Room room = (Room)component;
+				Set<Point> roomDoors = room.getDoors().keySet();
+				allDoors.addAll(roomDoors);
+			}
 		}
-		return null;
+		return player.visibleDoors(allDoors, playerLocation);
 	}
 
 	@Override
