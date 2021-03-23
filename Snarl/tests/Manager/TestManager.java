@@ -28,6 +28,7 @@ public class TestManager {
 	private Map<Player, Point> players;
 	private Map<Adversary, Point> adversaries;
 	private Level level;
+	private JSONArray output;
 	
 	public static void main(String[] args) {
 		TestManager managerParser = new TestManager();
@@ -61,7 +62,8 @@ public class TestManager {
 	  List<TestPlayer> testPlayers = createTestPlayers(allMoveLists);
 	  registerPlayers(nameList, testPlayers);
 	  generateActorMaps(nameList, initialPositions);
-	  this.level = new LevelImpl(this.players, this.adversaries, levelMap, false, false, items);	  
+		registerAdversaries();
+		this.level = new LevelImpl(this.players, this.adversaries, levelMap, false, false, items);
 	}
 	
 	private void registerPlayers(JSONArray nameList, List<TestPlayer> testPlayers) {
@@ -87,8 +89,8 @@ public class TestManager {
 					playerMoveList.add(parsePoint(point));
 				}
 			}
-			TestPlayer player = new TestPlayer(playerMoveList);
-			testPlayers.add(player);			
+			TestPlayer player = new TestPlayer(playerMoveList, this.output);
+			testPlayers.add(player);
 		}
 		
 		return testPlayers;
@@ -111,6 +113,13 @@ public class TestManager {
 				Point location = parsePoint(initialPositions.getJSONArray(i));
 				this.adversaries.put(zombie, location);
 			}
+		}
+	}
+
+	private void registerAdversaries() {
+		for (Adversary adversary : this.adversaries.keySet()) {
+			String name = adversary.getName();
+			this.gameManager.registerAdversary(name);
 		}
 	}
 	

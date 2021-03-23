@@ -41,6 +41,14 @@ abstract public class AbstractActor implements Actor {
   }
 
   /**
+   * Gets the name of this Actor
+   * @return string representing this actors name
+   */
+  public String getName() {
+    return this.name;
+  }
+
+  /**
    * Determines if the given EntityType is traversable for a player
    * @param entityType - the EntityType
    * @return true if the EntityType is traversable

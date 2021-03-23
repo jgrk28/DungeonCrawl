@@ -6,6 +6,7 @@ import java.util.List;
 
 import Game.modelView.DungeonModelView;
 import Game.modelView.EntityType;
+import java.util.Map;
 
 /**
  * Represents a dungeon for a game of Snarl. Manages the levels relevant 
@@ -95,6 +96,30 @@ public class Dungeon implements RuleChecker, DungeonModelView {
 	@Override
 	public LevelModelView getCurrentLevelModelView() {
 		return getCurrentLevel();
+	}
+
+	@Override
+	public Point getPosition(Actor actor) {
+		Level level = getCurrentLevel();
+		return level.getActorPosition(actor);
+	}
+
+	@Override
+	public List<Point> getVisibleDoors(Player player) {
+		Level level = getCurrentLevel();
+		return level.getVisibleDoors(player);
+	}
+
+	@Override
+	public List<Item> getVisibleItems(Player player) {
+		Level level = getCurrentLevel();
+		return level.getVisibleItems(player);
+	}
+
+	@Override
+	public Map<Actor, Point> getVisibleActors(Player player) {
+		Level level = getCurrentLevel();
+		return level.getVisibleActors(player);
 	}
 
 	@Override

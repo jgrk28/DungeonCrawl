@@ -1,9 +1,12 @@
 package Game.modelView;
 
+import Game.model.Actor;
 import Game.model.GameState;
+import Game.model.Item;
 import java.awt.Point;
 import java.util.List;
 import Game.model.Player;
+import java.util.Map;
 
 /**
  * Represents the model view of a Dungeon
@@ -56,4 +59,28 @@ public interface DungeonModelView {
 	 * @return
 	 */
 	LevelModelView getCurrentLevelModelView();
+
+	/**
+	 * TODO Add comment here
+	 * @return
+	 */
+	Point getPosition(Actor actor);
+
+	/**
+	 * TODO Add comment here
+	 * @return
+	 */
+	List<Point> getVisibleDoors(Player player);
+
+	/**
+	 * TODO Add comment here
+	 * @return
+	 */
+	List<Item> getVisibleItems(Player player);
+
+	/**
+	 * TODO Add comment here
+	 * @return
+	 */
+	Map<Actor, Point> getVisibleActors(Player player);
 }

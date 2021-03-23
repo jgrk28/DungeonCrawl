@@ -2,6 +2,7 @@ package Game.model;
 
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -725,6 +726,138 @@ public class LevelImpl implements Level {
 			}
 		}
 		return validMoves;
+	}
+
+	@Override
+	public Point getActorPosition(Actor actor) {
+		LevelComponent sourceComponent;
+		if (actor instanceof Player) {
+			sourceComponent = playerLocations.get(actor);
+		} else if (actor instanceof Adversary) {
+			sourceComponent = adversaryLocations.get(actor);
+		} else {
+			throw new IllegalArgumentException("Invalid actor type");
+		}
+		return sourceComponent.findActorLocation(actor);
+	}
+
+	@Override
+	public List<Point> getVisibleDoors(Player player) {
+		for (LevelComponent component : this.levelMap) {
+			//Get doors
+			//visibleDoors(player, doors)
+
+			//component(player)
+		}
+		return null;
+	}
+
+	@Override
+	public List<Item> getVisibleItems(Player player) {
+		List<Item> visibleItems = new ArrayList<>();
+		Point playerLocation = getActorPosition(player);
+		List<List<Tile>> tileMap = getTileMap();
+		List<List<Tile>> croppedTileMap = player.cropTileMap(tileMap, playerLocation);
+		for (List<Tile> tileRow : croppedTileMap) {
+			for (Tile tile : tileRow) {
+				Item item = tile.getItem();
+				if (item != null) {
+					visibleItems.add(item);
+				}
+			}
+		}
+		return visibleItems;
+	}
+
+	@Override
+	public Map<Actor, Point> getVisibleActors(Player player) {
+		Map<Actor, Point> visibleActors = new HashMap<>();
+		Point playerLocation = getActorPosition(player);
+		List<List<Tile>> tileMap = getTileMap();
+		List<List<Tile>> croppedTileMap = player.cropTileMap(tileMap, playerLocation);
+		for (List<Tile> tileRow : croppedTileMap) {
+			for (Tile tile : tileRow) {
+				Actor actor = tile.getActor();
+				if (actor != null) {
+					Point actorPosition = getActorPosition(actor);
+					visibleActors.put(actor, actorPosition);
+				}
+			}
+		}
+		return visibleActors;
+	}
+
+	/**
+	 * TODO add comment
+	 * @return
+	 */
+	private List<List<Tile>> getTileMap() {
+		Point topLeftBound = getTopLeft();
+		Point bottomRightBound = getBottomRight();
+		List<List<Tile>> tileMap = initializeEmptyTileMap(topLeftBound, bottomRightBound);
+
+		for (LevelComponent component : this.levelMap) {
+			addToTileMap(tileMap, component, topLeftBound, bottomRightBound);
+		}
+
+		return tileMap;
+	}
+
+	/**
+	 * Initializes a new map of Tiles as Walls
+	 * @return the map of Wall Tiles
+	 * @param topLeftBound - top left bound of viewable level
+	 * @param bottomRightBound - bottom right bound of viewable level
+	 */
+	private List<List<Tile>> initializeEmptyTileMap(Point topLeftBound,
+			Point bottomRightBound) {
+		//Determine the size of the map based on the bounds
+		int xSize = bottomRightBound.x - topLeftBound.x + 1;
+		int ySize = bottomRightBound.y - topLeftBound.y + 1;
+
+		List<List<Tile>> emptyMap = new ArrayList<>();
+
+		//Iterate through the map and place an EMPTY EntityType at
+		//each coordinate
+		for (int i = 0; i < ySize; i++) {
+			List<Tile> emptyRow = new ArrayList<>();
+			for (int j = 0; j < xSize; j++) {
+				emptyRow.add(j, new Wall());
+			}
+			emptyMap.add(i, emptyRow);
+		}
+		return emptyMap;
+	}
+
+	/**
+	 * Adds each EntityType within a LevelComponent to the viewableMap
+	 * @param component - the LevelComponent to add to the viewableMap
+	 * @param topLeftBound - top left bound of viewable level
+	 * @param bottomRightBound - bottom right bound of viewable level
+	 */
+	private void addToTileMap(
+			List<List<Tile>> tileMap,
+			LevelComponent component,
+			Point topLeftBound,
+			Point bottomRightBound) {
+		//Iterate through the viewableMap
+		for (int i = topLeftBound.y; i <= bottomRightBound.y; i++) {
+			for (int j = topLeftBound.x; j <= bottomRightBound.x; j++) {
+				try {
+					//Check if a Tile exists at the given coordinates in the LevelComponent
+					//If these coordinates are not available for this LevelComponent, no changes are made
+					Tile destTile = component.getDestinationTile(new Point(j, i));
+
+					//Add the EntityType to the viewableMap
+					int croppedYIndex = i - topLeftBound.y;
+					int croppedXIndex = j - topLeftBound.x;
+					List<Tile> editRow = tileMap.get(croppedYIndex);
+					editRow.set(croppedXIndex, destTile);
+				} catch (IllegalArgumentException e) {
+					//Do Nothing
+				}
+			}
+		}
 	}
 
 	@Override

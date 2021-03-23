@@ -139,7 +139,7 @@ public class GameManager {
     while (level.isLevelOver().equals(GameState.ACTIVE)) {
       for (Map.Entry<Player, Common.Player> currPlayer : playerClients.entrySet()) {
         PlayerModelView playerModelView = new PlayerModelView(currPlayer.getKey(), this.dungeon);
-    	List<Point> validMoves = playerModelView.getValidMoves();
+    	  List<Point> validMoves = playerModelView.getValidMoves();
         Point playerDestination = currPlayer.getValue().takeTurn(validMoves);
 
         if (this.ruleChecker.checkValidMove(currPlayer.getKey(), playerDestination)) {

@@ -2,6 +2,7 @@ package Game.model;
 
 import java.awt.Point;
 import Game.modelView.EntityType;
+import java.util.List;
 
 /**
  * Represents a LevelComponent within a game of Snarl
@@ -68,11 +69,15 @@ public interface LevelComponent {
   void placeItem(Item item);
   
   /**
-   * Finds the location of the actor within the componentMap
+   * Finds the absolute location of the actor within the level
    * @param actor - the actor to be found
    * @return the point that the actor is located at 
-   * @throws IllegalArgumentException if the actor is not in the room
+   * @throws IllegalArgumentException if the actor is not in the LevelComponent
    */
   Point findActorLocation(Actor actor);
-  
+
+  /**
+   * TODO add comment
+   */
+  List<Point> getDoors();
 }

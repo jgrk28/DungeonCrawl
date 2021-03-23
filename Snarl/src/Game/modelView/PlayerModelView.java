@@ -1,9 +1,12 @@
 package Game.modelView;
 
+import Game.model.Actor;
 import Game.model.GameState;
+import Game.model.Item;
 import java.awt.Point;
 import java.util.List;
 import Game.model.Player;
+import java.util.Map;
 
 /**
  * Represents the model view from a player's perspective
@@ -59,4 +62,30 @@ public class PlayerModelView {
    * @return
    */
   public GameState isGameOver() { return dungeonModelView.isGameOver(); }
+
+  /**
+   * TODO Add comment here
+   * @return
+   */
+  public Point getPosition() { return dungeonModelView.getPosition(this.player); }
+
+  /**
+   * TODO Add comment here
+   * @return
+   */
+  public List<Point> getVisibleDoors() { return dungeonModelView.getVisibleDoors(this.player); }
+
+
+  /**
+   * TODO Add comment here
+   * @return
+   */
+  public List<Item> getVisibleItems() { return dungeonModelView.getVisibleItems(this.player); }
+
+
+  /**
+   * TODO Add comment here
+   * @return
+   */
+  public Map<Actor, Point> getVisibleActors() { return dungeonModelView.getVisibleActors(this.player); }
 }

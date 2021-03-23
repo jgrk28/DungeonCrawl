@@ -5,6 +5,7 @@ import java.util.List;
 
 import Game.modelView.EntityType;
 import Game.modelView.LevelModelView;
+import java.util.Map;
 
 /**
  * Level extends the LevelModelView interface to provide
@@ -108,4 +109,31 @@ public interface Level extends LevelModelView {
 	 */
 	List<Point> getValidMoves(Player player);
 
+	/**
+	 * TODO Add comment here
+	 * @param actor
+	 * @return
+	 */
+	Point getActorPosition(Actor actor);
+
+	/**
+	 * TODO Add comment here
+	 * @param player
+	 * @return
+	 */
+	List<Point> getVisibleDoors(Player player);
+
+	/**
+	 * TODO Add comment here
+	 * @param player
+	 * @return
+	 */
+	List<Item> getVisibleItems(Player player);
+
+	/**
+	 * TODO Add comment here
+	 * @param player
+	 * @return
+	 */
+	Map<Actor, Point> getVisibleActors(Player player);
 }

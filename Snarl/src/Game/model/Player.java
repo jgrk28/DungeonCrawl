@@ -192,8 +192,49 @@ public class Player extends AbstractActor {
 		}
 		return croppedMap;
 	}
-	
-	
+
+	/**
+	 * Returns the subsection of the level map that the player can see
+	 * based on their position and range of sight
+	 * @param fullLevel - the full map of Tile for the level
+	 * @param playerLocation - the player's location in the level
+	 * @return the cropped map that the player can see
+	 * @throws IllegalArgumentException if the fullLevel contains no components
+	 */
+	public List<List<Tile>> cropTileMap(
+			List<List<Tile>> fullLevel,
+			Point playerLocation) {
+		List<List<Tile>> croppedMap = new ArrayList<>();
+		if (fullLevel.size() == 0) {
+			throw new IllegalArgumentException("Full Level map contains no components");
+		}
+
+		//Determine the visible range for the player
+		int fullLevelYMin = playerLocation.y - sightBoxWidth;
+		int fullLevelYMax = playerLocation.y + sightBoxWidth;
+		int fullLevelXMin = playerLocation.x - sightBoxWidth;
+		int fullLevelXMax = playerLocation.x + sightBoxWidth;
+
+		//Iterate through the visible range and get the EntityType at the corresponding
+		//location in the full map
+		for (int fullLevelY = fullLevelYMin; fullLevelY <= fullLevelYMax; fullLevelY++) {
+			List<Tile> croppedRow = new ArrayList<>();
+			for (int fullLevelX = fullLevelXMin; fullLevelX <= fullLevelXMax; fullLevelX++) {
+				if (fullLevelY >= 0
+						&& fullLevelX >= 0
+						&& fullLevelY <= fullLevel.size()
+						&& fullLevelY <= fullLevel.get(0).size()) {
+					Tile tile = fullLevel.get(fullLevelY).get(fullLevelX);
+					croppedRow.add(tile);
+				} else {
+					croppedRow.add(new Wall());
+				}
+			}
+			croppedMap.add(croppedRow);
+		}
+		return croppedMap;
+	}
+
 	@Override
 	public int getMaxMoveDistance() {
 		return this.maxMoveDistance;
