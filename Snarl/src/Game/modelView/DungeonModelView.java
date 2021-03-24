@@ -36,51 +36,68 @@ public interface DungeonModelView {
 	List<List<EntityType>> getPlayerMap(Player player);
 	
 	/**
-	 * TODO Add comment here
-	 * @param player
-	 * @return
+	 * Gets all valid moves for the provided player based on their 
+	 * position in the current level of the dungeon
+	 * @param player - the player to gather valid moves for
+	 * @return a list of all valid moves
 	 */
 	List<Point> getValidMoves(Player player);
 
 	/**
-	 * TODO Add comment here
-	 * @return
+	 * Checks if the level is over. If so, if it was won or lost. In 
+	 * order for a level to be over, all players must be removed from the 
+	 * current level. If  any player exited the level, the level was won. 
+	 * Otherwise, the level was lost. GameState can be Active, Won, or Lost
+	 * @return the GameState
 	 */
 	GameState isLevelOver();
 
 	/**
-	 * TODO Add comment here
-	 * @return
+	 * Checks if the game is over. If so, if it was won or lost. Determines 
+	 * if the level is over, and checks if this level is the last level in 
+	 * the dungeon. At least one player must exit the last level in order to 
+	 * win the game. GameState can be Active, Won, or Lost
+	 * @return the GameState
 	 */
 	GameState isGameOver();
 
 	/**
-	 * TODO Add comment here
-	 * @return
+	 * Gets the LevelModelView for the current level
+	 * @return the LevelModelView
 	 */
 	LevelModelView getCurrentLevelModelView();
 
 	/**
-	 * TODO Add comment here
-	 * @return
+	 * Gets the actor's position in the dungeon
+	 * @param actor - the actor to find
+	 * @return the point that the actor is located at
 	 */
 	Point getPosition(Actor actor);
 
 	/**
-	 * TODO Add comment here
-	 * @return
+	 * Gets all doors that are visible for the player based on their position 
+	 * in the dungeon
+	 * @param player - the player whose location will be used to determine 
+	 * visible doors
+	 * @return a list of locations for the visible doors
 	 */
 	List<Point> getVisibleDoors(Player player);
 
 	/**
-	 * TODO Add comment here
-	 * @return
+	 * Gets all items that are visible for the player based on their position 
+	 * in the dungeon
+	 * @param player - the player whose location will be used to determine 
+	 * visible items
+	 * @return a list of Item for the visible items
 	 */
 	List<Item> getVisibleItems(Player player);
 
 	/**
-	 * TODO Add comment here
-	 * @return
+	 * Gets all actors that are visible for the player based on their position 
+	 * in the dungeon
+	 * @param player - the player whose location will be used to determine 
+	 * visible actors
+	 * @return a map of all visible actors and their locations 
 	 */
 	Map<Actor, Point> getVisibleActors(Player player);
 }

@@ -3,7 +3,9 @@ package Observer;
 import Common.Observer;
 
 /**
- * TODO Add comments here
+ * Represents a local observer within a game of Snarl
+ * The observer receives updates from the game manager 
+ * on every state change
  */
 public class LocalObserver implements Observer {
 

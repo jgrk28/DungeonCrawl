@@ -789,7 +789,6 @@ public class LevelTest {
 	}  
   
   //Tests for getPlayerMap
-  //TODO complete implementation for getPlayerMap
 	@Test
 	public void testGetPlayer1Map() {
 	    List<List<EntityType>> expectedMap = Arrays.asList(

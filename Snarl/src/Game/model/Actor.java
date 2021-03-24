@@ -43,15 +43,15 @@ public interface Actor {
 	Boolean checkValidMovePath(Point source, Point destination, List<List<EntityType>> intermediateTypes);
 	
 	/**
-	 * TODO Add comment
-	 * @param actorLocation
-	 * @return
+	 * Gets all potential locations that the actor could move to based on their current location
+	 * @param actorLocation - the location of the actor
+	 * @return a list of all potential moves
 	 */
 	List<Point> getPotentialMoves(Point actorLocation);
 	
 	/**
-	 * TODO Add comment here
-	 * @return
+	 * Gets the maximum distance that an actor can move
+	 * @return the integer that represents this move distance
 	 */
 	int getMaxMoveDistance();
 }

@@ -66,8 +66,9 @@ public class TextualPlayerView extends AbstractTextualView {
 	}
 
 	/**
-	 * TODO add comment
-	 * @return
+	 * Draws the active level of the dungeon that the player is a part of
+	 * @return a string representing the state of the level that the player
+	 * can view
 	 */
 	private String drawActiveLevel() {
 		int currLevelIndex = playerModelView.getCurrentLevel();

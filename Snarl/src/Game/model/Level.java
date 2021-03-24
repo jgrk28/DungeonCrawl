@@ -103,37 +103,37 @@ public interface Level extends LevelModelView {
 	Player getPlayer(String name);
 
 	/**
-	 * TODO Add comment here
-	 * @param player
-	 * @return
+	 * Gets all valid moves for the provided player based on their position in the level
+	 * @param player - the player to gather valid moves for
+	 * @return a list of all valid moves
 	 */
 	List<Point> getValidMoves(Player player);
 
 	/**
-	 * TODO Add comment here
-	 * @param actor
-	 * @return
+	 * Gets the actor's position in the level
+	 * @param actor - the actor to find
+	 * @return the point that the actor is located at
 	 */
 	Point getActorPosition(Actor actor);
 
 	/**
-	 * TODO Add comment here
-	 * @param player
-	 * @return
+	 * Gets all doors that are visible for the player based on their position in the level
+	 * @param player - the player whose location will be used to determine visible doors
+	 * @return a list of locations for the visible doors
 	 */
 	List<Point> getVisibleDoors(Player player);
 
 	/**
-	 * TODO Add comment here
-	 * @param player
-	 * @return
+	 * Gets all items that are visible for the player based on their position in the level
+	 * @param player - the player whose location will be used to determine visible items
+	 * @return a list of Item for the visible items
 	 */
 	List<Item> getVisibleItems(Player player);
 
 	/**
-	 * TODO Add comment here
-	 * @param player
-	 * @return
+	 * Gets all actors that are visible for the player based on their position in the level
+	 * @param player - the player whose location will be used to determine visible actors
+	 * @return a map of all visible actors and their locations 
 	 */
 	Map<Actor, Point> getVisibleActors(Player player);
 }

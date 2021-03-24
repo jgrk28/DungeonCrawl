@@ -11,18 +11,15 @@ import Game.modelView.PlayerModelView;
 import Game.view.TextualPlayerView;
 
 /**
- * The PlayerClient runs on the user's side (locally or through TCP connection)
+ * The LocalPlayer represents a local connection to the user in a game of Snarl.
  * This displays relevant information to the user, and sends moves and other 
  * commands that the user would like to perform in the game to the GameManager 
  */
 public class LocalPlayer implements Player {
 
-	/**
-	 * Prompts the player for a move and sends it to the GameManager
-     * @return the point that the player would like to move to
-     */
 	@Override
     public Point takeTurn(List<Point> validMoves) {
+		//Prompt the user to take a turn
 		System.out.println("Please enter a valid move from the below list:");
 		System.out.println(pointsToString(validMoves));
 		
@@ -32,9 +29,17 @@ public class LocalPlayer implements Player {
 		System.out.println("Enter y position");
 		int y = in.nextInt();
 		in.close();
+		
+		//Create a new point based on the input
 		return new Point(x,y);
     }
 	
+	/**
+	 * Converts all valid moves for the player from a list of 
+	 * points to a string representation that can be displayed
+	 * @param points - the points to convert
+	 * @return a string that represents all of the points
+	 */
 	private String pointsToString(List<Point> points) {
 		StringBuilder output = new StringBuilder();
 		for (int i = 0; i < points.size(); i++) {
@@ -56,7 +61,7 @@ public class LocalPlayer implements Player {
  	    //ByteArrayOutputStream output = new ByteArrayOutputStream();
  	    //PrintStream printStream = new PrintStream(output);
  	    //TextualPlayerView playerView = new TextualPlayerView(gameState, printStream);
-			TextualPlayerView playerView = new TextualPlayerView(gameState, System.out);
+		TextualPlayerView playerView = new TextualPlayerView(gameState, System.out);
  	    playerView.draw();
     }
 

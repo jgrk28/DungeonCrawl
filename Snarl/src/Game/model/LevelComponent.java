@@ -2,7 +2,6 @@ package Game.model;
 
 import java.awt.Point;
 import Game.modelView.EntityType;
-import java.util.List;
 
 /**
  * Represents a LevelComponent within a game of Snarl

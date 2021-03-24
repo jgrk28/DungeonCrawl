@@ -216,7 +216,7 @@ public class Player extends AbstractActor {
 		int fullLevelXMin = playerLocation.x - sightBoxWidth;
 		int fullLevelXMax = playerLocation.x + sightBoxWidth;
 
-		//Iterate through the visible range and get the EntityType at the corresponding
+		//Iterate through the visible range and get the Tile at the corresponding
 		//location in the full map
 		for (int fullLevelY = fullLevelYMin; fullLevelY <= fullLevelYMax; fullLevelY++) {
 			List<Tile> croppedRow = new ArrayList<>();
@@ -237,16 +237,16 @@ public class Player extends AbstractActor {
 	}
 
 	/**
-	 * TODO add comment
-	 * @param allDoors
-	 * @return
+	 * Finds all doors that are within the player's view
+	 * @param allDoors - all doors within the level
+	 * @return the list of door locations that are visible
 	 */
 	public List<Point> visibleDoors(Set<Point> allDoors, Point playerLocation) {
 		List<Point> visibleDoors = new ArrayList<>();
 		for (Point door : allDoors) {
 			int distance = Math.abs(door.x - playerLocation.x)
 					+ Math.abs(door.y - playerLocation.y);
-			if (distance <= this.sightBoxWidth) {
+			if (distance <= sightBoxWidth) {
 				visibleDoors.add(door);
 			}
 		}
@@ -255,7 +255,7 @@ public class Player extends AbstractActor {
 
 	@Override
 	public int getMaxMoveDistance() {
-		return this.maxMoveDistance;
+		return maxMoveDistance;
 	}
 
 }

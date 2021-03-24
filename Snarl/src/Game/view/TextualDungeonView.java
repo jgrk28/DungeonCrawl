@@ -6,6 +6,10 @@ import Game.modelView.LevelModelView;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 
+/**
+ * Represents a textual level view of the dungeon, including the
+ * current level, game status, and level status
+ */
 public class TextualDungeonView extends AbstractTextualView {
   //The read-only version of the Dungeon model
   private DungeonModelView modelView;
@@ -17,6 +21,7 @@ public class TextualDungeonView extends AbstractTextualView {
 
   @Override
   public void draw() {
+	//Get the current level, the game status, and the level status
     int currLevelIndex = this.modelView.getCurrentLevelIndex();
     GameState gameStatus = this.modelView.isGameOver();
     GameState levelStatus = this.modelView.isLevelOver();

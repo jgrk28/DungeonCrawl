@@ -80,13 +80,13 @@ abstract public class AbstractActor implements Actor {
    }
    
    /**
-    * TODO Add comment
-    * @param point
-    * @return
+    * Gets all moves adjacent to the given point
+    * @param point - the central point
+    * @return a set of points adjacent to the provided point
     */
    private Set<Point> getAdjacentMoves(Point point) {
-	   Set<Point> moves = new HashSet<>();
-	   moves.add(new Point(point.x + 1, point.y));
+	 Set<Point> moves = new HashSet<>();
+	 moves.add(new Point(point.x + 1, point.y));
      moves.add(new Point(point.x - 1, point.y));
      moves.add(new Point(point.x, point.y + 1));
      moves.add(new Point(point.x, point.y - 1));

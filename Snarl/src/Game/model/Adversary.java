@@ -12,10 +12,17 @@ public abstract class Adversary extends AbstractActor {
 	
 	private static final int maxMoveDistance = 1;
 
+	/**
+	 * Initialize an Adversary with a unique name
+	 * @param name - the name of the Adversary
+	 */
 	public Adversary(String name) {
 		super(name);
 	}
 
+	/**
+	 * Initialize an Adversary with a unique ID
+	 */
 	public Adversary() {
 		super();
 	}
@@ -53,6 +60,6 @@ public abstract class Adversary extends AbstractActor {
 	
 	@Override
 	public int getMaxMoveDistance() {
-		return this.maxMoveDistance;
+		return maxMoveDistance;
 	}
 }

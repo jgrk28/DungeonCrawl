@@ -31,13 +31,14 @@ public class GameManager {
   private Dungeon dungeon;
   private RuleChecker ruleChecker;
   
-  //Player and adversary Game.clients in the game
+  //Player and adversary clients in the game
   private Map<Player, Common.Player> playerClients;
   private Map<Adversary, LocalAdversary> adversaryClients;
   
   //All observers in the game to notify when the game state changes
   private List<Observer> observers;
 
+  //Constructs the game manager with empty clients and observer fields
   public GameManager() {
     this.playerClients = new LinkedHashMap<>();
     this.adversaryClients = new LinkedHashMap<>();
@@ -162,25 +163,25 @@ public class GameManager {
   }
   
   /**
-   * TODO Add comments
-   * @param observer
+   * Adds the given Observer to the list of observers
+   * @param observer - the observer to add
    */
-  //Adds the given Observer to the list of observers
   public void attachObserver(Observer observer) {
     this.observers.add(observer);
   }
  
   /**
-   * TODO Add comments
-   * @param observer
+   * Removes the given Observer from the list of observers
+   * @param observer - the observer to remove
    */
-  //Removes the given Observer from the list of observers
   public void detachObserver(Observer observer) {
     this.observers.remove(observer);
   }
   
   /**
-   * Calls update() on all of the observers
+   * Calls update() on all of the observers. This includes observer components,
+   * as well as players. The players are updated of the game state relative to
+   * their view, whereas the observer can see the entire game
    */
   public void notifyAllObservers() {
 	  for (Observer observer : this.observers) {

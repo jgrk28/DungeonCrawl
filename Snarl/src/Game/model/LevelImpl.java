@@ -714,12 +714,13 @@ public class LevelImpl implements Level {
 	@Override
 	public List<Point> getValidMoves(Player player) {
 		LevelComponent sourceComponent = playerLocations.get(player);
-		Point playerLocation = sourceComponent.findActorLocation(player);		
+		Point playerLocation = sourceComponent.findActorLocation(player);	
+		
+		//Get all potential moves based on the player's location
 		List<Point> allPotentialMoves = player.getPotentialMoves(playerLocation);	
 		List<Point> validMoves = new ArrayList<>();
 		
-		for (Point point : allPotentialMoves) {
-			
+		for (Point point : allPotentialMoves) {		
 			//Identify all intermediate EntityTypes between the source and the destination
 			//If a valid path exists, return true
 			List<List<EntityType>> intermediateTypes = getIntermediateTypes(playerLocation, point, sourceComponent);
@@ -748,6 +749,7 @@ public class LevelImpl implements Level {
 		Point playerLocation = getActorPosition(player);
 		Set<Point> allDoors = new HashSet<>();
 		for (LevelComponent component : this.levelMap) {
+			//If the component is a room, add the door locations to the set
 			if (component instanceof Room) {
 				Room room = (Room)component;
 				Set<Point> roomDoors = room.getDoors().keySet();
@@ -761,11 +763,15 @@ public class LevelImpl implements Level {
 	public List<Item> getVisibleItems(Player player) {
 		List<Item> visibleItems = new ArrayList<>();
 		Point playerLocation = getActorPosition(player);
+		
+		//Get the cropped map of the level that the player can see
 		List<List<Tile>> tileMap = getTileMap();
 		List<List<Tile>> croppedTileMap = player.cropTileMap(tileMap, playerLocation);
+		
 		for (List<Tile> tileRow : croppedTileMap) {
 			for (Tile tile : tileRow) {
 				Item item = tile.getItem();
+				//If an item exists on the tile, add it to the list
 				if (item != null) {
 					visibleItems.add(item);
 				}
@@ -778,11 +784,15 @@ public class LevelImpl implements Level {
 	public Map<Actor, Point> getVisibleActors(Player player) {
 		Map<Actor, Point> visibleActors = new HashMap<>();
 		Point playerLocation = getActorPosition(player);
+		
+		//Get the cropped map of the level that the player can see
 		List<List<Tile>> tileMap = getTileMap();
 		List<List<Tile>> croppedTileMap = player.cropTileMap(tileMap, playerLocation);
+		
 		for (List<Tile> tileRow : croppedTileMap) {
 			for (Tile tile : tileRow) {
 				Actor actor = tile.getActor();
+				//If an actor exists on the tile, add it to the list
 				if (actor != null) {
 					Point actorPosition = getActorPosition(actor);
 					visibleActors.put(actor, actorPosition);
@@ -793,8 +803,8 @@ public class LevelImpl implements Level {
 	}
 
 	/**
-	 * TODO add comment
-	 * @return
+	 * Gets the map for the level composed of tiles
+	 * @return a map of all tiles within the level
 	 */
 	private List<List<Tile>> getTileMap() {
 		Point topLeftBound = getTopLeft();
@@ -822,7 +832,7 @@ public class LevelImpl implements Level {
 
 		List<List<Tile>> emptyMap = new ArrayList<>();
 
-		//Iterate through the map and place an EMPTY EntityType at
+		//Iterate through the map and place a Wall at
 		//each coordinate
 		for (int i = 0; i < ySize; i++) {
 			List<Tile> emptyRow = new ArrayList<>();
@@ -835,17 +845,17 @@ public class LevelImpl implements Level {
 	}
 
 	/**
-	 * Adds each EntityType within a LevelComponent to the viewableMap
-	 * @param component - the LevelComponent to add to the viewableMap
-	 * @param topLeftBound - top left bound of viewable level
-	 * @param bottomRightBound - bottom right bound of viewable level
+	 * Adds each Tile within a LevelComponent to the tileMap
+	 * @param component - the LevelComponent to add to the tileMap
+	 * @param topLeftBound - top left bound of the level
+	 * @param bottomRightBound - bottom right bound of the level
 	 */
 	private void addToTileMap(
 			List<List<Tile>> tileMap,
 			LevelComponent component,
 			Point topLeftBound,
 			Point bottomRightBound) {
-		//Iterate through the viewableMap
+		//Iterate through the level bounds
 		for (int i = topLeftBound.y; i <= bottomRightBound.y; i++) {
 			for (int j = topLeftBound.x; j <= bottomRightBound.x; j++) {
 				try {
@@ -853,7 +863,7 @@ public class LevelImpl implements Level {
 					//If these coordinates are not available for this LevelComponent, no changes are made
 					Tile destTile = component.getDestinationTile(new Point(j, i));
 
-					//Add the EntityType to the viewableMap
+					//Add the Tile to the viewableMap
 					int croppedYIndex = i - topLeftBound.y;
 					int croppedXIndex = j - topLeftBound.x;
 					List<Tile> editRow = tileMap.get(croppedYIndex);
