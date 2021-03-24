@@ -95,4 +95,10 @@ public class PlayerModelView {
    */
   public Map<Actor, Point> getVisibleActors() { return dungeonModelView.getVisibleActors(this.player); }
   
+  /**
+   * Gets the name for this player
+   * @return the name as a String
+   */
+  public String getName() { return this.player.getName(); }
+  
 }

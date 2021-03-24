@@ -3,6 +3,8 @@ package Game.view;
 import static org.junit.Assert.assertEquals;
 
 import Game.model.ModelCreator;
+
+import java.awt.Point;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.util.List;
@@ -11,6 +13,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import Game.model.Dungeon;
+import Game.model.Level;
 import Game.model.Player;
 import Game.modelView.DungeonModelView;
 import Game.modelView.PlayerModelView;
@@ -127,10 +130,24 @@ public class TextualPlayerViewTest {
 	@Test
 	public void testDrawNoLongerInLevel() {
 		initializePlayerModelView();
+		Level level = this.dungeon.getNextLevel();
+		this.dungeon.startCurrentLevel();
+		Player player2 = this.players.get(2);
 		
-		this.dungeon.getNextLevel();
+		//Kill player 2
+		level.playerAction(player2, new Point(2, 2));
+		level.playerAction(player2, new Point(4, 2));
+		level.playerAction(player2, new Point(6, 2));
+		level.playerAction(player2, new Point(6, 4));
+		level.playerAction(player2, new Point(6, 6));
+		level.playerAction(player2, new Point(6, 8));
+		level.playerAction(player2, new Point(6, 10));
+		level.playerAction(player2, new Point(7, 11));
+		level.playerAction(player2, new Point(9, 11));
+		level.playerAction(player2, new Point(13, 11));
+
 		DungeonModelView view = this.dungeon;
-		PlayerModelView playerModelView = new PlayerModelView(this.players.get(2), view);	
+		PlayerModelView playerModelView = new PlayerModelView(player2, view);	
 		
 		String expectedOut = "You are currently on level: 2\n"
 				+ "You are no longer active in the level\n";

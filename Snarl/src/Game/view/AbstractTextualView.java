@@ -40,8 +40,9 @@ public abstract class AbstractTextualView implements View {
    * Returns the ASCII representation of the level map based 
    * on the provided EntityTypes
    * @param level - the map of all EntityTypes in the level
+   * @return the level map representation as a string
    */
-  protected void drawLevelMap(List<List<EntityType>> level) {
+  protected String drawLevelMap(List<List<EntityType>> level) {
     StringBuilder output = new StringBuilder();
 
     //Iterate through the level, identify the entity, and append to
@@ -54,6 +55,6 @@ public abstract class AbstractTextualView implements View {
       }
       output.append("\n");
     }
-    this.output.print(output.toString());
+    return output.toString();
   }
 }

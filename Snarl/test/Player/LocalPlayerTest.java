@@ -4,10 +4,8 @@ import static org.junit.Assert.*;
 
 import Game.model.Dungeon;
 import Game.model.ModelCreator;
-import Game.model.Player;
 import Game.modelView.DungeonModelView;
 import Game.modelView.PlayerModelView;
-import com.sun.org.apache.xpath.internal.operations.Mod;
 import java.awt.Point;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -17,6 +15,9 @@ import java.util.Arrays;
 import java.util.List;
 import org.junit.Test;
 
+/**
+ * Tests for the LocalPlayer
+ */
 public class LocalPlayerTest {
 
   @Test

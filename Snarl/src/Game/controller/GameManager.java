@@ -28,11 +28,11 @@ import Game.modelView.PlayerModelView;
  */
 public class GameManager {
   //The dungeon that represents the game and the corresponding ruleChecker
-  private Dungeon dungeon;
-  private RuleChecker ruleChecker;
+  protected Dungeon dungeon;
+  protected RuleChecker ruleChecker;
   
   //Player and adversary clients in the game
-  private Map<Player, Common.Player> playerClients;
+  protected Map<Player, Common.Player> playerClients;
   private Map<Adversary, LocalAdversary> adversaryClients;
   
   //All observers in the game to notify when the game state changes

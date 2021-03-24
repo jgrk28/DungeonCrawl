@@ -54,4 +54,10 @@ public interface Actor {
 	 * @return the integer that represents this move distance
 	 */
 	int getMaxMoveDistance();
+	
+	/**
+	 * Gets the name of this Actor
+	 * @return string representing this actors name
+	 */
+	public String getName();
 }

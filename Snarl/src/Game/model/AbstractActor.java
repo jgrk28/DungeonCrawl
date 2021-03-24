@@ -40,10 +40,7 @@ abstract public class AbstractActor implements Actor {
     return this.name.equals(name);
   }
 
-  /**
-   * Gets the name of this Actor
-   * @return string representing this actors name
-   */
+  @Override
   public String getName() {
     return this.name;
   }

@@ -12,7 +12,6 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
-import Game.controller.GameManager;
 import Game.model.Adversary;
 import Game.model.Item;
 import Game.model.Level;
@@ -22,13 +21,21 @@ import Game.model.Player;
 import Game.model.Zombie;
 import Level.TestLevel;
 
+/**
+ * TODO Add comments
+ */
 public class TestManager {
 	
-	private GameManager gameManager;
+	private TraceManager gameManager;
 	private Map<Player, Point> players;
 	private Map<Adversary, Point> adversaries;
 	private Level level;
-	private JSONArray output;
+	private JSONArray trace;
+	private int maxNumTurns;
+	
+	public TestManager() {
+		this.trace = new JSONArray();
+	}
 	
 	public static void main(String[] args) {
 		TestManager managerParser = new TestManager();
@@ -54,11 +61,11 @@ public class TestManager {
 	  List<LevelComponent> levelMap = TestLevel.parseLevelMap(JSONLevel);
 	  List<Item> items = TestLevel.parseObjects(JSONLevel);
 	  
-	  int maxNumTurns = JSONInput.getInt(2);  
+	  this.maxNumTurns = JSONInput.getInt(2);  
 	  JSONArray initialPositions = JSONInput.getJSONArray(3);
 	  JSONArray allMoveLists = JSONInput.getJSONArray(4);	 
 	  
-	  this.gameManager = new GameManager();
+	  this.gameManager = new TraceManager(this.trace);
 	  List<TestPlayer> testPlayers = createTestPlayers(allMoveLists);
 	  registerPlayers(nameList, testPlayers);
 	  generateActorMaps(nameList, initialPositions);
@@ -89,7 +96,7 @@ public class TestManager {
 					playerMoveList.add(parsePoint(point));
 				}
 			}
-			TestPlayer player = new TestPlayer(playerMoveList, this.output);
+			TestPlayer player = new TestPlayer(playerMoveList, this.trace);
 			testPlayers.add(player);
 		}
 		
@@ -125,7 +132,12 @@ public class TestManager {
 	
 	private void playGame() {
 		this.gameManager.notifyAllObservers();
-		this.gameManager.playLevel(this.level);
+		try {
+			this.gameManager.playLevelTrace(this.level, this.maxNumTurns);		
+		} catch (IllegalStateException e) {
+			//Do nothing
+		}
+		
 	}
 
 }

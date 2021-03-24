@@ -6,6 +6,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import org.junit.Test;
 
+/**
+ * Tests for the LocalObserver
+ */
 public class LocalObserverTest {
 
   @Test

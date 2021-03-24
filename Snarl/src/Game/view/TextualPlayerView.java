@@ -79,7 +79,7 @@ public class TextualPlayerView extends AbstractTextualView {
 		if (isAlive) {
 			toOutput.append("You are active in the level\n");
 			List<List<EntityType>> level = playerModelView.getMap();
-			drawLevelMap(level);
+			toOutput.append(drawLevelMap(level));
 		} else {
 			toOutput.append("You are no longer active in the level\n");
 		}
