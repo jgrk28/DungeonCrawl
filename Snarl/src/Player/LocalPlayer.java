@@ -53,9 +53,10 @@ public class LocalPlayer implements Player {
 	//reduce the overhead of sending and parsing large JSONs
     @Override
     public void update(PlayerModelView gameState) {    	
- 	    ByteArrayOutputStream output = new ByteArrayOutputStream();
- 	    PrintStream printStream = new PrintStream(output);
- 	    TextualPlayerView playerView = new TextualPlayerView(gameState, printStream);
+ 	    //ByteArrayOutputStream output = new ByteArrayOutputStream();
+ 	    //PrintStream printStream = new PrintStream(output);
+ 	    //TextualPlayerView playerView = new TextualPlayerView(gameState, printStream);
+			TextualPlayerView playerView = new TextualPlayerView(gameState, System.out);
  	    playerView.draw();
     }
 

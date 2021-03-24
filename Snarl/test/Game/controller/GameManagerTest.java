@@ -30,7 +30,7 @@ public class GameManagerTest {
 		this.levels = creator.initializeDungeonLevels();
 
 		this.gameManager = new GameManager();
-		this.gameManager.registerActors(1, 6);
+		//this.gameManager.registerActors(1, 6);
 
 		this.gameManager.startGame(this.levels);
 	}
@@ -38,7 +38,7 @@ public class GameManagerTest {
 	@Test (expected = IllegalArgumentException.class)
 	public void registerActorsTooManyPlayers() {
 		GameManager manager = new GameManager();
-		manager.registerActors(6, 8);		
+		//manager.registerActors(6, 8);
 	}
 	
 	@Test

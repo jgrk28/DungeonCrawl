@@ -1,8 +1,13 @@
 package Game.controller;
 
+import Game.modelView.PlayerModelView;
+import Game.view.TextualPlayerView;
 import java.awt.Point;
 
 import Player.LocalPlayer;
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
+import java.util.List;
 
 public class MockPlayerClient extends LocalPlayer {
 	
@@ -17,7 +22,7 @@ public class MockPlayerClient extends LocalPlayer {
 	 * @return the point that the player would like to move to
 	 */
 	@Override
-	public Point takeTurn() {
+	public Point takeTurn(List<Point> validMoves) {
 	   turnCount++;
 	   return new Point(turnCount, 2);  
 	}
@@ -29,8 +34,16 @@ public class MockPlayerClient extends LocalPlayer {
 	 * @param gameState - the string containing the relevant game state
 	 */
 	@Override
-	public void displayGameState(String gameState) {
+	public void displayMessage(String gameState) {
 	  System.out.print(gameState);
+	}
+
+	@Override
+	public void update(PlayerModelView gameState) {
+		ByteArrayOutputStream output = new ByteArrayOutputStream();
+		PrintStream printStream = new PrintStream(output);
+		TextualPlayerView playerView = new TextualPlayerView(gameState, printStream);
+		playerView.draw();
 	}
 
 }
