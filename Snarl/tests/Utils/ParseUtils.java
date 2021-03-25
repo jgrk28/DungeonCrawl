@@ -18,15 +18,4 @@ public class ParseUtils {
 	  return new Point(x,y);
 	}
   
-	/**
-	 * TODO add comment
-	 * @param location
-	 * @return
-	 */
-	static public JSONArray generateJSONPoint(Point location) {
-		JSONArray JSONPoint = new JSONArray();
-		JSONPoint.put(location.y);
-		JSONPoint.put(location.x);
-		return JSONPoint;
-	}
 }

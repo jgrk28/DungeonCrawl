@@ -102,7 +102,7 @@ public class TraceManager extends GameManager {
 		if (playerSource.equals(playerDestination)) {
 			actorMove.put("to", JSONObject.NULL);
 		} else {
-			actorMove.put("to", ParseUtils.generateJSONPoint(playerDestination));
+			actorMove.put("to", JSONUtils.Generator.generateJSONPoint(playerDestination));
 		}
 		return actorMove;
 	}

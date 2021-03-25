@@ -1,11 +1,7 @@
 package Manager;
 
 import Game.model.Actor;
-import Game.model.Exit;
-import Game.model.Ghost;
 import Game.model.Item;
-import Game.model.Key;
-import Game.model.Zombie;
 import Game.modelView.EntityType;
 import JSONUtils.Generator;
 import java.awt.Point;
@@ -17,7 +13,6 @@ import java.util.Set;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-import Utils.ParseUtils;
 
 import Common.Player;
 import Game.modelView.PlayerModelView;

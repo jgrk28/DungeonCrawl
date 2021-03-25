@@ -138,27 +138,32 @@ public interface Level extends LevelModelView {
 	Map<Actor, Point> getVisibleActors(Player player);
 
 	/**
-	 * TODO Comment
+	 * Gets all active players in the level
+	 * @return the map of players and their location
 	 */
 	Map<Actor, Point> getActivePlayers();
 
 	/**
-	 * TODO Comment
+	 * Gets all active adversaries in the level
+	 * @return the map of adversaries and their locations
 	 */
 	Map<Actor, Point> getActiveAdversaries();
 
 	/**
-	 * TODO Comment
+	 * Gets the exitUnlocked boolean for the level
+	 * @return true if the exit is unlocked, false otherwise
 	 */
 	Boolean getExitUnlocked();
 
 	/**
-	 * TODO Comment
+	 * Gets the list of LevelComponents that compose the level map
+	 * @return the level map
 	 */
 	List<LevelComponent> getLevelMap();
 
 	/**
-	 * TODO Comment
+	 * Gets the items in the level. This can include keys and exits
+	 * @return the list of all items currently in the level
 	 */
 	List<Item> getItems();
 }

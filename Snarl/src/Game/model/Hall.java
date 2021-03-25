@@ -433,20 +433,22 @@ public class Hall implements LevelComponent {
 	}
 
 	/**
-	 * TODO Add comment
-	 * @return
+	 * Getter for the position of the start room
+	 * @return the point that represents the position in the StartRoom that connects through 
+	 * the door to the Hall
 	 */
 	public Point getStartRoomPosition() { return this.startRoomPosition; }
 
 	/**
-	 * TODO Add comment
-	 * @return
+	 * Getter for the position of the end room
+	 * @return the point that represents the position in the EndRoom that connects through 
+	 * the door to the Hall
 	 */
 	public Point getEndRoomPosition() { return this.endRoomPosition; }
 
 	/**
-	 * TODO Add comment
-	 * @return
+	 * Getter for the waypoints in the hall
+	 * @return the list of points that represent corners in the Hall
 	 */
 	public List<Point> getWaypoints() { return this.waypoints; }
 

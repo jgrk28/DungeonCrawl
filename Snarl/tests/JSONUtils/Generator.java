@@ -91,7 +91,7 @@ public class Generator {
       else if (item instanceof Exit) {
         JSONItem.put("type", "exit");
       }
-      JSONArray position = ParseUtils.generateJSONPoint(item.getLocation());
+      JSONArray position = generateJSONPoint(item.getLocation());
       JSONItem.put("position", position);
       objectList.put(JSONItem);
     }

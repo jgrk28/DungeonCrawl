@@ -199,8 +199,8 @@ public class Room implements LevelComponent {
 	}
 
 	/**
-	 * TODO Add comment
-	 * @return
+	 * Getter for the component map of EntityType for the room
+	 * @return the matrix of entityType that compose this room
 	 */
 	public List<List<EntityType>> getComponentMap() {
 		List<List<EntityType>> entityMap = new ArrayList<>();
