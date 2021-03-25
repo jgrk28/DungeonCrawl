@@ -2,6 +2,7 @@ package Manager;
 
 import static Utils.ParseUtils.parsePoint;
 
+import JSONUtils.Generator;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -41,7 +42,7 @@ public class TestManager {
 		TestManager managerParser = new TestManager();
 		managerParser.parseInput();
 		managerParser.playGame();
-		managerParser.output
+		managerParser.outputTrace();
 	}
 	
 	private void parseInput() {
@@ -139,6 +140,16 @@ public class TestManager {
 			//Do nothing
 		}
 		
+	}
+
+	private void outputTrace() {
+		JSONObject JSONState = Generator.generateJSONState(this.level);
+
+		JSONArray testOutput = new JSONArray();
+		testOutput.put(JSONState);
+		testOutput.put(this.trace);
+
+		System.out.print(testOutput.toString());
 	}
 
 }
