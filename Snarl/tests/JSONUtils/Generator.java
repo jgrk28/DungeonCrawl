@@ -12,7 +12,6 @@ import Game.model.LevelComponent;
 import Game.model.Room;
 import Game.model.Zombie;
 import Game.modelView.EntityType;
-import Utils.ParseUtils;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -22,11 +21,17 @@ import java.util.Set;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+/**
+ * Class for generating JSONs related to a game of Snarl.
+ * This includes the state, the level, rooms, halls, and
+ * items.
+ */
 public class Generator {
+	
   /**
-   * TODO add comment
-   * @param location
-   * @return
+   * Generates a JSONArray containing the specified location
+   * @param location - the point representation of the location
+   * @return the JSONArray [row, col] for the point
    */
   static public JSONArray generateJSONPoint(Point location) {
     JSONArray JSONPoint = new JSONArray();
@@ -36,9 +41,9 @@ public class Generator {
   }
 
   /**
-   * TODO add comment
-   * @param points
-   * @return
+   * Generates a list of JSONArrays that represent points
+   * @param points - the list of points to convert
+   * @return the JSONArray containing all given points
    */
   static public JSONArray generateJSONPointList(List<Point> points) {
     JSONArray JSONPointList = new JSONArray();
@@ -50,9 +55,10 @@ public class Generator {
   }
 
   /**
-   * TODO add comment
-   * @param actors
-   * @return
+   * Generates the actor list, including each actor's type, name, and
+   * location
+   * @param actors - a map of all actors and their locations
+   * @return a JSONActor list of JSONObjects 
    */
   static public JSONArray generateJSONActorList(Map<Actor, Point> actors) {
     JSONArray actorPositionList = new JSONArray();
@@ -77,9 +83,9 @@ public class Generator {
   }
 
   /**
-   * TODO add comment
-   * @param items
-   * @return
+   * Generates a JSONArray for all given items
+   * @param items - the provided items (keys and exits)
+   * @return a JSONArray of JSONObjects representing each item
    */
   static public JSONArray generateJSONObjects(List<Item> items) {
     JSONArray objectList = new JSONArray();
@@ -99,9 +105,10 @@ public class Generator {
   }
 
   /**
-   * TODO add comment
-   * @param halls
-   * @return
+   * Generates a JSONArray of halls. 
+   * @param halls - the list of halls to convert
+   * @return a JSONArray of JSONObjects representing each hall. This
+   * includes the from, to, and waypoints
    */
   static public JSONArray generateJSONHalls(List<Hall> halls) {
     JSONArray JSONHalls = new JSONArray();
@@ -128,17 +135,19 @@ public class Generator {
   }
 
   /**
-   * TODO add comment
-   * @param entityMap
-   * @param roomOrigin
-   * @param doors
-   * @return
+   * Generates the layout for a room based on the entityMap, origin, and doors
+   * @param entityMap - the layout of entities in the room
+   * @param roomOrigin - the origin of the room
+   * @param doors - the doors located in the room
+   * @return a JSONArray of the layout of the room, where 0 is a wall, 1 is a
+   * space, and 2 is a door
    */
   static public JSONArray generateJSONLayout(
       List<List<EntityType>> entityMap, Point roomOrigin, Set<Point> doors) {
     JSONArray layoutOutput = new JSONArray();
     Set<Point> relativeDoors = new HashSet<>();
 
+    //Determine the relative locations of the doors
     for (Point point : doors) {
       Point relPoint = new Point(point.x - roomOrigin.x, point.y - roomOrigin.y);
       relativeDoors.add(relPoint);
@@ -147,13 +156,22 @@ public class Generator {
     for (int i = 0; i < entityMap.size(); i++) {
       List<EntityType> entityRow = entityMap.get(i);
       JSONArray JSONRow = new JSONArray();
+      
       for (int j = 0; j < entityRow.size(); j++) {
+    	  
         EntityType entity = entityRow.get(j);
+        
+        //If the entity is empty or a wall, place a 0
         if (entity.equals(EntityType.EMPTY) || entity.equals(EntityType.WALL)) {
           JSONRow.put(0);
-        } else if (relativeDoors.contains(new Point(j, i))) {
+    
+        } 
+        //If the entity is a door, place a 2
+        else if (relativeDoors.contains(new Point(j, i))) {
           JSONRow.put(2);
-        } else {
+        }
+        //Otherwise, place a 1
+        else {
           JSONRow.put(1);
         }
       }
@@ -163,12 +181,14 @@ public class Generator {
   }
 
   /**
-   * TODO add comment
-   * @param origin
-   * @param bottomRight
-   * @return
+   * Determines the bounds of a room based on the origin and bottom right
+   * coordinate 
+   * @param origin - the origin of the room
+   * @param bottomRight - the bottom right coordinate of the room
+   * @return a JSON object containing the number of rows and columns
    */
   static public JSONObject generateJSONBounds(Point origin, Point bottomRight) {
+	//Account for off-by-1 calculation 
     int rows = bottomRight.y - origin.y + 1;
     int columns = bottomRight.x - origin.x + 1;
 
@@ -179,12 +199,13 @@ public class Generator {
   }
 
   /**
-   * TODO add comment
-   * @param rooms
-   * @return
+   * Generates a JSONArray of rooms 
+   * @param rooms - the list of rooms to convert to JSON format
+   * @return a JSONArray representation of the list of rooms
    */
   static public JSONArray generateJSONRooms(List<Room> rooms) {
     JSONArray JSONRooms = new JSONArray();
+    
     for (Room room : rooms) {
       JSONObject JSONRoom = new JSONObject();
       Point origin = room.getTopLeftBound();
@@ -202,19 +223,22 @@ public class Generator {
 
       JSONRooms.put(JSONRoom);
     }
+    
     return JSONRooms;
   }
 
   /**
-   * TODO add comment
-   * @param level
-   * @return
+   * Generates the JSON representation of a level
+   * @param level - the level to convert to JSON format
+   * @return the JSONObject containing all relevant information
+   * for the level 
    */
   static public JSONObject generateJSONLevel(Level level) {
     List<LevelComponent> levelMap = level.getLevelMap();
     List<Room> rooms = new ArrayList<>();
     List<Hall> halls = new ArrayList<>();
 
+    //Group all LevelComponents in the level into Rooms or Halls
     for (LevelComponent component : levelMap) {
       if (component instanceof Room) {
         rooms.add((Room) component);
@@ -224,6 +248,8 @@ public class Generator {
         throw new IllegalArgumentException("Invalid LevelComponent type");
       }
     }
+    
+    //Generate rooms, halls, and objects
     JSONArray JSONRooms = generateJSONRooms(rooms);
     JSONArray JSONHalls = generateJSONHalls(halls);
     JSONArray JSONObjects = generateJSONObjects(level.getItems());
@@ -238,9 +264,9 @@ public class Generator {
   }
 
   /**
-   * TODO add comment
-   * @param level
-   * @return
+   * Generates a JSON representation of the state for the given level
+   * @param level - the level to convert into the JSON state format
+   * @return a JSONObject representing the state of the provided level
    */
   static public JSONObject generateJSONState(Level level) {
     JSONObject JSONState = new JSONObject();
