@@ -1,6 +1,7 @@
 package Game.model;
 
 import java.awt.Point;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -195,6 +196,22 @@ public class Room implements LevelComponent {
 	 */
 	public Map<Point, Hall> getDoors() {
 		return this.doors;
+	}
+
+	/**
+	 * TODO Add comment
+	 * @return
+	 */
+	public List<List<EntityType>> getComponentMap() {
+		List<List<EntityType>> entityMap = new ArrayList<>();
+		for (List<Tile> row : this.componentMap) {
+			List<EntityType> entityRow = new ArrayList<>();
+			for (Tile tile : row) {
+				entityRow.add(getEntityType(tile));
+			}
+			entityMap.add(entityRow);
+		}
+		return entityMap;
 	}
 	
 	@Override

@@ -475,6 +475,7 @@ public class LevelImpl implements Level {
 		}
 
 		if (interaction.equals(InteractionResult.FOUND_KEY)) {
+			//TODO remove key from items list
 			this.exitUnlocked = true;
 		}
 
@@ -800,6 +801,43 @@ public class LevelImpl implements Level {
 			}
 		}
 		return visibleActors;
+	}
+
+	@Override
+	public Map<Actor, Point> getActivePlayers() {
+		Map<Actor, Point> activePlayers = new HashMap<>();
+		for (Map.Entry<Player, LevelComponent> locationEntry : this.playerLocations.entrySet()) {
+			Player player = locationEntry.getKey();
+			Point playerPoint = locationEntry.getValue().findActorLocation(player);
+			activePlayers.put(player, playerPoint);
+		}
+		return activePlayers;
+	}
+
+	@Override
+	public Map<Actor, Point> getActiveAdversaries() {
+		Map<Actor, Point> activeAdversaries = new HashMap<>();
+		for (Map.Entry<Adversary, LevelComponent> locationEntry : this.adversaryLocations.entrySet()) {
+			Adversary adversary = locationEntry.getKey();
+			Point adversaryPoint = locationEntry.getValue().findActorLocation(adversary);
+			activeAdversaries.put(adversary, adversaryPoint);
+		}
+		return activeAdversaries;
+	}
+
+	@Override
+	public Boolean getExitUnlocked() {
+		return this.exitUnlocked;
+	}
+
+	@Override
+	public List<LevelComponent> getLevelMap() {
+		return this.levelMap;
+	}
+
+	@Override
+	public List<Item> getItems() {
+		return this.items;
 	}
 
 	/**

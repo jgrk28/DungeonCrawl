@@ -136,4 +136,29 @@ public interface Level extends LevelModelView {
 	 * @return a map of all visible actors and their locations 
 	 */
 	Map<Actor, Point> getVisibleActors(Player player);
+
+	/**
+	 * TODO Comment
+	 */
+	Map<Actor, Point> getActivePlayers();
+
+	/**
+	 * TODO Comment
+	 */
+	Map<Actor, Point> getActiveAdversaries();
+
+	/**
+	 * TODO Comment
+	 */
+	Boolean getExitUnlocked();
+
+	/**
+	 * TODO Comment
+	 */
+	List<LevelComponent> getLevelMap();
+
+	/**
+	 * TODO Comment
+	 */
+	List<Item> getItems();
 }

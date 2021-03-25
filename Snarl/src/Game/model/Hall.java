@@ -431,7 +431,25 @@ public class Hall implements LevelComponent {
 	public Room getEndRoom() {
 		return this.endRoom;
 	}
-	
+
+	/**
+	 * TODO Add comment
+	 * @return
+	 */
+	public Point getStartRoomPosition() { return this.startRoomPosition; }
+
+	/**
+	 * TODO Add comment
+	 * @return
+	 */
+	public Point getEndRoomPosition() { return this.endRoomPosition; }
+
+	/**
+	 * TODO Add comment
+	 * @return
+	 */
+	public List<Point> getWaypoints() { return this.waypoints; }
+
 	@Override
 	public int hashCode() {
 	  return this.waypoints.hashCode() 

@@ -41,6 +41,7 @@ public class TestManager {
 		TestManager managerParser = new TestManager();
 		managerParser.parseInput();
 		managerParser.playGame();
+		managerParser.output
 	}
 	
 	private void parseInput() {

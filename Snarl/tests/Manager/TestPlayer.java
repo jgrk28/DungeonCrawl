@@ -7,6 +7,7 @@ import Game.model.Item;
 import Game.model.Key;
 import Game.model.Zombie;
 import Game.modelView.EntityType;
+import JSONUtils.Generator;
 import java.awt.Point;
 import java.util.HashSet;
 import java.util.List;
@@ -62,9 +63,9 @@ public class TestPlayer implements Player {
 		Map<Actor, Point> visibleActors = gameState.getVisibleActors();
 		
 		JSONArray layout = generateLayout(playerMap, absolutePosition, visibleDoors);
-		JSONArray position = ParseUtils.generateJSONPoint(absolutePosition);
-		JSONArray objects = generateObjectList(visibleItems);
-		JSONArray actors = generateActorPositionList(visibleActors);
+		JSONArray position = Generator.generateJSONPoint(absolutePosition);
+		JSONArray objects = Generator.generateJSONObjects(visibleItems);
+		JSONArray actors = Generator.generateJSONActorList(visibleActors);
 		
 		JSONObject playerUpdate = new JSONObject();
 		playerUpdate.put("type", "player-update");
@@ -113,57 +114,6 @@ public class TestPlayer implements Player {
 			layoutOutput.put(JSONRow);
 		}
 		return layoutOutput;
-	}
-	
-	/**
-	 * TODO add comment
-	 * @param items
-	 * @return
-	 */
-	private JSONArray generateObjectList(List<Item> items) {
-		JSONArray objectList = new JSONArray();
-		for (Item item : items) {
-			JSONObject JSONItem = new JSONObject();
-			if (item instanceof Key) {
-				JSONItem.put("type", "key");
-			}
-			else if (item instanceof Exit) {
-				JSONItem.put("type", "exit");
-			}
-			JSONArray position = ParseUtils.generateJSONPoint(item.getLocation());
-			JSONItem.put("position", position);
-			objectList.put(JSONItem);
-		}
-		return objectList;
-	}
-	
-
-	
-	/**
-	 * TODO Add comment
-	 * @param actors
-	 * @return
-	 */
-	private JSONArray generateActorPositionList(Map<Actor, Point> actors) {
-		JSONArray actorPositionList = new JSONArray();
-		for (Map.Entry<Actor, Point> actorEntry : actors.entrySet()) {
-			JSONObject actorJSON = new JSONObject();
-			Actor actor = actorEntry.getKey();
-			Point position = actorEntry.getValue();
-			
-			if (actor instanceof Player) {
-				actorJSON.put("type", "player");
-			} else if (actor instanceof Zombie) {
-				actorJSON.put("type", "zombie");
-			} else if (actor instanceof Ghost) {
-				actorJSON.put("type", "ghost");
-			}
-			
-			actorJSON.put("name", actor.getName());
-			actorJSON.put("position", ParseUtils.generateJSONPoint(position));
-			actorPositionList.put(actorJSON);
-		}
-		return actorPositionList;
 	}
 
 	@Override
