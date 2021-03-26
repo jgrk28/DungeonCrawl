@@ -94,7 +94,7 @@ public interface DungeonModelView {
 
 	/**
 	 * Gets all actors that are visible for the player based on their position 
-	 * in the dungeon
+	 * in the dungeon, not including the player themselves
 	 * @param player - the player whose location will be used to determine 
 	 * visible actors
 	 * @return a map of all visible actors and their locations 

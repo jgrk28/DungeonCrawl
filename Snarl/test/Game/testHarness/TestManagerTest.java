@@ -1,5 +1,6 @@
 package Game.testHarness;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import Manager.TestManager;
@@ -22,6 +23,8 @@ public class TestManagerTest {
     System.setIn(new FileInputStream(inFile));
     String expectedOut = new String(Files.readAllBytes(Paths.get(outFile)));
 
+    PrintStream console = System.out;
+
     ByteArrayOutputStream output = new ByteArrayOutputStream();
     PrintStream print = new PrintStream(output);
     System.setOut(print);
@@ -34,7 +37,10 @@ public class TestManagerTest {
     JSONTokener actualTokens = new JSONTokener(output.toString());
     Object actualValue = actualTokens.nextValue();
 
-    assertTrue(expectedArray.similar(actualValue));
+    console.println(expectedArray.toString());
+    console.println(actualValue.toString());
+
+    assertEquals(expectedArray.toString(), actualValue.toString());
   }
 
   //Check that an exception is thrown when invalid input is provided

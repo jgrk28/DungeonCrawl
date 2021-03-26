@@ -85,6 +85,9 @@ public class Space implements Tile {
   public void removeActor() { this.actor = null; }
 
   @Override
+  public void removeItem() { this.item = null; }
+
+  @Override
   public int hashCode() {
     int itemHash = 1;
     int actorHash = 1;

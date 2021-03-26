@@ -16,9 +16,12 @@ public class HallTest {
   @Before
   public void initEntities() {
     this.creator = new ModelCreator();
-    this.hall1 = creator.initializeHall1();
-    this.hall2 = creator.initializeHall1Snake();
-    this.hall3 = creator.initializeHall3();
+    Room room1 = this.creator.initializeRoom1();
+    Room room2 = this.creator.initializeRoom2();
+    Room room4 = this.creator.initializeRoom4();
+    this.hall1 = creator.initializeHall1(room1, room2);
+    this.hall2 = creator.initializeHall1Snake(room1, room2);
+    this.hall3 = creator.initializeHall3(room2, room4);
   }
 
   //Constructor and connectRooms tested by initializing hallways

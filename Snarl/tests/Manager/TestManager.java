@@ -2,10 +2,13 @@ package Manager;
 
 import static Utils.ParseUtils.parsePoint;
 
+import Game.model.Ghost;
 import JSONUtils.Generator;
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -145,9 +148,10 @@ public class TestManager {
 	 * @param initialPositions - the list of initial player and adversary positions
 	 */
 	private void generateActorMaps(JSONArray nameList, JSONArray initialPositions) {
-		this.players = new HashMap<>();
-		this.adversaries = new HashMap<>();
-		
+		this.players = new LinkedHashMap<>();
+		this.adversaries = new LinkedHashMap<>();
+
+		int adversaryCounter = 1;
 		for (int i = 0; i < initialPositions.length(); i++) {
 			//Add players until we run out of names
 			if (i < nameList.length()) {
@@ -157,9 +161,11 @@ public class TestManager {
 			}
 			//Add adversaries for the remaining initial positions
 			else {
-				Adversary zombie = new Zombie();
+				String name = "ghost" + adversaryCounter;
+				Adversary ghost = new Ghost(name);
 				Point location = parsePoint(initialPositions.getJSONArray(i));
-				this.adversaries.put(zombie, location);
+				this.adversaries.put(ghost, location);
+				adversaryCounter++;
 			}
 		}
 	}
@@ -184,6 +190,7 @@ public class TestManager {
 	 * - The level is over
 	 */
 	private void playGame() {
+		this.gameManager.initDungeon(new ArrayList<>(Arrays.asList(this.level)));
 		this.gameManager.notifyAllObservers();
 		try {
 			this.gameManager.playLevelTrace(this.level, this.maxNumTurns);		

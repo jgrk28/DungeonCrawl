@@ -361,7 +361,7 @@ public class Hall implements LevelComponent {
 			
 			//If the index is located between the current position and the next destination,
 			//find the location of the entity
-			if ((length + prevWaypoint.distance(nextDestination)) > tileIndex) {
+			if ((length + prevWaypoint.distance(nextDestination)) >= tileIndex) {
 				int distFromWaypoint = tileIndex - length;
 				Point currPosition = prevWaypoint;
 				for (int i = 0; i < distFromWaypoint; i++) {

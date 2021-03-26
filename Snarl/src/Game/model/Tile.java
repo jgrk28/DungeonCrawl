@@ -49,4 +49,9 @@ public interface Tile {
 	 * Removes the actor on this tile
 	 */
 	void removeActor();
+
+	/**
+	 * Removes the item on this tile
+	 */
+	void removeItem();
 }

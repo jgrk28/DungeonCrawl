@@ -70,12 +70,12 @@ public class TextualLevelViewTest {
 		this.room3 = creator.initializeRoom3();
 		this.room4 = creator.initializeRoom4();
 
-		this.hall1 = creator.initializeHall1();
-		this.hall1Snake = creator.initializeHall1Snake();
-		this.hall1RoomBrush = creator.initializeHall1RoomBrush();
-		this.hall1HallBrush = creator.initializeHall1HallBrush();
-		this.hall2 = creator.initializeHall2();
-		this.hall3 = creator.initializeHall3();
+		this.hall1 = creator.initializeHall1(room1, room2);
+		this.hall1Snake = creator.initializeHall1Snake(room1, room2);
+		this.hall1RoomBrush = creator.initializeHall1RoomBrush(room1, room2);
+		this.hall1HallBrush = creator.initializeHall1HallBrush(room1, room2);
+		this.hall2 = creator.initializeHall2(room3, room2);
+		this.hall3 = creator.initializeHall3(room2, room4);
 		this.players = new ArrayList<>(Arrays.asList(creator.getPlayer1()));
 		this.adversaries = new ArrayList<>(Arrays.asList(creator.getGhost1(), creator.getZombie1()));
 	}

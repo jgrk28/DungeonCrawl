@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import Game.modelView.EntityType;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -156,23 +157,28 @@ public class Player extends AbstractActor {
 	 * Returns the subsection of the level map that the player can see
 	 * based on their position and range of sight
 	 * @param fullLevel - the full map of EntityType for the level
+	 * @param levelOffset - the top left coordinate for the full level
 	 * @param playerLocation - the player's location in the level
 	 * @return the cropped map that the player can see
 	 * @throws IllegalArgumentException if the fullLevel contains no components
 	 */
 	public List<List<EntityType>> cropViewableMap(
 			List<List<EntityType>> fullLevel,
+			Point levelOffset,
 			Point playerLocation) {
 		List<List<EntityType>> croppedMap = new ArrayList<>();
 		if (fullLevel.size() == 0) {
 			throw new IllegalArgumentException("Full Level map contains no components");
 		}
 
+		Point relativePlayerLocation = new Point(playerLocation.x - levelOffset.x,
+				playerLocation.y - levelOffset.y);
+
 		//Determine the visible range for the player
-		int fullLevelYMin = playerLocation.y - sightBoxWidth;
-		int fullLevelYMax = playerLocation.y + sightBoxWidth;
-		int fullLevelXMin = playerLocation.x - sightBoxWidth;
-		int fullLevelXMax = playerLocation.x + sightBoxWidth;
+		int fullLevelYMin = relativePlayerLocation.y - sightBoxWidth;
+		int fullLevelYMax = relativePlayerLocation.y + sightBoxWidth;
+		int fullLevelXMin = relativePlayerLocation.x - sightBoxWidth;
+		int fullLevelXMax = relativePlayerLocation.x + sightBoxWidth;
 		
 		//Iterate through the visible range and get the EntityType at the corresponding
 		//location in the full map
@@ -181,8 +187,8 @@ public class Player extends AbstractActor {
 			for (int fullLevelX = fullLevelXMin; fullLevelX <= fullLevelXMax; fullLevelX++) {
 				if (fullLevelY >= 0
 						&& fullLevelX >= 0
-						&& fullLevelY <= fullLevel.size()
-						&& fullLevelY <= fullLevel.get(0).size()) {
+						&& fullLevelY < fullLevel.size()
+						&& fullLevelX < fullLevel.get(0).size()) {
 					EntityType entityType = fullLevel.get(fullLevelY).get(fullLevelX);
 					croppedRow.add(entityType);
 				} else {
@@ -204,17 +210,21 @@ public class Player extends AbstractActor {
 	 */
 	public List<List<Tile>> cropTileMap(
 			List<List<Tile>> fullLevel,
+			Point levelOffset,
 			Point playerLocation) {
 		List<List<Tile>> croppedMap = new ArrayList<>();
 		if (fullLevel.size() == 0) {
 			throw new IllegalArgumentException("Full Level map contains no components");
 		}
 
+		Point relativePlayerLocation = new Point(playerLocation.x - levelOffset.x,
+				playerLocation.y - levelOffset.y);
+
 		//Determine the visible range for the player
-		int fullLevelYMin = playerLocation.y - sightBoxWidth;
-		int fullLevelYMax = playerLocation.y + sightBoxWidth;
-		int fullLevelXMin = playerLocation.x - sightBoxWidth;
-		int fullLevelXMax = playerLocation.x + sightBoxWidth;
+		int fullLevelYMin = relativePlayerLocation.y - sightBoxWidth;
+		int fullLevelYMax = relativePlayerLocation.y + sightBoxWidth;
+		int fullLevelXMin = relativePlayerLocation.x - sightBoxWidth;
+		int fullLevelXMax = relativePlayerLocation.x + sightBoxWidth;
 
 		//Iterate through the visible range and get the Tile at the corresponding
 		//location in the full map
@@ -223,8 +233,8 @@ public class Player extends AbstractActor {
 			for (int fullLevelX = fullLevelXMin; fullLevelX <= fullLevelXMax; fullLevelX++) {
 				if (fullLevelY >= 0
 						&& fullLevelX >= 0
-						&& fullLevelY <= fullLevel.size()
-						&& fullLevelY <= fullLevel.get(0).size()) {
+						&& fullLevelY < fullLevel.size()
+						&& fullLevelX < fullLevel.get(0).size()) {
 					Tile tile = fullLevel.get(fullLevelY).get(fullLevelX);
 					croppedRow.add(tile);
 				} else {
@@ -244,9 +254,9 @@ public class Player extends AbstractActor {
 	public List<Point> visibleDoors(Set<Point> allDoors, Point playerLocation) {
 		List<Point> visibleDoors = new ArrayList<>();
 		for (Point door : allDoors) {
-			int distance = Math.abs(door.x - playerLocation.x)
-					+ Math.abs(door.y - playerLocation.y);
-			if (distance <= sightBoxWidth) {
+			int distanceX = Math.abs(door.x - playerLocation.x);
+			int distanceY = Math.abs(door.y - playerLocation.y);
+			if (distanceX <= sightBoxWidth && distanceY <= sightBoxWidth) {
 				visibleDoors.add(door);
 			}
 		}
@@ -258,4 +268,21 @@ public class Player extends AbstractActor {
 		return maxMoveDistance;
 	}
 
+	@Override
+	public int hashCode() {
+		return this.name.hashCode();
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == this) {
+			return true;
+		}
+		if (!(obj instanceof Player)) {
+			return false;
+		}
+
+		Player player = (Player) obj;
+		return player.hasName(this.name);
+	}
 }

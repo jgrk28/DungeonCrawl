@@ -46,15 +46,22 @@ public class TraceManager extends GameManager {
 	      for (Map.Entry<Player, Common.Player> currPlayer : playerClients.entrySet()) {
 	    	String result;
 	    	
-	        PlayerModelView playerModelView = new PlayerModelView(currPlayer.getKey(), this.dungeon);
+	    	PlayerModelView playerModelView = new PlayerModelView(currPlayer.getKey(), this.dungeon);
 	    	List<Point> validMoves = playerModelView.getValidMoves();
 	    	Point playerSource = playerModelView.getPosition();
-	        Point playerDestination = currPlayer.getValue().takeTurn(validMoves);
-	        
+	    	Point playerDestination = currPlayer.getValue().takeTurn(validMoves);
+
+					JSONArray traceEntry = new JSONArray();
+					traceEntry.put(playerModelView.getName());
+					traceEntry.put(generateActorMove(playerDestination, playerSource));
+
 	        if (this.ruleChecker.checkValidMove(currPlayer.getKey(), playerDestination)) {
 	          //Execute the move and corresponding interaction
 	          InteractionResult interactionResult = level.playerAction(currPlayer.getKey(), playerDestination);
 	          result = interactionResultToString(interactionResult);
+
+						traceEntry.put(result);
+						this.output.put(traceEntry);
 
 	          //Notify all observers of the current game state for each turn
 	          notifyAllObservers();
@@ -62,13 +69,9 @@ public class TraceManager extends GameManager {
 	          //If user entered invalid move notify them and skip their turn
 	          currPlayer.getValue().displayMessage("Invalid move, turn skipped");
 	          result = "Invalid";
+						traceEntry.put(result);
+						this.output.put(traceEntry);
 	        }
-	       
-	        JSONArray traceEntry = new JSONArray();
-	        traceEntry.put(playerModelView.getName());
-	        traceEntry.put(generateActorMove(playerDestination, playerSource));
-	        traceEntry.put(result);
-	        this.output.put(traceEntry);	        
 	      }
 	      
 	      turnCount++;

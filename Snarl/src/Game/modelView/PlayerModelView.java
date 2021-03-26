@@ -90,7 +90,7 @@ public class PlayerModelView {
 
   /**
    * Gets all actors that are visible for the player based on their position 
-   * in the dungeon
+   * in the dungeon, not including the player themselves
    * @return a map of all visible actors and their locations 
    */
   public Map<Actor, Point> getVisibleActors() { return dungeonModelView.getVisibleActors(this.player); }

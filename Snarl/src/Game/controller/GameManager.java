@@ -97,7 +97,7 @@ public class GameManager {
 
   /**
    * Initializes a Dungeon with the provided levels with registered players 
-   * and adversaries
+   * and adversaries, starts the first level and notifies all observers
    * @param levels - the list of levels that compose a game
    * @throws IllegalArgumentException if no players are registered for the game
    */
@@ -112,6 +112,22 @@ public class GameManager {
 
     this.dungeon.startCurrentLevel();
     notifyAllObservers();
+  }
+
+  /**
+   * Initializes a Dungeon with the provided levels with registered players
+   * and adversaries
+   * @param levels - the list of levels that compose a game
+   * @throws IllegalArgumentException if no players are registered for the game
+   */
+  public void initDungeon(List<Level> levels) {
+    if (playerClients.size() < 1) {
+      throw new IllegalArgumentException("Cannot start game with no players");
+    }
+    List<Player> players = new ArrayList<>(this.playerClients.keySet());
+    List<Adversary> adversaries = new ArrayList<>(this.adversaryClients.keySet());
+    this.dungeon = new Dungeon(players, adversaries, 1, levels);
+    this.ruleChecker = this.dungeon;
   }
 
   /**

@@ -691,7 +691,7 @@ public class LevelTest {
   
   @Test
   public void testFindComponentPlayer() {
-    Hall hall1 = this.creator.initializeHall1WithEntities();
+    Hall hall1 = this.creator.initializeHall1WithEntities(this.creator.initializeRoom1(), this.creator.initializeRoom2());
 	  assertEquals(hall1,level.findComponent(new Point(4, 2)));
   }
   
@@ -710,7 +710,7 @@ public class LevelTest {
   
   @Test
   public void testFindComponentHall() {
-    Hall hall2 = this.creator.initializeHall2();
+    Hall hall2 = this.creator.initializeHall2(this.creator.initializeRoom3(), this.creator.initializeRoom2());
 	  assertEquals(hall2,level.findComponent(new Point(4, 11)));
   }
   

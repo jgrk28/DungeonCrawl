@@ -281,10 +281,7 @@ public class ModelCreator {
 
   //Hall goes
   //room1 -> (4,2) -> (6,2) -> (6,6) -> room2
-  public Hall initializeHall1() {
-    Room startRoom = initializeRoom1();
-    Room endRoom = initializeRoom2();
-
+  public Hall initializeHall1(Room startRoom, Room endRoom) {
     List<Point> waypoints = new ArrayList<Point>();
     waypoints.add(new Point(6,2));
 
@@ -297,8 +294,8 @@ public class ModelCreator {
 
   //room1 -> (4,2) -> (6,2) -> (6,6) -> room2
   //Player map [P......]
-  public Hall initializeHall1WithEntities() {
-    Hall hall1 = initializeHall1();
+  public Hall initializeHall1WithEntities(Room startRoom, Room endRoom) {
+    Hall hall1 = initializeHall1(startRoom, endRoom);
     hall1.placeActor(this.jacob, new Point(4, 2));
 
     return hall1;
@@ -307,10 +304,7 @@ public class ModelCreator {
   //Hall to replace hall1 that makes multiple turns
   //Hall goes
   //room1 -> (4,2) -> (9,2) -> (9,4) -> (6,4) -> (6,6) -> room2
-  public Hall initializeHall1Snake() {
-    Room startRoom = initializeRoom1();
-    Room endRoom = initializeRoom2();
-
+  public Hall initializeHall1Snake(Room startRoom, Room endRoom) {
     List<Point> waypoints = new ArrayList<Point>();
     waypoints.add(new Point(9,2));
     waypoints.add(new Point(9,4));
@@ -326,10 +320,7 @@ public class ModelCreator {
   //Hall to replace hall1 that travels directly next to a room
   //Hall goes
   //room1 -> (4,2) -> (9,2) -> (9,6) -> (6,6) -> room2
-  public Hall initializeHall1RoomBrush() {
-    Room startRoom = initializeRoom1();
-    Room endRoom = initializeRoom2();
-
+  public Hall initializeHall1RoomBrush(Room startRoom, Room endRoom) {
     List<Point> waypoints = new ArrayList<Point>();
     waypoints.add(new Point(9,2));
     waypoints.add(new Point(9,6));
@@ -346,10 +337,7 @@ public class ModelCreator {
   //(12,2), (12,10), (9,10), (9,3), (6,3).
   //Hall goes
   //room1 -> (4,2) -> (12,2) -> (12,10) -> (9,10) -> (9,3) -> (6,3) -> (6,6) -> room2
-  public Hall initializeHall1HallBrush() {
-    Room startRoom = initializeRoom1();
-    Room endRoom = initializeRoom2();
-
+  public Hall initializeHall1HallBrush(Room startRoom, Room endRoom) {
     List<Point> waypoints = new ArrayList<Point>();
     waypoints.add(new Point(12,2));
     waypoints.add(new Point(12,10));
@@ -366,10 +354,7 @@ public class ModelCreator {
 
   //Hall goes
   //room3 -> (2,13) -> (2,11) -> (4,11) -> room2
-  public Hall initializeHall2() {
-    Room startRoom = initializeRoom3();
-    Room endRoom = initializeRoom2();
-
+  public Hall initializeHall2(Room startRoom, Room endRoom) {
     List<Point> waypoints = new ArrayList<Point>();
     waypoints.add(new Point(2,11));
 
@@ -382,10 +367,7 @@ public class ModelCreator {
 
   //Hall goes
   //room2 -> (9,11) -> (12, 11) -> room4
-  public Hall initializeHall3() {
-    Room startRoom = initializeRoom2();
-    Room endRoom = initializeRoom4();
-
+  public Hall initializeHall3(Room startRoom, Room endRoom) {
     List<Point> waypoints = new ArrayList<Point>();
 
     Hall hall3 = new Hall(new Point(8,11), startRoom, new Point(13,11), endRoom, waypoints);
@@ -398,10 +380,7 @@ public class ModelCreator {
   //Hall goes
   //room8 -> (2,11) -> (5,11) -> (5,8) -> room9
   //Player map [..P....]
-  public Hall initializeHall4() {
-    Room startRoom = initializeRoom8();
-    Room endRoom = initializeRoom9();
-
+  public Hall initializeHall4(Room startRoom, Room endRoom) {
     List<Point> waypoints = new ArrayList<Point>();
     waypoints.add(new Point(5,11));
 
@@ -414,10 +393,7 @@ public class ModelCreator {
   //Hall goes
   //room10 -> (4,3) -> (5,3) -> (5,6) -> (2,6) -> (2,10) -> room11
   //Player map [ZG.........]
-  public Hall initializeHall5() {
-    Room startRoom = initializeRoom10();
-    Room endRoom = initializeRoom11();
-
+  public Hall initializeHall5(Room startRoom, Room endRoom) {
     List<Point> waypoints = new ArrayList<Point>();
     waypoints.add(new Point(5,3));
     waypoints.add(new Point(5,6));
@@ -438,9 +414,9 @@ public class ModelCreator {
     Room room3 = initializeRoom3();
     Room room4 = initializeRoom4();
 
-    Hall hall1 = initializeHall1();
-    Hall hall2 = initializeHall2();
-    Hall hall3 = initializeHall3();
+    Hall hall1 = initializeHall1(room1, room2);
+    Hall hall2 = initializeHall2(room3, room2);
+    Hall hall3 = initializeHall3(room2, room4);
 
     List<LevelComponent> level1Map = new ArrayList<LevelComponent>();
 

@@ -42,6 +42,11 @@ public class Wall implements Tile {
   }
 
   @Override
+  public void removeItem() {
+    throw new IllegalArgumentException("Item cannot be removed from a wall");
+  }
+
+  @Override
   public int hashCode() {
     return 0;
   }

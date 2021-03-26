@@ -257,7 +257,7 @@ public class ActorTest {
 	  
 	  Player player = creator.getPlayer1();
 
-	  assertEquals(expectedMap, player.cropViewableMap(fullLevelMap, new Point(4,2)));	    	    
+	  assertEquals(expectedMap, player.cropViewableMap(fullLevelMap, new Point(0,0), new Point(4,2)));
   }
   
   @Test 
@@ -274,7 +274,7 @@ public class ActorTest {
 	  
 	  Player player = creator.getPlayer2();
 
-	  assertEquals(expectedMap, player.cropViewableMap(fullLevelMap, new Point(7,10)));	    	    
+	  assertEquals(expectedMap, player.cropViewableMap(fullLevelMap, new Point(0,0), new Point(7,10)));
   }
   
   @Test 
@@ -291,6 +291,6 @@ public class ActorTest {
 	  
 	  Player player = creator.getPlayer3();
 
-	  assertEquals(expectedMap, player.cropViewableMap(fullLevelMap, new Point(3,17)));	    	    
+	  assertEquals(expectedMap, player.cropViewableMap(fullLevelMap, new Point(0,0), new Point(3,17)));
   }
 }

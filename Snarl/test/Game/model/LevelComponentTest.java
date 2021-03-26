@@ -61,8 +61,8 @@ public class LevelComponentTest {
     this.room1 = creator.initializeRoom5();
     this.room2 = creator.initializeRoom6();
     this.room3 = creator.initializeRoom7();
-    this.hall1 = creator.initializeHall4();
-    this.hall2 = creator.initializeHall5();
+    this.hall1 = creator.initializeHall4(creator.initializeRoom8(), creator.initializeRoom9());
+    this.hall2 = creator.initializeHall5(creator.initializeRoom10(), creator.initializeRoom11());
     this.player1 = creator.getPlayer1();
     this.player2 = creator.getPlayer2();
     this.ghost1 = creator.getGhost1();

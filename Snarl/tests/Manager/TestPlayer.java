@@ -27,6 +27,7 @@ public class TestPlayer implements Player {
 	//All moves for the player
 	private List<Point> moves;
 	private JSONArray output;
+	private Point location;
 	
 	//Constructs a TestPlayer with a list of moves and an output
 	//JSONArray to append updates to
@@ -43,7 +44,11 @@ public class TestPlayer implements Player {
 		}
 		Point newMove = this.moves.get(0);
 		this.moves.remove(0);
-		return newMove;
+		if (newMove == null) {
+			return this.location;
+		} else {
+			return newMove;
+		}
 	}
 
 	/**
@@ -59,31 +64,34 @@ public class TestPlayer implements Player {
 	@Override
 	public void update(PlayerModelView gameState) {
 		//Gather all information for the player
-		List<List<EntityType>> playerMap = gameState.getMap();
-		Point absolutePosition = gameState.getPosition();
-		List<Point> visibleDoors = gameState.getVisibleDoors();
-		List<Item> visibleItems = gameState.getVisibleItems();
-		Map<Actor, Point> visibleActors = gameState.getVisibleActors();
-		
-		//Generate the JSON representation of the player's state
-		JSONArray layout = generateLayout(playerMap, absolutePosition, visibleDoors);
-		JSONArray position = Generator.generateJSONPoint(absolutePosition);
-		JSONArray objects = Generator.generateJSONObjects(visibleItems);
-		JSONArray actors = Generator.generateJSONActorList(visibleActors);
-		
-		//Place in the JSONObject format
-		JSONObject playerUpdate = new JSONObject();
-		playerUpdate.put("type", "player-update");
-		playerUpdate.put("layout", layout);
-		playerUpdate.put("position", position);
-		playerUpdate.put("objects", objects);
-		playerUpdate.put("actors", actors);
-		
-		JSONArray traceEntry = new JSONArray();
-		traceEntry.put(gameState.getName());
-		traceEntry.put(playerUpdate);
-		
-		this.output.put(traceEntry);
+		if (gameState.isPlayerAlive()) {
+			List<List<EntityType>> playerMap = gameState.getMap();
+			Point absolutePosition = gameState.getPosition();
+			this.location = absolutePosition;
+			List<Point> visibleDoors = gameState.getVisibleDoors();
+			List<Item> visibleItems = gameState.getVisibleItems();
+			Map<Actor, Point> visibleActors = gameState.getVisibleActors();
+
+			//Generate the JSON representation of the player's state
+			JSONArray layout = generateLayout(playerMap, absolutePosition, visibleDoors);
+			JSONArray position = Generator.generateJSONPoint(absolutePosition);
+			JSONArray objects = Generator.generateJSONObjects(visibleItems);
+			JSONArray actors = Generator.generateJSONActorList(visibleActors);
+
+			//Place in the JSONObject format
+			JSONObject playerUpdate = new JSONObject();
+			playerUpdate.put("type", "player-update");
+			playerUpdate.put("layout", layout);
+			playerUpdate.put("position", position);
+			playerUpdate.put("objects", objects);
+			playerUpdate.put("actors", actors);
+
+			JSONArray traceEntry = new JSONArray();
+			traceEntry.put(gameState.getName());
+			traceEntry.put(playerUpdate);
+
+			this.output.put(traceEntry);
+		}
 	}
 
 	/**

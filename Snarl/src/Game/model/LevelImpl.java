@@ -1,5 +1,6 @@
 package Game.model;
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -10,6 +11,7 @@ import java.util.Map;
 
 import Game.modelView.EntityType;
 import java.util.Set;
+import sun.awt.image.ImageWatched.Link;
 
 /**
  * Represents a Level within a game of Snarl
@@ -444,7 +446,8 @@ public class LevelImpl implements Level {
 	public InteractionResult playerAction(Player player, Point destination) {
 		LevelComponent sourceComponent = this.playerLocations.get(player);
 		LevelComponent destinationComponent = findDestinationComponent(sourceComponent, destination);
-		InteractionResult interaction = getInteractionResult(player, destinationComponent, destination);
+		Point playerSource = sourceComponent.findActorLocation(player);
+		InteractionResult interaction = getInteractionResult(player, destinationComponent, destination, playerSource);
 
 		if (interaction.equals(InteractionResult.EXIT) && !exitUnlocked) {
 			interaction = InteractionResult.NONE;
@@ -465,18 +468,20 @@ public class LevelImpl implements Level {
 		//If the player is not removed from the level, place them at the destination
 		if (!removePlayer) {
 			destinationComponent.placeActor(player, destination);
-			this.playerLocations.replace(player, destinationComponent);	
+			this.playerLocations.replace(player, destinationComponent);
 		} else {
 			this.playerLocations.remove(player);
 		}
 
-		if (interaction.equals(InteractionResult.EXIT)) {
-			this.levelExited = true;
+		if (interaction.equals(InteractionResult.FOUND_KEY)) {
+			Tile destinationTile = destinationComponent.getDestinationTile(destination);
+			this.items.remove(destinationTile.getItem());
+			destinationTile.removeItem();
+			this.exitUnlocked = true;
 		}
 
-		if (interaction.equals(InteractionResult.FOUND_KEY)) {
-			//TODO remove key from items list
-			this.exitUnlocked = true;
+		if (interaction.equals(InteractionResult.EXIT)) {
+			this.levelExited = true;
 		}
 
 		return interaction;
@@ -486,7 +491,8 @@ public class LevelImpl implements Level {
 	public InteractionResult adversaryAction(Adversary adversary, Point destination) {
 		LevelComponent sourceComponent = this.adversaryLocations.get(adversary);
 		LevelComponent destinationComponent = findDestinationComponent(sourceComponent, destination);
-		InteractionResult interaction = getInteractionResult(adversary, destinationComponent, destination);
+		Point adversarySource = sourceComponent.findActorLocation(adversary);
+		InteractionResult interaction = getInteractionResult(adversary, destinationComponent, destination, adversarySource);
 			
 		//If adversary is moving to a new room, remove them from the source room
 		//Otherwise, remove them from their current position
@@ -532,10 +538,18 @@ public class LevelImpl implements Level {
 	 * @param destination - the point that the actor is moving to
 	 * @return the resulting interaction at the destination 
 	 */
-	private InteractionResult getInteractionResult(Actor actor, LevelComponent destinationComponent, Point destination) {
+	private InteractionResult getInteractionResult(Actor actor, LevelComponent destinationComponent, Point destination, Point source) {
 		//Determine the EntityType at the destination and the resulting interaction
 		Tile destinationTile = destinationComponent.getDestinationTile(destination);
 		EntityType destinationType = destinationComponent.getEntityType(destinationTile);
+		Boolean noMove = source.equals(destination);
+		Boolean playerSelfMove = noMove && destinationType.equals(EntityType.PLAYER) && actor instanceof Player;
+		Boolean adversarySelfMove = noMove
+				&& actor instanceof Adversary
+				&& (destinationType.equals(EntityType.ZOMBIE) || destinationType.equals(EntityType.GHOST));
+		if (playerSelfMove || adversarySelfMove) {
+			return InteractionResult.NONE;
+		}
 		return actor.getInteractionResult(destinationType);	
 	}
 	
@@ -570,7 +584,7 @@ public class LevelImpl implements Level {
 		
 		//Find the point that the actor is located at
 		Point source = sourceComponent.findActorLocation(actor);
-		
+
 		//Check that the actor is moving a valid distance
 		if (!actor.checkValidMoveDistance(source, destination)) {
 			return false;
@@ -697,8 +711,9 @@ public class LevelImpl implements Level {
 		Point playerLocation = sourceComponent.findActorLocation(player);
 		
 		List<List<EntityType>> fullLevel = getMap();
+		Point topLeft = getTopLeft();
 		//Crop map based on player's location
-		return player.cropViewableMap(fullLevel, playerLocation);
+		return player.cropViewableMap(fullLevel, topLeft, playerLocation);
 	}
 
 	@Override
@@ -767,10 +782,14 @@ public class LevelImpl implements Level {
 		
 		//Get the cropped map of the level that the player can see
 		List<List<Tile>> tileMap = getTileMap();
-		List<List<Tile>> croppedTileMap = player.cropTileMap(tileMap, playerLocation);
+		Point topLeft = getTopLeft();
+		List<List<Tile>> croppedTileMap = player.cropTileMap(tileMap, topLeft, playerLocation);
 		
 		for (List<Tile> tileRow : croppedTileMap) {
 			for (Tile tile : tileRow) {
+				if (tile instanceof Wall) {
+					continue;
+				}
 				Item item = tile.getItem();
 				//If an item exists on the tile, add it to the list
 				if (item != null) {
@@ -783,18 +802,22 @@ public class LevelImpl implements Level {
 
 	@Override
 	public Map<Actor, Point> getVisibleActors(Player player) {
-		Map<Actor, Point> visibleActors = new HashMap<>();
+		Map<Actor, Point> visibleActors = new LinkedHashMap<>();
 		Point playerLocation = getActorPosition(player);
 		
 		//Get the cropped map of the level that the player can see
 		List<List<Tile>> tileMap = getTileMap();
-		List<List<Tile>> croppedTileMap = player.cropTileMap(tileMap, playerLocation);
+		Point topLeft = getTopLeft();
+		List<List<Tile>> croppedTileMap = player.cropTileMap(tileMap, topLeft, playerLocation);
 		
 		for (List<Tile> tileRow : croppedTileMap) {
 			for (Tile tile : tileRow) {
+				if (tile instanceof Wall) {
+					continue;
+				}
 				Actor actor = tile.getActor();
 				//If an actor exists on the tile, add it to the list
-				if (actor != null) {
+				if (actor != null && !player.equals(actor)) {
 					Point actorPosition = getActorPosition(actor);
 					visibleActors.put(actor, actorPosition);
 				}
@@ -805,7 +828,7 @@ public class LevelImpl implements Level {
 
 	@Override
 	public Map<Actor, Point> getActivePlayers() {
-		Map<Actor, Point> activePlayers = new HashMap<>();
+		Map<Actor, Point> activePlayers = new LinkedHashMap<>();
 		for (Map.Entry<Player, LevelComponent> locationEntry : this.playerLocations.entrySet()) {
 			Player player = locationEntry.getKey();
 			Point playerPoint = locationEntry.getValue().findActorLocation(player);
@@ -816,7 +839,7 @@ public class LevelImpl implements Level {
 
 	@Override
 	public Map<Actor, Point> getActiveAdversaries() {
-		Map<Actor, Point> activeAdversaries = new HashMap<>();
+		Map<Actor, Point> activeAdversaries = new LinkedHashMap<>();
 		for (Map.Entry<Adversary, LevelComponent> locationEntry : this.adversaryLocations.entrySet()) {
 			Adversary adversary = locationEntry.getKey();
 			Point adversaryPoint = locationEntry.getValue().findActorLocation(adversary);

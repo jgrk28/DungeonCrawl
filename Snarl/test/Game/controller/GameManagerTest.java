@@ -99,7 +99,6 @@ public class GameManagerTest {
 		this.gameManager.startGame(this.levels);
 
 		Level firstLevel = this.gameManager.dungeon.getCurrentLevel();
-		Map<Actor, Point> players = firstLevel.getActivePlayers();
 		Map<Actor, Point> expectedPlayers = new HashMap<>();
 		expectedPlayers.put(new Player("Jacob"), new Point(4, 17));
 
@@ -109,6 +108,7 @@ public class GameManagerTest {
 		} catch (IllegalStateException e) {
 			//Do nothing this will happen when the player runs out of moves
 		}
+		Map<Actor, Point> players = firstLevel.getActivePlayers();
 
 		assertEquals(1, this.gameManager.dungeon.getCurrentLevelIndex());
 		assertEquals(this.levels.get(0), this.gameManager.dungeon.getCurrentLevel());
@@ -122,8 +122,6 @@ public class GameManagerTest {
 		this.gameManager.registerPlayer("Jacob", player1);
 		this.gameManager.startGame(this.levels);
 
-		Level firstLevel = this.gameManager.dungeon.getCurrentLevel();
-		Map<Actor, Point> players = firstLevel.getActivePlayers();
 		Map<Actor, Point> expectedPlayers = new HashMap<>();
 		expectedPlayers.put(new Player("Jacob"), new Point(1, 1));
 
@@ -132,10 +130,11 @@ public class GameManagerTest {
 		} catch (IllegalStateException e) {
 			//Do nothing this will happen when the player runs out of moves
 		}
+		Level secondLevel = this.gameManager.dungeon.getCurrentLevel();
+		Map<Actor, Point> players = secondLevel.getActivePlayers();
 
 		assertEquals(2, this.gameManager.dungeon.getCurrentLevelIndex());
-		assertEquals(this.levels.get(0), firstLevel);
-		assertEquals(this.levels.get(1), this.gameManager.dungeon.getCurrentLevel());
+		assertEquals(this.levels.get(1), secondLevel);
 		assertEquals(expectedPlayers, players);
 	}
 
@@ -148,7 +147,7 @@ public class GameManagerTest {
 		this.gameManager.registerPlayer("Juliette", player2);
 		this.gameManager.startGame(this.levels);
 
-		String expectedOut = new String(Files.readAllBytes(Paths.get("notify-simple.json")));
+		String expectedOut = new String(Files.readAllBytes(Paths.get("test/Game/Controller/notify-simple.json")));
 		JSONTokener expectedTokens = new JSONTokener(expectedOut);
 		Object expectedValue = expectedTokens.nextValue();
 		JSONArray expectedArray = (JSONArray) expectedValue;

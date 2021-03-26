@@ -1,6 +1,6 @@
 package JSONUtils;
 
-import Common.Player;
+import Game.model.Player;
 import Game.model.Actor;
 import Game.model.Exit;
 import Game.model.Ghost;
