@@ -166,7 +166,7 @@ public class Generator {
           JSONRow.put(0);
     
         } 
-        //If the entity is a door, place a 2
+        //If the location is a door, place a 2
         else if (relativeDoors.contains(new Point(j, i))) {
           JSONRow.put(2);
         }
