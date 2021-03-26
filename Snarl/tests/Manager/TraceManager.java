@@ -16,7 +16,8 @@ import Game.modelView.PlayerModelView;
 import Utils.ParseUtils;
 
 /**
- * TODO Add comments
+ * Represents the TraceManager. Extends the GameManager
+ * and serves the purpose of testing game play.
  */
 public class TraceManager extends GameManager {
 	
@@ -28,25 +29,27 @@ public class TraceManager extends GameManager {
 	}
 	
 	/**
-	 * TODO Add comments
-	 * @param level
-	 * @param output
+	 * Plays the level and updates the TestManager with the results of player 
+	 * moves
+	 * @param level - the level currently being player
+	 * @param maxNumTurns - the maximum number of turns for the level
 	 */
 	public void playLevelTrace(Level level, int maxNumTurns) {
 		//While the level has not been won or lost, execute turns for each player
 		//and adversary
 		int turnCount = 0;
 		while (this.ruleChecker.isLevelOver().equals(GameState.ACTIVE)) {
+		  //End the loop if the max number of turns has been reached
 		  if (turnCount == maxNumTurns) {
 			  throw new IllegalStateException("Reached the max number of turns");
 		  }
 	      for (Map.Entry<Player, Common.Player> currPlayer : playerClients.entrySet()) {
+	    	String result;
 	    	
 	        PlayerModelView playerModelView = new PlayerModelView(currPlayer.getKey(), this.dungeon);
 	    	List<Point> validMoves = playerModelView.getValidMoves();
 	    	Point playerSource = playerModelView.getPosition();
 	        Point playerDestination = currPlayer.getValue().takeTurn(validMoves);
-	        String result;
 	        
 	        if (this.ruleChecker.checkValidMove(currPlayer.getKey(), playerDestination)) {
 	          //Execute the move and corresponding interaction
@@ -77,9 +80,9 @@ public class TraceManager extends GameManager {
 	}
 	
 	/**
-	 * TODO add comment
-	 * @param interactionResult
-	 * @return
+	 * Converts an InteractionResult to the corresponding string value for the JSON output
+	 * @param interactionResult - the result of a move
+	 * @return a string representing the result of a move
 	 */
 	private String interactionResultToString(InteractionResult interactionResult) {
 		switch (interactionResult) {
@@ -96,9 +99,17 @@ public class TraceManager extends GameManager {
 		}
 	}
 	
+	/**
+	 * Generates the JSON for a player's move based on their source and destination
+	 * @param playerDestination - the location the player is moving to
+	 * @param playerSource - the location the player is moving from
+	 * @return a JSONObject representing the move of the player
+	 */
 	private JSONObject generateActorMove(Point playerDestination, Point playerSource) {
 		JSONObject actorMove = new JSONObject();
 		actorMove.put("type", "move");
+		
+		//If the player has chosen to skip their turn, the "to" is null
 		if (playerSource.equals(playerDestination)) {
 			actorMove.put("to", JSONObject.NULL);
 		} else {
