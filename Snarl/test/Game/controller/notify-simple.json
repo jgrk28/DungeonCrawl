@@ -1,0 +1,34 @@
+[
+  [
+    "Jacob",
+    {
+      "type": "player-update",
+      "position": [ 1, 1 ],
+      "layout": [
+        [ 0, 0, 0, 0, 0 ],
+        [ 0, 0, 0, 0, 0 ],
+        [ 0, 0, 1, 1, 0 ],
+        [ 0, 0, 1, 1, 2 ],
+        [ 0, 0, 0, 0, 0 ]
+      ],
+      "objects": [],
+      "actors": [{ "type": "player", "name": "Juliette", "position": [ 1, 2 ] }]
+    }
+  ],
+  [
+    "Juliette",
+    {
+      "type": "player-update",
+      "position": [ 1, 2 ],
+      "layout": [
+        [ 0, 0, 0, 0, 0 ],
+        [ 0, 0, 0, 0, 0 ],
+        [ 0, 1, 1, 0, 0 ],
+        [ 0, 1, 1, 2, 1 ],
+        [ 0, 0, 0, 0, 0 ]
+      ],
+      "objects": [],
+      "actors": [{ "type": "player", "name": "Jacob", "position": [ 1, 1 ] }]
+    }
+  ]
+]

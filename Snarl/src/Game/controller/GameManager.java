@@ -109,6 +109,9 @@ public class GameManager {
     List<Adversary> adversaries = new ArrayList<>(this.adversaryClients.keySet());
     this.dungeon = new Dungeon(players, adversaries, 1, levels);
     this.ruleChecker = this.dungeon;
+
+    this.dungeon.startCurrentLevel();
+    notifyAllObservers();
   }
 
   /**
@@ -117,10 +120,9 @@ public class GameManager {
    * end the game
    */
   public void playGame() {
-    Level currLevel = this.dungeon.startCurrentLevel();
+    Level currLevel = this.dungeon.getCurrentLevel();
     playLevel(currLevel);
-    
-    //If the first level was won, play all remaining levels in the game
+    //While the game is still active, play all remaining levels in the game
     while (this.ruleChecker.isGameOver().equals(GameState.ACTIVE)) {
       currLevel = this.dungeon.getNextLevel();
       this.dungeon.startCurrentLevel();
@@ -140,7 +142,7 @@ public class GameManager {
     while (this.ruleChecker.isLevelOver().equals(GameState.ACTIVE)) {
       for (Map.Entry<Player, Common.Player> currPlayer : playerClients.entrySet()) {
         PlayerModelView playerModelView = new PlayerModelView(currPlayer.getKey(), this.dungeon);
-    	List<Point> validMoves = playerModelView.getValidMoves();
+    	  List<Point> validMoves = playerModelView.getValidMoves();
         Point playerDestination = currPlayer.getValue().takeTurn(validMoves);
 
         if (this.ruleChecker.checkValidMove(currPlayer.getKey(), playerDestination)) {

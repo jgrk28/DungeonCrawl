@@ -596,4 +596,55 @@ public class ModelCreator {
 
     return new Dungeon(players, adversaries, startingLevel, levels);
   }
+
+  public static List<Point> initWinningMoves() {
+    List<Point> winningMoves = new ArrayList<>();
+
+    //Get key then exit
+    winningMoves.add(new Point(2, 2));
+    winningMoves.add(new Point(4, 2));
+    winningMoves.add(new Point(6, 2));
+    winningMoves.add(new Point(6, 4));
+    winningMoves.add(new Point(6, 6));
+    winningMoves.add(new Point(6, 8));
+    winningMoves.add(new Point(6, 10));
+    winningMoves.add(new Point(5, 11));
+    winningMoves.add(new Point(3, 11));
+    winningMoves.add(new Point(2, 12));
+    winningMoves.add(new Point(2, 14));
+    winningMoves.add(new Point(3, 15));
+    winningMoves.add(new Point(4, 16));
+    winningMoves.add(new Point(4, 17));
+    winningMoves.add(new Point(4, 16));
+    winningMoves.add(new Point(3, 15));
+    winningMoves.add(new Point(2, 14));
+    winningMoves.add(new Point(2, 12));
+    winningMoves.add(new Point(3, 11));
+    winningMoves.add(new Point(5, 11));
+    winningMoves.add(new Point(7, 11));
+
+    return winningMoves;
+  }
+
+  public static List<Point> initGetKeyMoves() {
+    List<Point> getKeyMoves = new ArrayList<>();
+
+    //Get key then exit
+    getKeyMoves.add(new Point(2, 2));
+    getKeyMoves.add(new Point(4, 2));
+    getKeyMoves.add(new Point(6, 2));
+    getKeyMoves.add(new Point(6, 4));
+    getKeyMoves.add(new Point(6, 6));
+    getKeyMoves.add(new Point(6, 8));
+    getKeyMoves.add(new Point(6, 10));
+    getKeyMoves.add(new Point(5, 11));
+    getKeyMoves.add(new Point(3, 11));
+    getKeyMoves.add(new Point(2, 12));
+    getKeyMoves.add(new Point(2, 14));
+    getKeyMoves.add(new Point(3, 15));
+    getKeyMoves.add(new Point(4, 16));
+    getKeyMoves.add(new Point(4, 17));
+
+    return getKeyMoves;
+  }
 }
