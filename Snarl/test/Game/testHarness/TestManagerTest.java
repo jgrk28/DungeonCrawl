@@ -1,10 +1,8 @@
 package Game.testHarness;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 import Manager.TestManager;
-import State.TestState;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
@@ -75,6 +73,8 @@ public class TestManagerTest {
   //Tests game play where the key is found and a player exits
   @Test
   public void testPlayerExiting() throws IOException {
+	//TODO If the player stays in the same place when the exit is unlocked 
+	//between turns, they do not seem to exit
     testJSONFile("tests/Manager/4-in.json", "tests/Manager/4-out.json");
   }
 
@@ -87,6 +87,8 @@ public class TestManagerTest {
   //Tests when all moves from players are invalid
   @Test
   public void testAllInvalidMoves() throws IOException {
+	//TODO I believe we should take another move from a player when their move was invalid
+	//Right now we are still moving to the next player's turn
     testJSONFile("tests/Manager/6-in.json", "tests/Manager/6-out.json");
   }
 
