@@ -1,9 +1,7 @@
 package Game.model;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import java.awt.Point;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -11,7 +9,6 @@ import java.util.Map;
 
 import Game.modelView.EntityType;
 import java.util.Set;
-import sun.awt.image.ImageWatched.Link;
 
 /**
  * Represents a Level within a game of Snarl
