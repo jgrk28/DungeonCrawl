@@ -24,6 +24,13 @@ public interface Actor {
 	InteractionResult getInteractionResult(EntityType entityType);
 
 	/**
+	 * Returns the InteractionResult that corresponds to this actor moving onto
+	 * the given Tile
+	 * @return The type of InteractionResult generated
+	 */
+	InteractionResult getTileInteractionResult(Tile destTile);
+
+	/**
 	 * Checks if the distance of the given move is valid for this actor
 	 * @return true if the move distance is acceptable
 	 */

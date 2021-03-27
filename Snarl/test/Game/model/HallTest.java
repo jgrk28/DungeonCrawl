@@ -12,13 +12,16 @@ public class HallTest {
   Hall hall1;
   Hall hall2;
   Hall hall3;
+  Room room1;
+  Room room2;
+  Room room4;
 
   @Before
   public void initEntities() {
     this.creator = new ModelCreator();
-    Room room1 = this.creator.initializeRoom1();
-    Room room2 = this.creator.initializeRoom2();
-    Room room4 = this.creator.initializeRoom4();
+    this.room1 = this.creator.initializeRoom1();
+    this.room2 = this.creator.initializeRoom2();
+    this.room4 = this.creator.initializeRoom4();
     this.hall1 = creator.initializeHall1(room1, room2);
     this.hall2 = creator.initializeHall1Snake(room1, room2);
     this.hall3 = creator.initializeHall3(room2, room4);
@@ -55,26 +58,16 @@ public class HallTest {
   //and the returned room should be pointing to the same thing that we passed into the constructor.
   @Test
   public void testGetStartRoom() {
-    Room room1 = this.creator.initializeRoom1();
-    room1.connectHall(new Point(3,2), this.hall1);
-    Room room2 = this.creator.initializeRoom2();
-    room2.connectHall(new Point(8,11), this.hall3);
-
-    assertEquals(room1, this.hall1.getStartRoom());
-    assertEquals(room2, this.hall3.getStartRoom());
+    assertEquals(this.room1, this.hall1.getStartRoom());
+    assertEquals(this.room2, this.hall3.getStartRoom());
   }
 
   //Tests that the ending rooms are initialized properly. This is done in the constructor
   //and the returned room should be pointing to the same thing that we passed into the constructor.
   @Test
   public void testGetEndRoom() {
-    Room room2 = this.creator.initializeRoom2();
-    room2.connectHall(new Point(6,7), hall1);
-    Room room4 = this.creator.initializeRoom4();
-    room4.connectHall(new Point(13,11), this.hall3);
-
-    assertEquals(room2, this.hall1.getEndRoom());
-    assertEquals(room4, this.hall3.getEndRoom());
+    assertEquals(this.room2, this.hall1.getEndRoom());
+    assertEquals(this.room4, this.hall3.getEndRoom());
   }
 
 }

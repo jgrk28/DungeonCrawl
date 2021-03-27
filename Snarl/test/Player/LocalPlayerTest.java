@@ -45,6 +45,36 @@ public class LocalPlayerTest {
   }
 
   @Test
+  public void testTakeTurnEmpty() {
+    ByteArrayInputStream in = new ByteArrayInputStream("\n\n".getBytes());
+    System.setIn(in);
+
+    ModelCreator creator = new ModelCreator();
+    Dungeon dungeon = creator.initializeDungeonStarted();
+    DungeonModelView dungeonModelView = dungeon;
+    PlayerModelView playerModelView = new PlayerModelView(creator.getPlayer1(), dungeonModelView);
+
+    LocalPlayer player = new LocalPlayer();
+    player.update(playerModelView);
+
+    ByteArrayOutputStream output = new ByteArrayOutputStream();
+    PrintStream print = new PrintStream(output);
+    System.setOut(print);
+
+    List<Point> validMoves = new ArrayList<>(
+        Arrays.asList(new Point(2, 2), new Point(3, 2), new Point(4, 2), new Point(5, 2), new Point(6, 2)));
+    Point returnedPoint = player.takeTurn(validMoves);
+
+    String expectedOut = ""
+        + "Please enter a valid move from the below list:\n"
+        + "[2,2], [3,2], [4,2], [5,2], [6,2]\n"
+        + "Enter x position\n";
+
+    assertEquals(expectedOut, output.toString());
+    assertEquals(new Point(4, 2), returnedPoint);
+  }
+
+  @Test
   public void testTakeTurnBadMove() {
     ByteArrayInputStream in = new ByteArrayInputStream("6 12".getBytes());
     System.setIn(in);

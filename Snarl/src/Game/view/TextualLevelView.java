@@ -44,7 +44,7 @@ public class TextualLevelView extends AbstractTextualView {
 	@Override
 	public void draw() {
 		List<List<EntityType>> level = modelView.getMap();
-		this.output.println(drawLevelMap(level));
+		this.output.print(drawLevelMap(level));
 	}
 
 }

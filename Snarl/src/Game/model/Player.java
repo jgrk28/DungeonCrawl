@@ -56,6 +56,42 @@ public class Player extends AbstractActor {
 	}
 
 	@Override
+	public InteractionResult getTileInteractionResult(Tile destTile) {
+		EntityType destType = destTile.getEntityType();
+		switch (destType) {
+			case HALL_SPACE:
+				//Same as SPACE
+			case SPACE:
+				return InteractionResult.NONE;
+			case KEY:
+				return InteractionResult.FOUND_KEY;
+			case EXIT:
+				return InteractionResult.EXIT;
+			case GHOST:
+				//Same as ZOMBIE
+			case ZOMBIE:
+				return InteractionResult.REMOVE_PLAYER;
+			case PLAYER:
+				if (this.equals(destTile.getActor())) {
+					Item item = destTile.getItem();
+					if (item == null) {
+						return InteractionResult.NONE;
+					} else if (item instanceof Key) {
+						return InteractionResult.FOUND_KEY;
+					} else if (item instanceof Exit) {
+						return InteractionResult.EXIT;
+					} else {
+						throw new IllegalArgumentException("Unhandled item type");
+					}
+				} else {
+					throw new IllegalArgumentException("Illegal interaction entity for player");
+				}
+			default:
+				throw new IllegalArgumentException("Illegal interaction entity for player");
+		}
+	}
+
+	@Override
 	public Boolean checkValidMoveDistance(Point source, Point destination) {
 		int distance = Math.abs(source.x - destination.x) 
 				+ Math.abs(source.y - destination.y);

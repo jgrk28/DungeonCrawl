@@ -41,7 +41,7 @@
       ]
     },
     "players": [
-      { "type": "player", "name": "Jacob", "position": [ 2, 3 ] }
+      { "type": "player", "name": "Jacob", "position": [ 5, 2 ] }
     ],
     "adversaries": [
       { "type": "ghost", "name": "ghost1", "position": [ 1, 1 ] },
@@ -130,8 +130,8 @@
         "type": "player-update",
         "position": [ 5, 2 ],
         "layout": [
-          [ 0, 0, 0, 0, 1 ],
-          [ 0, 0, 0, 0, 1 ],
+          [ 0, 0, 0, 0, 0 ],
+          [ 0, 0, 0, 0, 0 ],
           [ 0, 1, 1, 2, 1 ],
           [ 0, 1, 1, 0, 0 ],
           [ 0, 0, 0, 0, 0 ]

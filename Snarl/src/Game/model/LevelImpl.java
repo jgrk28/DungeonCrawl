@@ -443,8 +443,8 @@ public class LevelImpl implements Level {
 	public InteractionResult playerAction(Player player, Point destination) {
 		LevelComponent sourceComponent = this.playerLocations.get(player);
 		LevelComponent destinationComponent = findDestinationComponent(sourceComponent, destination);
-		Point playerSource = sourceComponent.findActorLocation(player);
-		InteractionResult interaction = getInteractionResult(player, destinationComponent, destination, playerSource);
+		Tile destTile = destinationComponent.getDestinationTile(destination);
+		InteractionResult interaction = player.getTileInteractionResult(destTile);
 
 		if (interaction.equals(InteractionResult.EXIT) && !exitUnlocked) {
 			interaction = InteractionResult.NONE;
@@ -488,8 +488,9 @@ public class LevelImpl implements Level {
 	public InteractionResult adversaryAction(Adversary adversary, Point destination) {
 		LevelComponent sourceComponent = this.adversaryLocations.get(adversary);
 		LevelComponent destinationComponent = findDestinationComponent(sourceComponent, destination);
-		Point adversarySource = sourceComponent.findActorLocation(adversary);
-		InteractionResult interaction = getInteractionResult(adversary, destinationComponent, destination, adversarySource);
+
+		Tile destTile = destinationComponent.getDestinationTile(destination);
+		InteractionResult interaction = adversary.getTileInteractionResult(destTile);
 			
 		//If adversary is moving to a new room, remove them from the source room
 		//Otherwise, remove them from their current position
@@ -526,28 +527,6 @@ public class LevelImpl implements Level {
 		} else {
 			return findComponent(destination);
 		}
-	}
-	
-	/**
-	 * Determines the InteractionResult of an Actor moving to a destination
-	 * @param actor - the actor that is moving
-	 * @param destinationComponent - the component of the destination point
-	 * @param destination - the point that the actor is moving to
-	 * @return the resulting interaction at the destination 
-	 */
-	private InteractionResult getInteractionResult(Actor actor, LevelComponent destinationComponent, Point destination, Point source) {
-		//Determine the EntityType at the destination and the resulting interaction
-		Tile destinationTile = destinationComponent.getDestinationTile(destination);
-		EntityType destinationType = destinationComponent.getEntityType(destinationTile);
-		Boolean noMove = source.equals(destination);
-		Boolean playerSelfMove = noMove && destinationType.equals(EntityType.PLAYER) && actor instanceof Player;
-		Boolean adversarySelfMove = noMove
-				&& actor instanceof Adversary
-				&& (destinationType.equals(EntityType.ZOMBIE) || destinationType.equals(EntityType.GHOST));
-		if (playerSelfMove || adversarySelfMove) {
-			return InteractionResult.NONE;
-		}
-		return actor.getInteractionResult(destinationType);	
 	}
 	
 	@Override

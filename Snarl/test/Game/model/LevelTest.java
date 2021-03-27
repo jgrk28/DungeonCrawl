@@ -31,6 +31,13 @@ public class LevelTest {
   private Adversary ghost1 = new Ghost();
   private Adversary ghost2 = new Ghost();
   private Adversary zombie = new Zombie();
+  private Room room1;
+  private Room room2;
+  private Room room3;
+  private Room room4;
+  private Hall hall1;
+  private Hall hall2;
+  private Hall hall3;
   
   //Entity types
   private EntityType w = EntityType.WALL;
@@ -57,6 +64,13 @@ public class LevelTest {
     this.zombie = creator.getZombie1();
     this.key = creator.getLevel1Key();
     this.exit = creator.getLevel1Exit();
+    this.room1 = creator.initializeRoom1();
+    this.room2 = creator.initializeRoom2WithEntities();
+    this.room3 = creator.initializeRoom3WithEntities();
+    this.room4 = creator.initializeRoom4();
+    this.hall1 = creator.initializeHall1WithEntities(room1, room2);
+    this.hall2 = creator.initializeHall2(room3, room2);
+    this.hall3 = creator.initializeHall3(room2, room4);
   }
 
   /**
@@ -679,39 +693,32 @@ public class LevelTest {
   
   @Test
   public void testFindComponentKey() {
-    Room room3 = this.creator.initializeRoom3WithEntities();
-	  assertEquals(room3,level.findComponent(new Point(4, 17)));
+	  assertEquals(this.room3, level.findComponent(new Point(4, 17)));
   }
   
   @Test
   public void testFindComponentExit() {
-    Room room2 = this.creator.initializeRoom2WithEntities();
-	  assertEquals(room2,level.findComponent(new Point(7, 11)));
+	  assertEquals(this.room2,level.findComponent(new Point(7, 11)));
   }
   
   @Test
   public void testFindComponentPlayer() {
-    Hall hall1 = this.creator.initializeHall1WithEntities(this.creator.initializeRoom1(), this.creator.initializeRoom2());
-	  assertEquals(hall1,level.findComponent(new Point(4, 2)));
+	  assertEquals(this.hall1,level.findComponent(new Point(4, 2)));
   }
   
   @Test
   public void testFindComponentRoom() {
-    Room room4 = this.creator.initializeRoom4();
-	  assertEquals(room4,level.findComponent(new Point(15, 15)));
+	  assertEquals(this.room4,level.findComponent(new Point(15, 15)));
   }
   
-  //These two tests are hitting stack overflows in hashcode
   @Test
   public void testFindComponentAdversary() {
-    Room room2 = this.creator.initializeRoom2WithEntities();
-	  assertEquals(room2,level.findComponent(new Point(7, 8)));
+	  assertEquals(this.room2,level.findComponent(new Point(7, 8)));
   }
   
   @Test
   public void testFindComponentHall() {
-    Hall hall2 = this.creator.initializeHall2(this.creator.initializeRoom3(), this.creator.initializeRoom2());
-	  assertEquals(hall2,level.findComponent(new Point(4, 11)));
+	  assertEquals(this.hall2,level.findComponent(new Point(4, 11)));
   }
   
   //Tests for checkValidLevelState

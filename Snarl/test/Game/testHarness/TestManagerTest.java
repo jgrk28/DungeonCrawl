@@ -21,8 +21,6 @@ public class TestManagerTest {
     System.setIn(new FileInputStream(inFile));
     String expectedOut = new String(Files.readAllBytes(Paths.get(outFile)));
 
-    PrintStream console = System.out;
-
     ByteArrayOutputStream output = new ByteArrayOutputStream();
     PrintStream print = new PrintStream(output);
     System.setOut(print);
@@ -35,10 +33,7 @@ public class TestManagerTest {
     JSONTokener actualTokens = new JSONTokener(output.toString());
     Object actualValue = actualTokens.nextValue();
 
-    console.println(expectedArray.toString());
-    console.println(actualValue.toString());
-
-    assertEquals(expectedArray.toString(), actualValue.toString());
+    assertEquals(true, expectedArray.similar(actualValue));
   }
 
   //Check that an exception is thrown when invalid input is provided
@@ -73,8 +68,6 @@ public class TestManagerTest {
   //Tests game play where the key is found and a player exits
   @Test
   public void testPlayerExiting() throws IOException {
-	//TODO If the player stays in the same place when the exit is unlocked 
-	//between turns, they do not seem to exit
     testJSONFile("tests/Manager/4-in.json", "tests/Manager/4-out.json");
   }
 
@@ -87,8 +80,6 @@ public class TestManagerTest {
   //Tests when all moves from players are invalid
   @Test
   public void testAllInvalidMoves() throws IOException {
-	//TODO I believe we should take another move from a player when their move was invalid
-	//Right now we are still moving to the next player's turn
     testJSONFile("tests/Manager/6-in.json", "tests/Manager/6-out.json");
   }
 

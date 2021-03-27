@@ -17,22 +17,31 @@ import Game.view.TextualPlayerView;
  */
 public class LocalPlayer implements Player {
 
+	private Point currentLocation;
+
 	@Override
     public Point takeTurn(List<Point> validMoves) {
 		//Prompt the user to take a turn
 		System.out.println("Please enter a valid move from the below list:");
 		System.out.println(pointsToString(validMoves));
-		
-		Scanner in = new Scanner(System.in);
-		System.out.println("Enter x position");
-		int x = in.nextInt();
-		System.out.println("Enter y position");
-		int y = in.nextInt();
-		in.close();
-		
-		//Create a new point based on the input
-		return new Point(x,y);
-    }
+
+		try {
+			Scanner in = new Scanner(System.in);
+			System.out.println("Enter x position");
+			int x = in.nextInt();
+			System.out.println("Enter y position");
+			int y = in.nextInt();
+			in.close();
+			//Create a new point based on the input
+			return new Point(x,y);
+		} catch (java.util.InputMismatchException e) {
+			//If the move was not an integer throw error out
+			throw new java.util.InputMismatchException();
+		} catch (java.util.NoSuchElementException e) {
+			//If the move was empty return the players current position
+			return this.currentLocation;
+		}
+	}
 	
 	/**
 	 * Converts all valid moves for the player from a list of 
@@ -54,13 +63,10 @@ public class LocalPlayer implements Player {
 	}
 
 	//This can receive an update containing the avatar's position and the current
-	//state of their immediate surroundings in string form. This allows us to 
-	//reduce the overhead of sending and parsing large JSONs
+	//state of their immediate surroundings
     @Override
-    public void update(PlayerModelView gameState) {    	
- 	    //ByteArrayOutputStream output = new ByteArrayOutputStream();
- 	    //PrintStream printStream = new PrintStream(output);
- 	    //TextualPlayerView playerView = new TextualPlayerView(gameState, printStream);
+    public void update(PlayerModelView gameState) {
+			this.currentLocation = gameState.getPosition();
 		TextualPlayerView playerView = new TextualPlayerView(gameState, System.out);
  	    playerView.draw();
     }
