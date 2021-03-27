@@ -51,22 +51,43 @@ public class TestManagerTest {
     TestManager.main(new String[]{});
   }
 
-  //Tests TODO
+  //Tests multiple moves for two players. Checks that players can collect
+  //the key and be ejected from the level correctly
   @Test
-  public void testNormalMove() throws IOException {
+  public void testEjectPlayer() throws IOException {
     testJSONFile("tests/Manager/1-in.json", "tests/Manager/1-out.json");
   }
 
-  //Tests TODO
+  //Tests that the correct updates are returned when the moves for each
+  //player are exhausted before the max number of turns
   @Test
-  public void testFindingKey() throws IOException {
+  public void testMovesExhausted() throws IOException {
     testJSONFile("tests/Manager/2-in.json", "tests/Manager/2-out.json");
   }
 
-  //Tests TODO
+  //Tests that zero max turns results in the initial update for each player
+  //being returned
   @Test
-  public void testExitLevel() throws IOException {
+  public void testZeroMaxTurns() throws IOException {
     testJSONFile("tests/Manager/3-in.json", "tests/Manager/3-out.json");
+  }
+  
+  //Tests game play where the key is found and a player exits
+  @Test
+  public void testPlayerExiting() throws IOException {
+    testJSONFile("tests/Manager/4-in.json", "tests/Manager/4-out.json");
+  }
+
+  //Tests when all players are ejected from the game
+  @Test
+  public void testEjectAllPlayers() throws IOException {
+    testJSONFile("tests/Manager/5-in.json", "tests/Manager/5-out.json");
+  }
+
+  //Tests when all moves from players are invalid
+  @Test
+  public void testAllInvalidMoves() throws IOException {
+    testJSONFile("tests/Manager/6-in.json", "tests/Manager/6-out.json");
   }
 
 }
