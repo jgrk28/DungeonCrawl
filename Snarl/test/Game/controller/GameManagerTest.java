@@ -3,6 +3,7 @@ package Game.controller;
 import static org.junit.Assert.assertEquals;
 
 import Game.model.Actor;
+import Game.model.GameState;
 import Game.model.ModelCreator;
 import Manager.TestPlayer;
 import java.awt.Point;
@@ -145,7 +146,9 @@ public class GameManagerTest {
 		Common.Player player2 = new TestPlayer(new ArrayList<>(), updates);
 		this.gameManager.registerPlayer("Jacob", player1);
 		this.gameManager.registerPlayer("Juliette", player2);
-		this.gameManager.startGame(this.levels);
+		this.gameManager.initDungeon(this.levels);
+		this.gameManager.dungeon.startCurrentLevel();
+		this.gameManager.notifyAllObservers();
 
 		String expectedOut = new String(Files.readAllBytes(Paths.get("test/Game/Controller/notify-simple.json")));
 		JSONTokener expectedTokens = new JSONTokener(expectedOut);
@@ -155,7 +158,21 @@ public class GameManagerTest {
 		assertEquals(true, expectedArray.similar(updates));
 	}
 
-	//TODO testPlayLevel
-	//TODO testObserver functions maybe
-	//TODO more complicated notify
+	@Test
+	public void testPlayLevel() {
+		Common.Player player1 = new TestPlayer(ModelCreator.initWinningMoves(), new JSONArray());
+		this.gameManager.registerPlayer("Juliette", player1);
+		this.gameManager.initDungeon(this.levels);
+		Level firstLevel = this.gameManager.dungeon.startCurrentLevel();
+		this.gameManager.playLevel(firstLevel);
+
+		Level currLevel = this.gameManager.dungeon.getCurrentLevel();
+		Map<Actor, Point> players = currLevel.getActivePlayers();
+		Map<Actor, Point> expectedPlayers = new HashMap<>();
+
+		assertEquals(1, this.gameManager.dungeon.getCurrentLevelIndex());
+		assertEquals(this.levels.get(0), currLevel);
+		assertEquals(expectedPlayers, players);
+		assertEquals(GameState.WON, currLevel.isLevelOver());
+	}
 }
