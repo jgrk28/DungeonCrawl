@@ -1,0 +1,52 @@
+[
+  [ "Jacob" ],
+  {
+    "type": "level",
+    "rooms": [
+      {
+        "type": "room",
+        "origin": [ 0, 0 ],
+        "bounds": { "rows": 4, "columns": 4 },
+        "layout": [
+          [ 0, 0, 0, 0 ],
+          [ 0, 1, 1, 0 ],
+          [ 0, 1, 1, 2 ],
+          [ 0, 0, 0, 0 ]
+        ]
+      },
+      {
+        "type": "room",
+        "origin": [ 4, 0 ],
+        "bounds": { "rows": 4, "columns": 4 },
+        "layout": [
+          [ 0, 0, 0, 0 ],
+          [ 0, 1, 1, 2 ],
+          [ 0, 1, 1, 0 ],
+          [ 0, 0, 0, 0 ]
+        ]
+      }
+    ],
+    "hallways": [
+      {
+        "type": "hallway",
+        "from": [ 2, 3 ],
+        "to": [ 5, 3 ],
+        "waypoints": [ [ 2, 5 ], [ 5, 5 ] ]
+      }
+    ],
+    "objects": [
+      { "type": "exit", "position": [ 2, 2 ] },
+      { "type": "key", "position": [ 6, 2 ] }
+    ]
+  },
+  5,
+  [ [ 3, 2 ], [ 1, 1 ], [ 4, 2 ] ],
+  [
+    [
+      { "type": "move", "to": [ 5, 2 ] },
+      { "type": "move", "to": [ 5, 4 ] },
+      { "type": "move", "to": [ 4, 5 ] },
+      { "type": "move", "to": [ 2, 5 ] }
+    ]
+  ]
+]

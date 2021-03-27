@@ -1,0 +1,148 @@
+[
+  {
+    "type": "state",
+    "level": {
+      "type": "level",
+      "rooms": [
+        {
+          "type": "room",
+          "origin": [ 0, 0 ],
+          "bounds": { "rows": 4, "columns": 4 },
+          "layout": [
+            [ 0, 0, 0, 0 ],
+            [ 0, 1, 1, 0 ],
+            [ 0, 1, 1, 2 ],
+            [ 0, 0, 0, 0 ]
+          ]
+        },
+        {
+          "type": "room",
+          "origin": [ 4, 0 ],
+          "bounds": { "rows": 4, "columns": 4 },
+          "layout": [
+            [ 0, 0, 0, 0 ],
+            [ 0, 1, 1, 2 ],
+            [ 0, 1, 1, 0 ],
+            [ 0, 0, 0, 0 ]
+          ]
+        }
+      ],
+      "hallways": [
+        {
+          "type": "hallway",
+          "from": [ 2, 3 ],
+          "to": [ 5, 3 ],
+          "waypoints": [ [ 2, 5 ], [ 5, 5 ] ]
+        }
+      ],
+      "objects": [
+        { "type": "exit", "position": [ 2, 2 ] },
+        { "type": "key", "position": [ 6, 2 ] }
+      ]
+    },
+    "players": [
+      { "type": "player", "name": "Jacob", "position": [ 2, 3 ] }
+    ],
+    "adversaries": [
+      { "type": "ghost", "name": "ghost1", "position": [ 1, 1 ] },
+      { "type": "ghost", "name": "ghost2", "position": [ 5, 1 ] }
+    ],
+    "exit-locked": true
+  },
+  [
+    [
+      "Jacob",
+      {
+        "type": "player-update",
+        "position": [ 2, 3 ],
+        "layout": [
+          [ 0, 0, 0, 0, 0 ],
+          [ 1, 1, 0, 0, 0 ],
+          [ 1, 1, 2, 1, 1 ],
+          [ 0, 0, 0, 0, 1 ],
+          [ 0, 0, 0, 0, 1 ]
+        ],
+        "objects": [
+          { "type": "exit", "position": [ 2, 2 ] }
+        ],
+        "actors": [
+          { "type": "ghost", "name": "ghost1", "position": [ 1, 1 ] }
+        ]
+      }
+    ],
+    [ "Jacob", { "type": "move", "to": [ 2, 5 ] }, "OK" ],
+    [
+      "Jacob",
+      {
+        "type": "player-update",
+        "position": [ 2, 5 ],
+        "layout": [
+          [ 0, 0, 0, 0, 0 ],
+          [ 0, 0, 0, 0, 0 ],
+          [ 2, 1, 1, 0, 0 ],
+          [ 0, 0, 1, 0, 0 ],
+          [ 0, 0, 1, 0, 0 ]
+        ],
+        "objects": [],
+        "actors": []
+      }
+    ],
+    [ "Jacob", { "type": "move", "to": [ 4, 5 ] }, "OK" ],
+    [
+      "Jacob",
+      {
+        "type": "player-update",
+        "position": [ 4, 5 ],
+        "layout": [
+          [ 2, 1, 1, 0, 0 ],
+          [ 0, 0, 1, 0, 0 ],
+          [ 0, 0, 1, 0, 0 ],
+          [ 2, 1, 1, 0, 0 ],
+          [ 0, 0, 0, 0, 0 ]
+        ],
+        "objects": [],
+        "actors": []
+      }
+    ],
+    [ "Jacob", { "type": "move", "to": [ 5, 4 ] }, "OK" ],
+    [
+      "Jacob",
+      {
+        "type": "player-update",
+        "position": [ 5, 4 ],
+        "layout": [
+          [ 0, 0, 0, 1, 0 ],
+          [ 0, 0, 0, 1, 0 ],
+          [ 1, 2, 1, 1, 0 ],
+          [ 1, 0, 0, 0, 0 ],
+          [ 0, 0, 0, 0, 0 ]
+        ],
+        "objects": [
+          { "type": "key", "position": [ 6, 2 ] }
+        ],
+        "actors": []
+      }
+    ],
+    [ "Jacob", { "type": "move", "to": [ 5, 2 ] }, "OK" ],
+    [
+      "Jacob",
+      {
+        "type": "player-update",
+        "position": [ 5, 2 ],
+        "layout": [
+          [ 0, 0, 0, 0, 1 ],
+          [ 0, 0, 0, 0, 1 ],
+          [ 0, 1, 1, 2, 1 ],
+          [ 0, 1, 1, 0, 0 ],
+          [ 0, 0, 0, 0, 0 ]
+        ],
+        "objects": [
+          { "type": "key", "position": [ 6, 2 ] }
+        ],
+        "actors": [
+          { "type": "ghost", "name": "ghost2", "position": [ 5, 1 ] }
+        ]
+      }
+    ]
+  ]
+]

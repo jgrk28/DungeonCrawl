@@ -92,4 +92,15 @@ public class TestManagerTest {
     testJSONFile("tests/Manager/6-in.json", "tests/Manager/6-out.json");
   }
 
+  //Tests interactions after skipped moves
+  @Test
+  public void testSkippedMoves() throws IOException {
+    testJSONFile("tests/Manager/7-in.json", "tests/Manager/7-out.json");
+  }
+
+  //Tests manager with a different level layout
+  @Test
+  public void testDifferentLevel() throws IOException {
+    testJSONFile("tests/Manager/8-in.json", "tests/Manager/8-out.json");
+  }
 }
