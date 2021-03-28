@@ -2,7 +2,10 @@ package Game.model;
 
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 import Game.modelView.EntityType;
 
 /**
@@ -451,6 +454,14 @@ public class Hall implements LevelComponent {
 	 * @return the list of points that represent corners in the Hall
 	 */
 	public List<Point> getWaypoints() { return this.waypoints; }
+
+	@Override
+	public Map<Point, Hall> getDoors() {
+		Map<Point, Hall> doors = new HashMap<>();
+		doors.put(this.startRoomPosition, this);
+		doors.put(this.endRoomPosition, this);
+		return doors;
+	}
 
 	@Override
 	public int hashCode() {

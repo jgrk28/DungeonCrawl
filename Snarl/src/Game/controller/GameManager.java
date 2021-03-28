@@ -10,7 +10,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import Adversary.LocalAdversary;
+import Adversary.LocalZombie;
 import Common.Observer;
 import Game.model.Adversary;
 import Game.model.Dungeon;
@@ -33,7 +33,7 @@ public class GameManager {
   
   //Player and adversary clients in the game
   protected Map<Player, Common.Player> playerClients;
-  private Map<Adversary, LocalAdversary> adversaryClients;
+  private Map<Adversary, LocalZombie> adversaryClients;
   
   //All observers in the game to notify when the game state changes
   private List<Observer> observers;
@@ -71,7 +71,7 @@ public class GameManager {
 		  throw new IllegalArgumentException("A unique name must be provided");
 	  }
       Adversary adversary = new Zombie(name);
-      LocalAdversary adversaryClient = new LocalAdversary();
+      LocalZombie adversaryClient = new LocalZombie();
       this.adversaryClients.put(adversary, adversaryClient);
   }
   

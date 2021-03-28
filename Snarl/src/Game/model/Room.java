@@ -189,11 +189,8 @@ public class Room implements LevelComponent {
 		row.set(relativePos.x, tile);
 	}
 
-	/**
-	 * Getter for the doors and connected hallways of this room. This field will be set at
-	 * construction but this getter will allow easy traversal of the level map.
-	 * @return the map of Points to hallways that represents the doors of this room
-	 */
+
+	@Override
 	public Map<Point, Hall> getDoors() {
 		return this.doors;
 	}

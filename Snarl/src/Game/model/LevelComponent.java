@@ -1,6 +1,8 @@
 package Game.model;
 
 import java.awt.Point;
+import java.util.Map;
+
 import Game.modelView.EntityType;
 
 /**
@@ -74,5 +76,12 @@ public interface LevelComponent {
    * @throws IllegalArgumentException if the actor is not in the LevelComponent
    */
   Point findActorLocation(Actor actor);
+  
+  /**
+   * Getter for the doors and connected hallways of this LevelComponent
+   * @return the map of Points to hallways that represents the doors of this 
+   * LevelComponent
+   */
+  Map<Point, Hall> getDoors();
 
 }
