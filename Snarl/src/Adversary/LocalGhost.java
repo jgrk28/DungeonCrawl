@@ -1,6 +1,11 @@
 package Adversary;
 
+import Game.model.Room;
+import Game.model.Tile;
+import Game.model.Wall;
 import java.awt.Point;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import Game.model.LevelComponent;
@@ -23,10 +28,11 @@ public class LocalGhost extends AbstractLocalAdversary {
 		Point closestPlayer = findClosestPlayerLocation();
 		if (closestPlayer == null) {
 			//If there are no players in the chase radius, the ghost should move towards a wall
-			return moveTowardsBoundary();
+			Point closestDoor = findClosestDoor();
+			return stepTowardsBoundary(closestDoor);
 		} else {
 			//If there are players in the LevelComponent, take 1 step towards the closest player
-			return stepTowardsPlayer(closestPlayer);
+			return stepTowardsPoint(closestPlayer);
 		}
 	}
 		
@@ -54,14 +60,50 @@ public class LocalGhost extends AbstractLocalAdversary {
 		}
 		return closestPlayer;
 	}
+
+	/**
+	 * TODO Add comments
+	 * @return
+	 */
+	private Point findClosestDoor() {
+		LevelComponent component = this.level.findComponent(this.currentLocation);
+
+		Set<Point> doors = component.getDoors().keySet();
+
+		Point closestDoor = null;
+		Integer closestDoorDist = null;
+		for (Point door : doors) {
+			int currDoorDist = Math.abs(door.x - this.currentLocation.x)
+					+ Math.abs(door.y - this.currentLocation.y);
+			if (closestDoor == null) {
+				closestDoor = door;
+				closestDoorDist = currDoorDist;
+			} else if (currDoorDist < closestDoorDist) {
+				closestDoor = door;
+				closestDoorDist = currDoorDist;
+			}
+		}
+		return closestDoor;
+	}
 	
 	/**
 	 * TODO Add comments
 	 * @return
 	 */
-	private Point moveTowardsBoundary() {
-		//TODO implement this
-		//Need to determine if Ghost's can only move into walls in Rooms
+	private Point stepTowardsBoundary(Point closestDoor) {
+		LevelComponent component = this.level.findComponent(this.currentLocation);
+		if (this.currentLocation.equals(closestDoor)) {
+			List<Point> possibleMoves = generatePotentialMoves();
+			for (Point move : possibleMoves) {
+				Tile tile = component.getDestinationTile(move);
+				if (tile instanceof Wall) {
+					return move;
+				}
+			}
+			throw new IllegalStateException("No Wall next to door");
+		} else {
+			return stepTowardsPoint(closestDoor);
+		}
 	}
 	
 	/**

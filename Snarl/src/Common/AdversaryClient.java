@@ -1,5 +1,6 @@
 package Common;
 
+import Game.model.Actor;
 import java.awt.Point;
 import java.util.Map;
 
@@ -17,8 +18,8 @@ public interface AdversaryClient {
 	
 	//Update the adversary on all actor locations  
 	//This will be called at the beginning of the adversary’s turn 
-	void updateActorLocations(Map<Player, Point> playerLocations, 
-			Map<Adversary, Point> adversaryLocations,
+	void updateActorLocations(Map<Actor, Point> playerLocations,
+			Map<Actor, Point> adversaryLocations,
 			Adversary adversaryAvatar); 
 	
 	//Prompts the adversary for a move and sends it to the GameManager  

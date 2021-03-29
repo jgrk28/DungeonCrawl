@@ -26,7 +26,7 @@ public class LocalZombie extends AbstractLocalAdversary {
 			return arbitraryMove();
 		} else {
 			//If there are players in the LevelComponent, take 1 step towards the closest player
-			return stepTowardsPlayer(closestPlayer);
+			return stepTowardsPoint(closestPlayer);
 		}
 	}
 	

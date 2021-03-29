@@ -1,6 +1,8 @@
 package Adversary;
 
+import Game.model.Actor;
 import java.awt.Point;
+import java.nio.channels.AcceptPendingException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -13,8 +15,8 @@ import Game.model.Player;
 public abstract class AbstractLocalAdversary implements AdversaryClient {
 	
 	protected Level level;
-	protected Map<Player, Point> playerLocations;
-	protected Map<Adversary, Point> adversaryLocations;
+	protected Map<Actor, Point> playerLocations;
+	protected Map<Actor, Point> adversaryLocations;
 	protected Point currentLocation;
 	protected Adversary adversaryAvatar;
 	
@@ -24,8 +26,8 @@ public abstract class AbstractLocalAdversary implements AdversaryClient {
 	}
 
 	@Override
-	public void updateActorLocations(Map<Player, Point> playerLocations, 
-			Map<Adversary, Point> adversaryLocations,
+	public void updateActorLocations(Map<Actor, Point> playerLocations,
+			Map<Actor, Point> adversaryLocations,
 			Adversary adversaryAvatar) {
 		this.playerLocations = playerLocations;
 		this.adversaryLocations = adversaryLocations;
@@ -51,10 +53,10 @@ public abstract class AbstractLocalAdversary implements AdversaryClient {
 	
 	/**
 	 * TODO Add comments
-	 * @param closestPlayer
+	 * @param destPoint
 	 * @return
 	 */
-	protected Point stepTowardsPlayer(Point closestPlayer) {
+	protected Point stepTowardsPoint(Point destPoint) {
 		List<Point> potentialMoves = generatePotentialMoves();
 		List<Point> validMoves = new ArrayList<>();
 		
@@ -71,11 +73,11 @@ public abstract class AbstractLocalAdversary implements AdversaryClient {
 		
 		//Find the best move
 		Point closestMove = validMoves.get(0);
-		int closestMoveDist = Math.abs(closestMove.x - closestPlayer.x) 
-				+ Math.abs(closestMove.y - closestPlayer.y);
+		int closestMoveDist = Math.abs(closestMove.x - destPoint.x)
+				+ Math.abs(closestMove.y - destPoint.y);
 		for (Point move : validMoves) {
-			int nextMoveDist = Math.abs(move.x - closestPlayer.x) 
-					+ Math.abs(move.y - closestPlayer.y);
+			int nextMoveDist = Math.abs(move.x - destPoint.x)
+					+ Math.abs(move.y - destPoint.y);
 			if (nextMoveDist < closestMoveDist) {
 				closestMove = move;
 				closestMoveDist = nextMoveDist;

@@ -1,10 +1,13 @@
 package Game.controller;
 
+import Common.AdversaryClient;
+import Game.model.Actor;
 import Game.modelView.DungeonModelView;
 import Game.view.TextualDungeonView;
 import java.awt.Point;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+import java.lang.reflect.AccessibleObject;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -33,7 +36,7 @@ public class GameManager {
   
   //Player and adversary clients in the game
   protected Map<Player, Common.Player> playerClients;
-  private Map<Adversary, LocalZombie> adversaryClients;
+  private Map<Adversary, AdversaryClient> adversaryClients;
   
   //All observers in the game to notify when the game state changes
   private List<Observer> observers;
@@ -110,6 +113,7 @@ public class GameManager {
     this.dungeon = new Dungeon(players, adversaries, 1, levels);
     this.ruleChecker = this.dungeon;
 
+    sendAdversariesLevel(this.dungeon.getCurrentLevel());
     this.dungeon.startCurrentLevel();
     notifyAllObservers();
   }
@@ -141,6 +145,7 @@ public class GameManager {
     //While the game is still active, play all remaining levels in the game
     while (this.ruleChecker.isGameOver().equals(GameState.ACTIVE)) {
       currLevel = this.dungeon.getNextLevel();
+      sendAdversariesLevel(currLevel);
       this.dungeon.startCurrentLevel();
       playLevel(currLevel);
     }
@@ -171,10 +176,29 @@ public class GameManager {
           //If user entered invalid move notify them and skip their turn
           currPlayer.getValue().displayMessage("Invalid move, turn skipped");
         }
+      }
+      //Adversary turns
+      for (Map.Entry<Adversary, AdversaryClient> currAdversary : adversaryClients.entrySet()) {
+        Map<Actor, Point> players = level.getActivePlayers();
+        Map<Actor, Point> adversaries = level.getActiveAdversaries();
+        AdversaryClient client = currAdversary.getValue();
+        Adversary adversary = currAdversary.getKey();
+        client.updateActorLocations(players, adversaries, adversary);
+
+        Point adversaryDestination = client.takeTurn();
+
+        if (this.ruleChecker.checkValidMove(adversary, adversaryDestination)) {
+          //Execute the move and corresponding interaction
+          level.adversaryAction(adversary, adversaryDestination);
+
+          //Notify all observers of the current game state for each turn
+          notifyAllObservers();
+        } else {
+          //If user entered invalid move notify them and skip their turn
+          //TODO adversary skipped
+        }
 
       }
-
-      //Add adversary turns once we implement the AdversaryClient or at least a stub
     }
     //Display to observers when the level ends to provide result
     notifyAllObservers();
@@ -214,6 +238,16 @@ public class GameManager {
 	  for (Map.Entry<Player, Common.Player> currPlayer : playerClients.entrySet()) {
 		  PlayerModelView playerModelView = new PlayerModelView(currPlayer.getKey(), this.dungeon);
 		  currPlayer.getValue().update(playerModelView);
+    }
+  }
+
+  /**
+   * TODO comment
+   * @param level
+   */
+  private void sendAdversariesLevel(Level level) {
+    for (AdversaryClient client : adversaryClients.values()) {
+      client.getLevelStart(level);
     }
   }
 

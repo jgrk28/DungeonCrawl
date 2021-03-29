@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import Game.modelView.EntityType;
+import java.util.Random;
 import java.util.Set;
 
 /**
@@ -506,11 +507,32 @@ public class LevelImpl implements Level {
 			this.playerLocations.remove(destinationTile.getActor());
 		}	
 		
-		//Place the adversary and update their location
-		destinationComponent.placeActor(adversary, destination);
-		this.adversaryLocations.replace(adversary, destinationComponent);
+		//Place the adversary and update their location, if they are teleporting place in random room
+		if (interaction.equals(InteractionResult.TELEPORT)) {
+			Room randomRoom = findRandomRoom(sourceComponent);
+			placeActorValidly(adversary, randomRoom);
+			this.adversaryLocations.replace(adversary, randomRoom);
+		} else {
+			destinationComponent.placeActor(adversary, destination);
+			this.adversaryLocations.replace(adversary, destinationComponent);
+		}
 
 		return interaction;
+	}
+
+	/**
+	 * TODO add comment
+	 * @return
+	 */
+	private Room findRandomRoom(LevelComponent source) {
+		List<Room> rooms = new ArrayList<>();
+		for (LevelComponent component : this.levelMap) {
+			if (component instanceof Room && !component.equals(source)) {
+				rooms.add((Room)component);
+			}
+		}
+		int index = new Random().nextInt(rooms.size());
+		return rooms.get(index);
 	}
 	
 	/**
