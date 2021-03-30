@@ -30,6 +30,7 @@ public class Dungeon implements RuleChecker, DungeonModelView {
 	
 	//Initializes all the levels, sets the players and adversaries for the dungeon.
 	//Players are not placed in any level yet
+	//TODO Maybe delete this
 	public Dungeon(List<Player> players, List<Adversary> adversaries, int currLevel, List<Level> levels) {
 		if (players.size() < 1 || players.size() > 4) {
 			throw new IllegalArgumentException("Invalid number of players");
@@ -39,15 +40,39 @@ public class Dungeon implements RuleChecker, DungeonModelView {
 		this.currLevel = currLevel;	
 		this.levels = levels;
 	}
+	
+	/**
+	 * TODO Add comments
+	 * @param currLevel
+	 * @param levels
+	 */
+	public Dungeon(int currLevel, List<Level> levels) {
+		this.currLevel = currLevel;	
+		this.levels = levels;
+	}
 
 	/**
 	 * Starts the current level of the game and places the players and 
 	 * adversaries in the level.
 	 * @return the level
+	 * TODO Maybe delete this
 	 */
 	public Level startCurrentLevel() {
 		Level currLevel = getCurrentLevel();
 		currLevel.placeActors(this.players, this.adversaries);
+		return currLevel;
+	}
+	
+	/**
+	 * TODO Add comments
+	 * @param players
+	 * @param adversaries
+	 * @return
+	 */
+	public Level startCurrentLevel(List<Player> players, List<Adversary> adversaries) {
+		Level currLevel = getCurrentLevel();
+		//TODO implement this
+		currLevel.placeActorsRandomly(players, adversaries);
 		return currLevel;
 	}
 

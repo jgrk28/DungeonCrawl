@@ -13,11 +13,13 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import Adversary.LocalGhost;
 import Adversary.LocalZombie;
 import Common.Observer;
 import Game.model.Adversary;
 import Game.model.Dungeon;
 import Game.model.GameState;
+import Game.model.Ghost;
 import Game.model.Level;
 import Game.model.Player;
 import Game.model.RuleChecker;
@@ -79,6 +81,25 @@ public class GameManager {
   }
   
   /**
+   * TODO Add comments
+   * @param numZombies
+   * @param numGhosts
+   */
+  public void registerAdversaries(int numZombies, int numGhosts) {
+	  for (int i = 0; i < numZombies; i++) {
+		  Adversary zombie = new Zombie();
+		  LocalZombie zombieClient = new LocalZombie();
+		  this.adversaryClients.put(zombie, zombieClient);		  
+	  }  
+	  
+	  for (int i = 0; i < numGhosts; i++) {
+		  Adversary ghost = new Ghost();
+		  LocalGhost ghostClient = new LocalGhost();
+		  this.adversaryClients.put(ghost, ghostClient);	  
+	  } 
+  }
+  
+  /**
    * Checks that the name is unique based on existing players and adversaries in
    * the game
    * @param name - the name to check
@@ -111,6 +132,45 @@ public class GameManager {
     List<Player> players = new ArrayList<>(this.playerClients.keySet());
     List<Adversary> adversaries = new ArrayList<>(this.adversaryClients.keySet());
     this.dungeon = new Dungeon(players, adversaries, 1, levels);
+    this.ruleChecker = this.dungeon;
+
+    sendAdversariesLevel(this.dungeon.getCurrentLevel());
+    this.dungeon.startCurrentLevel();
+    notifyAllObservers();
+  }
+  
+  /**
+   * TODO Add comments
+   * @param levels
+   * @param startLevel
+   * @param numZombies
+   * @param numGhosts
+   */
+  public void startGame(List<Level> levels, int startLevel, int numZombies, int numGhosts) {
+	if (playerClients.size() < 1) {
+		throw new IllegalArgumentException("Cannot start game with no players");
+	}
+    List<Player> players = new ArrayList<>(this.playerClients.keySet());
+    List<Adversary> adversaries = new ArrayList<>();
+    
+    for (Adversary adversary : this.adversaryClients.keySet()) {
+    	if (adversary instanceof Zombie && numZombies > 0) {
+    		adversaries.add(adversary);
+    		numZombies--;
+    	}
+    	if (adversary instanceof Ghost && numGhosts > 0) {
+    		adversaries.add(adversary);
+    		numGhosts--;
+    	}
+    }
+    
+    if (numZombies + numGhosts > 0) {
+    	throw new IllegalArgumentException("Not enough adversaries to start the game");
+    }
+    
+    //TODO Players and adversaries should be added when we start a level, not the whole dungeon
+    //Turn order will vary based on who is in the level 
+    this.dungeon = new Dungeon(startLevel, levels);
     this.ruleChecker = this.dungeon;
 
     sendAdversariesLevel(this.dungeon.getCurrentLevel());

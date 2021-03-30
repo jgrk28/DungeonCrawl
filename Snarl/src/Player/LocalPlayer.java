@@ -1,8 +1,6 @@
 package Player;
 
 import java.awt.Point;
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
 import java.util.List;
 import java.util.Scanner;
 
