@@ -7,8 +7,10 @@ import java.util.Set;
 import Game.model.LevelComponent;
 
 /**
- * The client for adversaries in the game 
- * TODO: This class will be implemented in future milestones
+ * The LocalZombie represents an automated adversary that communicates locally
+ * during a game of Snarl. Zombies implement the relevant strategies for an 
+ * automated adversary, and send turns to the GameManager based on their 
+ * location and the state of the game. 
  */
 public class LocalZombie extends AbstractLocalAdversary {
 	
@@ -31,8 +33,9 @@ public class LocalZombie extends AbstractLocalAdversary {
 	}
 	
 	/**
-	 * TODO Add comments
-	 * @return
+	 * Finds the closest player to the LocalZombie's current location
+	 * @return the location of the closest player, if there is one. 
+	 * Returns null if there are no players in the LevelComponent
 	 */
 	private Point findClosestPlayerLocation() {
 		LevelComponent zombieComponent = this.level.findComponent(this.currentLocation);
@@ -58,7 +61,7 @@ public class LocalZombie extends AbstractLocalAdversary {
 	}
 	
 	/**
-	 * TODO Add comments
+	 * Returns a valid, arbitrary move of one tile in a cardinal direction
 	 * @return
 	 */
 	private Point arbitraryMove() {
@@ -68,14 +71,14 @@ public class LocalZombie extends AbstractLocalAdversary {
 			if (checkValidMove(move)) {
 				return move;
 			}
-		}
-		
+		}	
 		return this.currentLocation;
 	}
 	
 	/**
-	 * TODO Add comments
-	 * @return
+	 * Checks that the move is valid for a Zombie, is not moving into the position 
+	 * of another adversary, and would not place the Zombie on a door tile
+	 * @return true if the move is valid, false otherwise
 	 */
 	protected Boolean checkValidMove(Point move) {
 		LevelComponent zombieComponent = this.level.findComponent(this.currentLocation);

@@ -2,7 +2,6 @@ package Adversary;
 
 import Game.model.Actor;
 import java.awt.Point;
-import java.nio.channels.AcceptPendingException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -10,14 +9,24 @@ import java.util.Map;
 import Common.AdversaryClient;
 import Game.model.Adversary;
 import Game.model.Level;
-import Game.model.Player;
 
+/**
+ * Represents a local adversary client. AbstractLocalAdversary contains 
+ * the common fields and methods for LocalGhost and LocalZombie. 
+ */
 public abstract class AbstractLocalAdversary implements AdversaryClient {
 	
+	//The full level information for the current level
 	protected Level level;
+	
+	//All player and adversary locations in the level
 	protected Map<Actor, Point> playerLocations;
 	protected Map<Actor, Point> adversaryLocations;
+	
+	//The current location of this AdversaryClient in the current level
 	protected Point currentLocation;
+	
+	//The avatar that represents the AdversaryClient within the game
 	protected Adversary adversaryAvatar;
 	
 	@Override
@@ -36,8 +45,10 @@ public abstract class AbstractLocalAdversary implements AdversaryClient {
 	}
 	
 	/**
-	 * TODO Add comments
-	 * @return
+	 * Generates all potential moves for this AdversaryClient based on their
+	 * current location. A potential move is at most one tile in a cardinal 
+	 * direction
+	 * @return a list of all potential moves
 	 */
 	protected List<Point> generatePotentialMoves() {
 		List<Point> potentialMoves = new ArrayList<>();
@@ -52,9 +63,9 @@ public abstract class AbstractLocalAdversary implements AdversaryClient {
 	}
 	
 	/**
-	 * TODO Add comments
-	 * @param destPoint
-	 * @return
+	 * Finds the best move towards the destination point
+	 * @param destPoint - the destination to move towards
+	 * @return the closest valid move to the destination
 	 */
 	protected Point stepTowardsPoint(Point destPoint) {
 		List<Point> potentialMoves = generatePotentialMoves();
@@ -82,16 +93,14 @@ public abstract class AbstractLocalAdversary implements AdversaryClient {
 				closestMove = move;
 				closestMoveDist = nextMoveDist;
 			}
-		}
-		
-		return closestMove;
-		
+		}		
+		return closestMove;		
 	}
 	
 	/**
-	 * TODO Add comments
-	 * @param move
-	 * @return
+	 * Checks that the move is valid for this AdversaryClient
+	 * @param move - the move to check
+	 * @return true if the move is valid, false otherwise
 	 */
 	abstract protected Boolean checkValidMove(Point move);
 
