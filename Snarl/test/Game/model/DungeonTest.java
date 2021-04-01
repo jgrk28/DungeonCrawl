@@ -40,7 +40,7 @@ public class DungeonTest {
 		players.add(new Player());
 		players.add(new Player());
 		
-		new Dungeon(players, adversaries, currLevel, levels);
+		new Dungeon(players, currLevel, levels);
 	}
 	
 	//Test that the constructor throws the corresponding error when no players are added
@@ -50,13 +50,13 @@ public class DungeonTest {
 		
 		List<Player> noPlayers = new ArrayList<>();
 
-		new Dungeon(noPlayers, adversaries, currLevel, levels);
+		new Dungeon(noPlayers, currLevel, levels);
 	}
 	
 	//Tests that the level is in the correct state once started
 	@Test
 	public void testStartCurrentLevel() {
-		dungeon.startCurrentLevel();
+		dungeon.startCurrentLevel(this.adversaries);
 		
 	    String expectedOut = ""
 	            + "XXXX              \n"

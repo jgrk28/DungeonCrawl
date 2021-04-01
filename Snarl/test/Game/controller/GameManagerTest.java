@@ -147,7 +147,7 @@ public class GameManagerTest {
 		this.gameManager.registerPlayer("Jacob", player1);
 		this.gameManager.registerPlayer("Juliette", player2);
 		this.gameManager.initDungeon(this.levels);
-		this.gameManager.dungeon.startCurrentLevel();
+		this.gameManager.dungeon.startCurrentLevel(new ArrayList<>());
 		this.gameManager.notifyAllObservers();
 
 		String expectedOut = new String(Files.readAllBytes(Paths.get("test/Game/Controller/notify-simple.json")));
@@ -163,7 +163,7 @@ public class GameManagerTest {
 		Common.Player player1 = new TestPlayer(ModelCreator.initWinningMoves(), new JSONArray());
 		this.gameManager.registerPlayer("Juliette", player1);
 		this.gameManager.initDungeon(this.levels);
-		Level firstLevel = this.gameManager.dungeon.startCurrentLevel();
+		Level firstLevel = this.gameManager.dungeon.startCurrentLevel(this.adversaries);
 		this.gameManager.playLevel(firstLevel);
 
 		Level currLevel = this.gameManager.dungeon.getCurrentLevel();

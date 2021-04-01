@@ -41,7 +41,7 @@ public interface RuleChecker {
 	/**
 	 * Checks if the current state of the Dungeon is valid by checking if each level is 
 	 * valid. A level is invalid if the level has been exited while the exit is locked, 
-	 * if there is not exactly one key and exit, or if unknown players or adversaries are 
+	 * if there is not exactly one key and exit, or if unknown players are
 	 * in the level
 	 * @return true if the game state is valid
 	 */

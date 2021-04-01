@@ -31,8 +31,8 @@ public interface AdversaryClient {
 	 * @param adversaryAvatar - the adversary avatar that corresponds to 
 	 * this AdversaryClient 
 	 */ 
-	void updateActorLocations(Map<Actor, Point> playerLocations,
-			Map<Actor, Point> adversaryLocations,
+	void updateActorLocations(Map<Game.model.Player, Point> playerLocations,
+			Map<Adversary, Point> adversaryLocations,
 			Adversary adversaryAvatar); 
 	
 	/**

@@ -24,7 +24,7 @@ public class LocalGhostTest {
   Adversary ghost2;
   Adversary zombie1;
   Adversary zombie2;
-  Map<Actor, Point> playerLocations;
+  Map<Player, Point> playerLocations;
 
   //These tests also implicitly test getLevelStart and updateActorLocations
   @Before
@@ -75,7 +75,7 @@ public class LocalGhostTest {
 
   @Test
   public void testTakeTurnChase() {
-    Map<Actor, Point> adversaryLocation = new HashMap<>();
+    Map<Adversary, Point> adversaryLocation = new HashMap<>();
     adversaryLocation.put(this.ghost1, new Point(1,1));
     adversaryLocation.put(this.ghost2, new Point(2,11));
     adversaryLocation.put(this.zombie1, new Point(7,9));
@@ -94,7 +94,7 @@ public class LocalGhostTest {
 
   @Test
   public void testTakeTurnChaseNavigate() {
-    Map<Actor, Point> adversaryLocation = new HashMap<>();
+    Map<Adversary, Point> adversaryLocation = new HashMap<>();
     adversaryLocation.put(this.ghost1, new Point(2,1));
     adversaryLocation.put(this.ghost2, new Point(6,9));
     adversaryLocation.put(this.zombie1, new Point(6,10));
@@ -109,7 +109,7 @@ public class LocalGhostTest {
 
   @Test
   public void testTakeTurnTeleport() {
-    Map<Actor, Point> adversaryLocation = new HashMap<>();
+    Map<Adversary, Point> adversaryLocation = new HashMap<>();
     adversaryLocation.put(this.ghost1, new Point(13,11));
     adversaryLocation.put(this.ghost2, new Point(16,13));
     adversaryLocation.put(this.zombie1, new Point(6,10));
@@ -130,7 +130,7 @@ public class LocalGhostTest {
 
   @Test
   public void testCheckValidMoveValid() {
-    Map<Actor, Point> adversaryLocation = new HashMap<>();
+    Map<Adversary, Point> adversaryLocation = new HashMap<>();
     adversaryLocation.put(this.ghost1, new Point(2,1));
     adversaryLocation.put(this.ghost2, new Point(8,11));
     adversaryLocation.put(this.zombie1, new Point(6,10));
@@ -151,7 +151,7 @@ public class LocalGhostTest {
 
   @Test
   public void testCheckValidMoveInvalid() {
-    Map<Actor, Point> adversaryLocation = new HashMap<>();
+    Map<Adversary, Point> adversaryLocation = new HashMap<>();
     adversaryLocation.put(this.ghost1, new Point(6,2));
     adversaryLocation.put(this.ghost2, new Point(6,9));
     adversaryLocation.put(this.zombie1, new Point(6,10));

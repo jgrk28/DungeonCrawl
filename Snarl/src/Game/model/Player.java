@@ -15,12 +15,17 @@ public class Player extends AbstractActor {
 	private static final int maxMoveDistance = 2;
 	private static final int sightBoxWidth = 2;
 
+	private int keysFound;
+	private int numExits;
+
 	/**
 	 * Initialize a Player with a unique name
 	 * @param name - the name of the Player
 	 */
 	public Player(String name) {
 		super(name);
+		this.keysFound = 0;
+		this.numExits = 0;
 	}
 
 	/**
@@ -28,6 +33,8 @@ public class Player extends AbstractActor {
 	 */
 	public Player() {
 		super();
+		this.keysFound = 0;
+		this.numExits = 0;
 	}
 
 	@Override
@@ -281,6 +288,35 @@ public class Player extends AbstractActor {
 		}
 		return croppedMap;
 	}
+
+	/**
+	 * TODO add comment
+	 */
+	public void foundKey() {
+		this.keysFound++;
+	}
+
+	/**
+	 * TODO add comment
+	 */
+	public void exited() {
+		this.numExits++;
+	}
+
+	/**
+	 * TODO add comment
+	 */
+	public int getKeysFound() {
+		return this.keysFound;
+	}
+
+	/**
+	 * TODO add comment
+	 */
+	public int getNumExits() {
+		return this.numExits;
+	}
+
 
 	/**
 	 * Finds all doors that are within the player's view

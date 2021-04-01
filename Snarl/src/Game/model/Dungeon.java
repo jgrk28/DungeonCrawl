@@ -18,36 +18,25 @@ public class Dungeon implements RuleChecker, DungeonModelView {
 	//All players in the game regardless of status in current level
 	private List<Player> players;
 	
-	//All adversaries in the game regardless of status in current level
-	private List<Adversary> adversaries;
-	
 	//Current number of the level that the players are on. The first level
 	//is represented as 1
 	private int currLevel;
 	
 	//All levels in the game
 	private List<Level> levels;
-	
-	//Initializes all the levels, sets the players and adversaries for the dungeon.
-	//Players are not placed in any level yet
-	//TODO Maybe delete this
-	public Dungeon(List<Player> players, List<Adversary> adversaries, int currLevel, List<Level> levels) {
+
+	/**
+	 * Initializes a dungeon with all of the levels for the game, as well as the index
+	 * for the current level
+	 * @param players - the players playing this dungeon
+	 * @param currLevel - the index of the current level
+	 * @param levels - the list of all levels in the game
+	 */
+	public Dungeon(List<Player> players, int currLevel, List<Level> levels) {
 		if (players.size() < 1 || players.size() > 4) {
 			throw new IllegalArgumentException("Invalid number of players");
 		}
 		this.players = players;
-		this.adversaries = adversaries;
-		this.currLevel = currLevel;	
-		this.levels = levels;
-	}
-	
-	/**
-	 * Initializes a dungeon with all of the levels for the game, as well as the index
-	 * for the current level
-	 * @param currLevel - the index of the current level
-	 * @param levels - the list of all levels in the game
-	 */
-	public Dungeon(int currLevel, List<Level> levels) {
 		this.currLevel = currLevel;	
 		this.levels = levels;
 	}
@@ -56,25 +45,22 @@ public class Dungeon implements RuleChecker, DungeonModelView {
 	 * Starts the current level of the game and places the players and 
 	 * adversaries in the level.
 	 * @return the level
-	 * TODO Maybe delete this
 	 */
-	public Level startCurrentLevel() {
+	public Level startCurrentLevel(List<Adversary> adversaries) {
 		Level currLevel = getCurrentLevel();
-		currLevel.placeActors(this.players, this.adversaries);
+		currLevel.placeActors(this.players, adversaries);
 		return currLevel;
 	}
-	
+
 	/**
 	 * Starts the current level by placing all players and adversaries randomly
 	 * within the level map
-	 * @param players - all players in the level
 	 * @param adversaries - all adversaries in the level
 	 * @return the level with the placed actors
 	 */
-	public Level startCurrentLevel(List<Player> players, List<Adversary> adversaries) {
+	public Level startCurrentLevelRandom(List<Adversary> adversaries) {
 		Level currLevel = getCurrentLevel();
-		//TODO implement this
-		//currLevel.placeActorsRandomly(players, adversaries);
+		currLevel.placeActorsRandomly(this.players, adversaries);
 		return currLevel;
 	}
 
@@ -164,13 +150,12 @@ public class Dungeon implements RuleChecker, DungeonModelView {
 	/**
 	 * A level is invalid if the level has been exited while the exit is 
 	 * locked, if there is not exactly one key and exit, if there is a key
-	 * in the level but the exit is unlocked, or if unknown players or
-	 * adversaries are in the level
+	 * in the level but the exit is unlocked, or if unknown players are in the level
 	 */
 	@Override
 	public Boolean checkValidGameState() {
 		for (Level level : this.levels) {
-			if (!level.checkValidLevelState(this.players, this.adversaries)) {
+			if (!level.checkValidLevelState(this.players)) {
 				return false;
 			}
 		}

@@ -65,7 +65,7 @@ public class LocalPlayer implements Player {
     @Override
     public void update(PlayerModelView gameState) {
 			this.currentLocation = gameState.getPosition();
-		TextualPlayerView playerView = new TextualPlayerView(gameState, System.out);
+			TextualPlayerView playerView = new TextualPlayerView(gameState, System.out);
  	    playerView.draw();
     }
 

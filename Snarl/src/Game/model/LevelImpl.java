@@ -63,6 +63,9 @@ public class LevelImpl implements Level {
 	
 	//All items in the level
 	private List<Item> items;
+
+	//Random generator
+	private Random random;
 	
 	/** 
 	 * Initializes a new level. This constructor is used primarily for testing 
@@ -84,6 +87,7 @@ public class LevelImpl implements Level {
 		this.playerLocations = new LinkedHashMap<>();
 		this.adversaryLocations = new LinkedHashMap<>();
 		this.items = items;
+		this.random = new Random();
 		
 		for (Item item : this.items) {	
 			placeItem(item);
@@ -112,6 +116,7 @@ public class LevelImpl implements Level {
 		this.playerLocations = new LinkedHashMap<>();
 		this.adversaryLocations = new LinkedHashMap<>();
 		this.items = items;
+		this.random = new Random();
 		
 		for (Item item : this.items) {	
 			placeItem(item);
@@ -149,6 +154,7 @@ public class LevelImpl implements Level {
 		this.playerLocations = new LinkedHashMap<>();
 		this.adversaryLocations = new LinkedHashMap<>();
 		this.items = items;
+		this.random = new Random();
 		
 		for (Item item : this.items) {	
 			placeItem(item);
@@ -216,6 +222,23 @@ public class LevelImpl implements Level {
 		for (Adversary adversary : adversaries) {
 			adversaryLocations.put(adversary, bottomRightRoom);
 			placeActorValidly(adversary, bottomRightRoom);
+		}
+	}
+
+	@Override
+	public void placeActorsRandomly(List<Player> players, List<Adversary> adversaries) {
+		//Add each player to a random room on a random tile
+		for (Player player : players) {
+			Room randomRoom = findRandomRoom(null);
+			playerLocations.put(player, randomRoom);
+			placeActorRandomly(player, randomRoom);
+		}
+
+		//Add each adversary to a random room on a random tile
+		for (Adversary adversary : adversaries) {
+			Room randomRoom = findRandomRoom(null);
+			adversaryLocations.put(adversary, randomRoom);
+			placeActorRandomly(adversary, randomRoom);
 		}
 	}
 
@@ -306,6 +329,35 @@ public class LevelImpl implements Level {
 			}
 		}
 		throw new IllegalArgumentException("Room has no empty spaces to place a new actor");
+	}
+
+	/**
+	 * TODO add comment
+	 * @param actor
+	 * @param room
+	 */
+	private void placeActorRandomly(Actor actor, Room room) {
+		Point roomTopLeft = room.getTopLeftBound();
+		Point roomBottomRight = room.getBottomRightBound();
+
+		//Iterate until actor is places
+		while (true) {
+			//Get random location in this room
+			int row = this.random.nextInt(roomBottomRight.y - roomTopLeft.y) + roomTopLeft.y;
+			int col = this.random.nextInt(roomBottomRight.x - roomTopLeft.x) + roomTopLeft.x;
+			Point currPoint = new Point(col, row);
+			try {
+				//If the position contains a space, place the actor here
+				Tile destinationTile = room.getDestinationTile(currPoint);
+				EntityType destinationEntity = room.getEntityType(destinationTile);
+				if (destinationEntity.equals(EntityType.SPACE)) {
+					room.placeActor(actor, currPoint);
+					return;
+				}
+			} catch (IllegalArgumentException e) {
+				//Do nothing
+			}
+		}
 	}
 
 	@Override
@@ -533,7 +585,7 @@ public class LevelImpl implements Level {
 			}
 		}
 		//Select a random index in the list and return the room at that index
-		int index = new Random().nextInt(rooms.size());
+		int index = this.random.nextInt(rooms.size());
 		return rooms.get(index);
 	}
 	
@@ -634,13 +686,13 @@ public class LevelImpl implements Level {
 	}
 
 	@Override
-	public Boolean checkValidLevelState(List<Player> players, List<Adversary> adversaries) {
+	public Boolean checkValidLevelState(List<Player> players) {
 		if (this.levelExited && !this.exitUnlocked) {
 			return false;
 		} 
 		else if (!checkValidItems()) {
 			return false;		
-		} else if (!checkValidActors(players, adversaries)) {
+		} else if (!checkValidPlayers(players)) {
 			return false;
 		} else {
 			return true;
@@ -681,19 +733,13 @@ public class LevelImpl implements Level {
 	}
 	
 	/**
-	 * Checks that every actor in the level is a member of the game
+	 * Checks that every player in the level is a member of the game
 	 * @param players - all players to check
-	 * @param adversaries - all adversaries to check
-	 * @return true if all actors are in the game, false otherwise
+	 * @return true if all players are in the game, false otherwise
 	 */
-	private Boolean checkValidActors(List<Player> players, List<Adversary> adversaries) {
+	private Boolean checkValidPlayers(List<Player> players) {
 		for (Player player : this.playerLocations.keySet()) {
 			if (!players.contains(player)) {
-				return false;
-			}
-		}
-		for (Adversary adversary : this.adversaryLocations.keySet()) {
-			if (!adversaries.contains(adversary)) {
 				return false;
 			}
 		}
@@ -827,8 +873,8 @@ public class LevelImpl implements Level {
 	}
 
 	@Override
-	public Map<Actor, Point> getActivePlayers() {
-		Map<Actor, Point> activePlayers = new LinkedHashMap<>();
+	public Map<Player, Point> getActivePlayers() {
+		Map<Player, Point> activePlayers = new LinkedHashMap<>();
 		for (Map.Entry<Player, LevelComponent> locationEntry : this.playerLocations.entrySet()) {
 			Player player = locationEntry.getKey();
 			Point playerPoint = locationEntry.getValue().findActorLocation(player);
@@ -838,8 +884,8 @@ public class LevelImpl implements Level {
 	}
 
 	@Override
-	public Map<Actor, Point> getActiveAdversaries() {
-		Map<Actor, Point> activeAdversaries = new LinkedHashMap<>();
+	public Map<Adversary, Point> getActiveAdversaries() {
+		Map<Adversary, Point> activeAdversaries = new LinkedHashMap<>();
 		for (Map.Entry<Adversary, LevelComponent> locationEntry : this.adversaryLocations.entrySet()) {
 			Adversary adversary = locationEntry.getKey();
 			Point adversaryPoint = locationEntry.getValue().findActorLocation(adversary);
@@ -852,6 +898,9 @@ public class LevelImpl implements Level {
 	public Boolean getExitUnlocked() {
 		return this.exitUnlocked;
 	}
+
+	@Override
+	public Boolean getLevelExited() { return this.levelExited; }
 
 	@Override
 	public List<LevelComponent> getLevelMap() {

@@ -51,13 +51,13 @@ public class DungeonModelViewTest {
 	//Tests for isPlayerAlive
 	@Test 
 	public void testIsPlayerAlive() {
-		dungeon.startCurrentLevel();
+		dungeon.startCurrentLevel(this.adversaries);
 		assertTrue(dungeonView.isPlayerAlive(this.players.get(0)));
 	}
 	
 	@Test (expected = IllegalArgumentException.class)
 	public void testIsPlayerAliveException() {
-		dungeon.startCurrentLevel();
+		dungeon.startCurrentLevel(this.adversaries);
 		dungeonView.isPlayerAlive(new Player());
 	}
 	
@@ -66,7 +66,7 @@ public class DungeonModelViewTest {
 	//Test for getPlayerMap
 	@Test 
 	public void testGetPlayer0Map() {
-		dungeon.startCurrentLevel();
+		dungeon.startCurrentLevel(this.adversaries);
 		
 	    List<List<EntityType>> expectedMap = Arrays.asList(
 	    		Arrays.asList(e, e, e, e, e),
@@ -81,7 +81,7 @@ public class DungeonModelViewTest {
 	
 	@Test 
 	public void testGetPlayer2Map() {
-		dungeon.startCurrentLevel();
+		dungeon.startCurrentLevel(this.adversaries);
 		
 	    List<List<EntityType>> expectedMap = Arrays.asList(
 	            Arrays.asList(e, w, w, w, w),

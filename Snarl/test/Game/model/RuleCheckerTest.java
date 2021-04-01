@@ -39,12 +39,12 @@ public class RuleCheckerTest {
 		this.creator = new ModelCreator();
 		this.dungeon = this.creator.initializeDungeonStarted();
 		this.ruleChecker = this.dungeon;
+		this.adversaries = this.creator.initializeDungeonAdversaries();
 		this.simpleDungeon = this.creator.initializeSimpleDungeon();
-		this.simpleDungeon.startCurrentLevel();
+		this.simpleDungeon.startCurrentLevel(this.adversaries);
 		this.simpleRuleChecker = this.simpleDungeon;
 		this.levels = this.creator.initializeDungeonLevelsStarted();
 		this.players = this.creator.initializeDungeonPlayers();
-		this.adversaries = this.creator.initializeDungeonAdversaries();
 		this.levelMap = this.creator.initializeLevel1Map();
 		this.player1 = creator.getPlayer1();
 		this.player2 = creator.getPlayer2();
@@ -163,7 +163,7 @@ public class RuleCheckerTest {
 			beatLevel(firstLevel);
 
 			Level secondLevel = simpleDungeon.getNextLevel();
-			simpleDungeon.startCurrentLevel();
+			simpleDungeon.startCurrentLevel(this.adversaries);
 
 			assertEquals(GameState.ACTIVE, simpleRuleChecker.isLevelOver());
 		}
@@ -194,7 +194,7 @@ public class RuleCheckerTest {
 			assertEquals(GameState.ACTIVE, simpleRuleChecker.isGameOver());
 
 			Level secondLevel = simpleDungeon.getNextLevel();
-			simpleDungeon.startCurrentLevel();
+			simpleDungeon.startCurrentLevel(this.adversaries);
 
 			assertEquals(GameState.ACTIVE, simpleRuleChecker.isGameOver());
 		}
@@ -202,7 +202,7 @@ public class RuleCheckerTest {
 	@Test
 	public void testIsGameOverWon() {
 		Level secondLevel = simpleDungeon.getNextLevel();
-		simpleDungeon.startCurrentLevel();
+		simpleDungeon.startCurrentLevel(this.adversaries);
 		beatLevel(secondLevel);
 
 		assertEquals(GameState.WON, simpleRuleChecker.isGameOver());
@@ -222,7 +222,7 @@ public class RuleCheckerTest {
 		beatLevel(firstLevel);
 
 		Level secondLevel = simpleDungeon.getNextLevel();
-		simpleDungeon.startCurrentLevel();
+		simpleDungeon.startCurrentLevel(this.adversaries);
 		loseLevel(secondLevel);
 
 		assertEquals(GameState.LOST, simpleRuleChecker.isGameOver());
@@ -322,7 +322,7 @@ public class RuleCheckerTest {
 		//Add no key
 		List<Item> items = new ArrayList<>(Arrays.asList(this.exit));
 		this.levels.add(new LevelImpl(levelMap, items));
-		RuleChecker ruleChecker = new Dungeon(players, adversaries, 1, levels);
+		RuleChecker ruleChecker = new Dungeon(players, 1, levels);
 		assertFalse(ruleChecker.checkValidGameState());
 	}
 
@@ -331,21 +331,14 @@ public class RuleCheckerTest {
 		//Add no exit
 		List<Item> items = new ArrayList<>(Arrays.asList(this.key));
 		this.levels.add(new LevelImpl(levelMap, items));
-		RuleChecker ruleChecker = new Dungeon(players, adversaries, 1, levels);
+		RuleChecker ruleChecker = new Dungeon(players, 1, levels);
 		assertFalse(ruleChecker.checkValidGameState());
 	}
 
 	@Test
 	public void testCheckValidGameStateBadPlayer() {
 		List<Player> players = new ArrayList<Player>(Arrays.asList(new Player(), this.player2, this.player3));
-		RuleChecker ruleChecker = new Dungeon(players, adversaries, 1, levels);
-		assertFalse(ruleChecker.checkValidGameState());
-	}
-
-	@Test
-	public void testCheckValidGameStateBadAdversary() {
-		List<Adversary> adversaries = new ArrayList<Adversary>(Arrays.asList(new Ghost(), this.zombie, this.ghost2));
-		RuleChecker ruleChecker = new Dungeon(players, adversaries, 1, levels);
+		RuleChecker ruleChecker = new Dungeon(players, 1, levels);
 		assertFalse(ruleChecker.checkValidGameState());
 	}
 }

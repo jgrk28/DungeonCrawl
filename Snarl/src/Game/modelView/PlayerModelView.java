@@ -100,5 +100,15 @@ public class PlayerModelView {
    * @return the name as a String
    */
   public String getName() { return this.player.getName(); }
+
+  /**
+   * TODO add comment
+   */
+  public int getKeysFound() { return this.player.getKeysFound(); }
+
+  /**
+   * TODO add comment
+   */
+  public int getNumExits() { return this.player.getNumExits(); }
   
 }

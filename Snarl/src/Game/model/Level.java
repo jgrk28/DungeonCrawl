@@ -28,6 +28,13 @@ public interface Level extends LevelModelView {
 	void placeActors(List<Player> players, List<Adversary> adversaries);
 
 	/**
+	 * Places the actors randomly in the level
+	 * @param players - all players in the level
+	 * @param adversaries - all adversaries in the level
+	 */
+	void placeActorsRandomly(List<Player> players, List<Adversary> adversaries);
+
+	/**
      * Processes a player's action by moving the player and
      * performing the corresponding interaction
      * @param player - the player performing the action
@@ -72,12 +79,11 @@ public interface Level extends LevelModelView {
 	/**
 	 * Checks if the level is in a valid state. The level is invalid if the level has 
 	 * been exited while the exit is locked, if there is not exactly one key and exit, 
-	 * or if unknown players or adversaries are in the level
+	 * or if unknown players are in the level
 	 * @param players - all players in the dungeon
-	 * @param adversaries - all adversaries in the dungeon
 	 * @return true if the level state is valid, false otherwise
 	 */
-	Boolean checkValidLevelState(List<Player> players, List<Adversary> adversaries);
+	Boolean checkValidLevelState(List<Player> players);
 	
 	/**
 	 * Determines whether the player is currently alive in the level
@@ -142,19 +148,25 @@ public interface Level extends LevelModelView {
 	 * Gets all active players in the level
 	 * @return the map of players and their location
 	 */
-	Map<Actor, Point> getActivePlayers();
+	Map<Player, Point> getActivePlayers();
 
 	/**
 	 * Gets all active adversaries in the level
 	 * @return the map of adversaries and their locations
 	 */
-	Map<Actor, Point> getActiveAdversaries();
+	Map<Adversary, Point> getActiveAdversaries();
 
 	/**
 	 * Gets the exitUnlocked boolean for the level
 	 * @return true if the exit is unlocked, false otherwise
 	 */
 	Boolean getExitUnlocked();
+
+	/**
+	 * Gets the levelExited boolean for the level
+	 * @return true if the level has been exited by at least 1 player, false otherwise
+	 */
+	Boolean getLevelExited();
 
 	/**
 	 * Gets the list of LevelComponents that compose the level map
@@ -167,4 +179,5 @@ public interface Level extends LevelModelView {
 	 * @return the list of all items currently in the level
 	 */
 	List<Item> getItems();
+
 }

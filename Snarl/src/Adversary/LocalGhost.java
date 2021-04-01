@@ -122,12 +122,7 @@ public class LocalGhost extends AbstractLocalAdversary {
 	 * @return true if the move is valid, false otherwise
 	 */
 	protected Boolean checkValidMove(Point move) {
-		//Level levelCopy = new LevelImpl(
-		//		this.playerLocations,
-		//		this.adversaryLocations,
-		//		this.level.getLevelMap(),
-		//		this.level.getItems());
-		return this.level.checkValidMove(adversaryAvatar, move) 
+		return this.occupiedLevel.checkValidMove(adversaryAvatar, move)
 		&& !adversaryLocations.values().contains(move);
 	}
 

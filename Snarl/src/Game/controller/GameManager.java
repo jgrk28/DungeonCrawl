@@ -2,6 +2,7 @@ package Game.controller;
 
 import Common.AdversaryClient;
 import Game.model.Actor;
+import Game.model.InteractionResult;
 import Game.modelView.DungeonModelView;
 import Game.view.TextualDungeonView;
 import java.awt.Point;
@@ -9,6 +10,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.lang.reflect.AccessibleObject;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -133,11 +136,11 @@ public class GameManager {
 	}
     List<Player> players = new ArrayList<>(this.playerClients.keySet());
     List<Adversary> adversaries = new ArrayList<>(this.adversaryClients.keySet());
-    this.dungeon = new Dungeon(players, adversaries, 1, levels);
+    this.dungeon = new Dungeon(players, 1, levels);
     this.ruleChecker = this.dungeon;
 
     sendAdversariesLevel(this.dungeon.getCurrentLevel());
-    this.dungeon.startCurrentLevel();
+    this.dungeon.startCurrentLevel(adversaries);
     notifyAllObservers();
   }
   
@@ -145,39 +148,40 @@ public class GameManager {
    * TODO Add comments
    * @param levels
    * @param startLevel
-   * @param numZombies
-   * @param numGhosts
    */
-  public void startGame(List<Level> levels, int startLevel, int numZombies, int numGhosts) {
+  public void startGame(List<Level> levels, int startLevel) {
 	if (playerClients.size() < 1) {
 		throw new IllegalArgumentException("Cannot start game with no players");
 	}
     List<Player> players = new ArrayList<>(this.playerClients.keySet());
-    List<Adversary> adversaries = new ArrayList<>();
-    
-    for (Adversary adversary : this.adversaryClients.keySet()) {
-    	if (adversary instanceof Zombie && numZombies > 0) {
-    		adversaries.add(adversary);
-    		numZombies--;
-    	}
-    	if (adversary instanceof Ghost && numGhosts > 0) {
-    		adversaries.add(adversary);
-    		numGhosts--;
-    	}
-    }
-    
-    if (numZombies + numGhosts > 0) {
-    	throw new IllegalArgumentException("Not enough adversaries to start the game");
-    }
-    
-    //TODO Players and adversaries should be added when we start a level, not the whole dungeon
-    //Turn order will vary based on who is in the level 
-    this.dungeon = new Dungeon(startLevel, levels);
+
+    //Turn order will vary based on who is in the level
+    this.dungeon = new Dungeon(players, startLevel, levels);
     this.ruleChecker = this.dungeon;
 
     sendAdversariesLevel(this.dungeon.getCurrentLevel());
-    this.dungeon.startCurrentLevel();
+    List<Adversary> adversaries = getLevelAdversaries(startLevel);
+    this.dungeon.startCurrentLevelRandom(adversaries);
     notifyAllObservers();
+  }
+
+  private List<Adversary> getLevelAdversaries(int levelNum) {
+    int numZombies = Math.floorDiv(levelNum, 2) + 1;
+    int numGhosts = Math.floorDiv((levelNum - 1), 2);
+
+    List<Adversary> adversaries = new ArrayList<>();
+
+    for (Adversary adversary : this.adversaryClients.keySet()) {
+      if (adversary instanceof Zombie && numZombies > 0) {
+        adversaries.add(adversary);
+        numZombies--;
+      }
+      if (adversary instanceof Ghost && numGhosts > 0) {
+        adversaries.add(adversary);
+        numGhosts--;
+      }
+    }
+    return adversaries;
   }
 
   /**
@@ -191,8 +195,7 @@ public class GameManager {
       throw new IllegalArgumentException("Cannot start game with no players");
     }
     List<Player> players = new ArrayList<>(this.playerClients.keySet());
-    List<Adversary> adversaries = new ArrayList<>(this.adversaryClients.keySet());
-    this.dungeon = new Dungeon(players, adversaries, 1, levels);
+    this.dungeon = new Dungeon(players, 1, levels);
     this.ruleChecker = this.dungeon;
   }
 
@@ -208,7 +211,9 @@ public class GameManager {
     while (this.ruleChecker.isGameOver().equals(GameState.ACTIVE)) {
       currLevel = this.dungeon.getNextLevel();
       sendAdversariesLevel(currLevel);
-      this.dungeon.startCurrentLevel();
+      int levelNum = this.dungeon.getCurrentLevelIndex();
+      List<Adversary> adversaries = getLevelAdversaries(levelNum);
+      this.dungeon.startCurrentLevel(adversaries);
       playLevel(currLevel);
     }
     //When the game is over notify all observers of the end state
@@ -224,27 +229,36 @@ public class GameManager {
 	  //and adversary
     while (this.ruleChecker.isLevelOver().equals(GameState.ACTIVE)) {
       for (Map.Entry<Player, Common.Player> currPlayer : playerClients.entrySet()) {
-        PlayerModelView playerModelView = new PlayerModelView(currPlayer.getKey(), this.dungeon);
+        Player player = currPlayer.getKey();
+        Common.Player client = currPlayer.getValue();
+        if (!level.getActivePlayers().containsKey(player)) {
+          continue;
+        }
+        PlayerModelView playerModelView = new PlayerModelView(player, this.dungeon);
     	  List<Point> validMoves = playerModelView.getValidMoves();
-        Point playerDestination = currPlayer.getValue().takeTurn(validMoves);
+        Point playerDestination = client.takeTurn(validMoves);
 
-        if (this.ruleChecker.checkValidMove(currPlayer.getKey(), playerDestination)) {
+        if (this.ruleChecker.checkValidMove(player, playerDestination)) {
           //Execute the move and corresponding interaction
-          level.playerAction(currPlayer.getKey(), playerDestination);
+          InteractionResult result = level.playerAction(player, playerDestination);
+          processResult(result, player, client);
 
           //Notify all observers of the current game state for each turn
           notifyAllObservers();
         } else {
           //If user entered invalid move notify them and skip their turn
-          currPlayer.getValue().displayMessage("Invalid move, turn skipped");
+          client.displayMessage("Invalid move, turn skipped");
         }
       }
       //Adversary turns
       for (Map.Entry<Adversary, AdversaryClient> currAdversary : adversaryClients.entrySet()) {
-        Map<Actor, Point> players = level.getActivePlayers();
-        Map<Actor, Point> adversaries = level.getActiveAdversaries();
+        Map<Player, Point> players = level.getActivePlayers();
+        Map<Adversary, Point> adversaries = level.getActiveAdversaries();
         AdversaryClient client = currAdversary.getValue();
         Adversary adversary = currAdversary.getKey();
+        if (!adversaries.containsKey(adversary)) {
+          continue;
+        }
         client.updateActorLocations(players, adversaries, adversary);
 
         Point adversaryDestination = client.takeTurn();
@@ -256,14 +270,73 @@ public class GameManager {
           //Notify all observers of the current game state for each turn
           notifyAllObservers();
         } else {
-          //If user entered invalid move notify them and skip their turn
-          //TODO adversary skipped
+          //If adversary is not a local implementation we will need to handle invalid moves
+          throw new IllegalArgumentException("Invalid adversary moves");
         }
 
       }
     }
     //Display to observers when the level ends to provide result
     notifyAllObservers();
+  }
+
+  /**
+   * TODO comment
+   * @param result
+   * @param player
+   * @param client
+   */
+  private void processResult(InteractionResult result, Player player, Common.Player client) {
+    switch (result) {
+      case FOUND_KEY:
+        client.displayMessage("Player " + player.getName() + " found the key.");
+        player.foundKey();
+        break;
+      case REMOVE_PLAYER:
+        client.displayMessage("Player " + player.getName() + " was expelled.");
+        break;
+      case EXIT:
+        client.displayMessage("Player " + player.getName() + " exited.");
+        player.exited();
+        break;
+    }
+  }
+
+  /**
+   * TODO add comment
+   */
+  public void endGame() {
+    List<Player> orderedPlayers = new ArrayList<>(this.playerClients.keySet());
+
+    //Resource: https://stackoverflow.com/questions/4805606/how-to-sort-by-two-fields-in-java
+    Collections.sort(orderedPlayers, new Comparator() {
+      public int compare(Object o1, Object o2) {
+        Player player1 = (Player) o1;
+        Player player2 = (Player) o2;
+
+        int exitsComp = Integer.compare(player1.getNumExits(), player2.getNumExits());
+        if (exitsComp != 0) {
+          return exitsComp;
+        }
+
+        return Integer.compare(player1.getKeysFound(), player2.getKeysFound());
+      }});
+
+    StringBuilder output = new StringBuilder();
+    output.append("Player Rankings:\n");
+    for (Player player : orderedPlayers) {
+      output.append(player.getName() + ": Exited " + player.getNumExits() + " times. " +
+          "Found " + player.getKeysFound() + " keys.\n");
+    }
+
+    String stringOut = output.toString();
+    for (Observer observer : this.observers) {
+      observer.update(stringOut);
+    }
+
+    for (Common.Player client : playerClients.values()) {
+      client.displayMessage(stringOut);
+    }
   }
   
   /**

@@ -1,5 +1,5 @@
-import static org.junit.Assert.assertEquals;
 
+import Observer.LocalObserver;
 import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -77,9 +77,13 @@ public class LocalSnarl {
 		int numLevels = levels.size();
 		snarl.registerAdversaries(manager, numLevels);
 
-		//TODO Figure out how to start the game with the players and adversaries in the level
-		//Number of adversaries varies based on the current level
+		if (observer) {
+			manager.attachObserver(new LocalObserver());
+		}
+
 		manager.startGame(levels, startLevel);
+		manager.playGame();
+		manager.endGame();
 	}
 	
 	/**

@@ -50,7 +50,7 @@ public class TextualPlayerView extends AbstractTextualView {
 				toOutput.append("Congratulations! You Won!\n");
 				break;
 			case LOST:
-				toOutput.append("Sorry. You Lost. :(\n");
+				toOutput.append("Sorry. You lost on level " + playerModelView.getCurrentLevel() + " :(\n");
 				break;
 			case ACTIVE:
 				if (levelStatus.equals(GameState.WON)) {

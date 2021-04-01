@@ -725,8 +725,7 @@ public class LevelTest {
   @Test
 	public void testCheckValidLevelStateNormal() {
     List<Player> players = new ArrayList<>(Arrays.asList(this.player1, this.player2, this.player3));
-    List<Adversary> adversaries = new ArrayList<>(Arrays.asList(this.ghost1, this.zombie, this.ghost2));
-		assertTrue(level.checkValidLevelState(players, adversaries));
+		assertTrue(level.checkValidLevelState(players));
 	}
 
 	@Test
@@ -734,8 +733,7 @@ public class LevelTest {
 		//Add null key
 		Level level = new LevelImpl(this.levelMap, new ArrayList<>(Arrays.asList(this.exit)));
 		List<Player> players = new ArrayList<>(Arrays.asList(this.player1, this.player2, this.player3));
-		List<Adversary> adversaries = new ArrayList<>(Arrays.asList(this.ghost1, this.zombie, this.ghost2));
-		assertFalse(level.checkValidLevelState(players, adversaries));
+		assertFalse(level.checkValidLevelState(players));
 	}
 
 	@Test
@@ -743,8 +741,7 @@ public class LevelTest {
 		//Add no exit
 		Level level = new LevelImpl(this.levelMap, new ArrayList<>(Arrays.asList(this.key)));
 		List<Player> players = new ArrayList<>(Arrays.asList(this.player1, this.player2, this.player3));
-		List<Adversary> adversaries = new ArrayList<>(Arrays.asList(this.ghost1, this.zombie, this.ghost2));
-		assertFalse(level.checkValidLevelState(players, adversaries));
+		assertFalse(level.checkValidLevelState(players));
 	}
 
 	@Test
@@ -759,22 +756,13 @@ public class LevelTest {
         new ArrayList<>(Arrays.asList(this.key, this.exit))
 		);
 		List<Player> players = new ArrayList<>(Arrays.asList(this.player1, this.player2, this.player3));
-		List<Adversary> adversaries = new ArrayList<>(Arrays.asList(this.ghost1, this.zombie, this.ghost2));
-		assertFalse(level.checkValidLevelState(players, adversaries));
+		assertFalse(level.checkValidLevelState(players));
 	}
 
 	@Test
 	public void testCheckValidLevelStateBadPlayer() {
 		List<Player> players = new ArrayList<Player>(Arrays.asList(new Player(), this.player2, this.player3));
-		List<Adversary> adversaries = new ArrayList<>(Arrays.asList(this.ghost1, this.zombie, this.ghost2));
-		assertFalse(level.checkValidLevelState(players, adversaries));
-	}
-
-	@Test
-	public void testCheckValidLevelStateBadAdversary() {
-		List<Player> players = new ArrayList<>(Arrays.asList(this.player1, this.player2, this.player3));
-		List<Adversary> adversaries = new ArrayList<Adversary>(Arrays.asList(new Ghost(), this.zombie, this.ghost2));
-		assertFalse(level.checkValidLevelState(players, adversaries));
+		assertFalse(level.checkValidLevelState(players));
 	}
  
   //Tests for isPlayerAlive

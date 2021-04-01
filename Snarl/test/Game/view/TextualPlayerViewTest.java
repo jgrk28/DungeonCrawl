@@ -2,11 +2,13 @@ package Game.view;
 
 import static org.junit.Assert.assertEquals;
 
+import Game.model.Adversary;
 import Game.model.ModelCreator;
 
 import java.awt.Point;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Before;
@@ -32,11 +34,13 @@ public class TextualPlayerViewTest {
 	//Fields for the Dungeon
 	private Dungeon dungeon;
 	private List<Player> players;
+	private List<Adversary> adversaries;
 	
 	@Before
 	public void initializePlayerModelView() {
 		this.creator = new ModelCreator();
 		this.players = creator.initializeDungeonPlayers();
+		this.adversaries = this.creator.initializeDungeonAdversaries();
 		this.dungeon = creator.initializeDungeonStarted();
 		this.dungeonView = this.dungeon;
 		this.playerModelView0 = new PlayerModelView(this.players.get(0), dungeonView);
@@ -110,7 +114,7 @@ public class TextualPlayerViewTest {
 		initializePlayerModelView();
 		Dungeon simpleDungeon = this.creator.initializeSimpleDungeon();
 		simpleDungeon.getNextLevel();
-		simpleDungeon.startCurrentLevel();
+		simpleDungeon.startCurrentLevel(new ArrayList<>());
 		DungeonModelView view = simpleDungeon;
 		PlayerModelView playerModelView = new PlayerModelView(this.players.get(1), view);	
 		
@@ -131,7 +135,7 @@ public class TextualPlayerViewTest {
 	public void testDrawNoLongerInLevel() {
 		initializePlayerModelView();
 		Level level = this.dungeon.getNextLevel();
-		this.dungeon.startCurrentLevel();
+		this.dungeon.startCurrentLevel(this.adversaries);
 		Player player2 = this.players.get(2);
 		
 		//Kill player 2

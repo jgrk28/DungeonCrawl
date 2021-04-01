@@ -1,6 +1,8 @@
 package Adversary;
 
 import Game.model.Actor;
+import Game.model.LevelImpl;
+import Game.model.Player;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,10 +20,13 @@ public abstract class AbstractLocalAdversary implements AdversaryClient {
 	
 	//The full level information for the current level
 	protected Level level;
+
+	//The level with the current actors placed
+	protected Level occupiedLevel;
 	
 	//All player and adversary locations in the level
-	protected Map<Actor, Point> playerLocations;
-	protected Map<Actor, Point> adversaryLocations;
+	protected Map<Player, Point> playerLocations;
+	protected Map<Adversary, Point> adversaryLocations;
 	
 	//The current location of this AdversaryClient in the current level
 	protected Point currentLocation;
@@ -35,15 +40,21 @@ public abstract class AbstractLocalAdversary implements AdversaryClient {
 	}
 
 	@Override
-	public void updateActorLocations(Map<Actor, Point> playerLocations,
-			Map<Actor, Point> adversaryLocations,
-			Adversary adversaryAvatar) {
+	public void updateActorLocations(Map<Player, Point> playerLocations,
+			Map<Adversary, Point> adversaryLocations, Adversary adversaryAvatar) {
 		this.playerLocations = playerLocations;
 		this.adversaryLocations = adversaryLocations;
 		this.adversaryAvatar = adversaryAvatar;
-		this.currentLocation = adversaryLocations.get(adversaryAvatar);				
+		this.currentLocation = adversaryLocations.get(adversaryAvatar);
+		this.occupiedLevel = new LevelImpl(
+				this.playerLocations,
+				this.adversaryLocations,
+				this.level.getLevelMap(),
+				this.level.getExitUnlocked(),
+				this.level.getLevelExited(),
+				this.level.getItems());
 	}
-	
+
 	/**
 	 * Generates all potential moves for this AdversaryClient based on their
 	 * current location. A potential move is at most one tile in a cardinal 

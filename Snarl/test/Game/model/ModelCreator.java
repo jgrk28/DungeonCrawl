@@ -546,11 +546,10 @@ public class ModelCreator {
   //Initialize Dungeon with no level started
   public Dungeon initializeDungeon() {
     List<Player> players = initializeDungeonPlayers();
-    List<Adversary> adversaries = initializeDungeonAdversaries();
     List<Level> levels = initializeDungeonLevels();
     int startingLevel = 1;
 
-    return new Dungeon(players, adversaries, startingLevel, levels);
+    return new Dungeon(players, startingLevel, levels);
   }
 
   //Initialize Dungeon with the first level started in an intermediate position
@@ -560,7 +559,7 @@ public class ModelCreator {
     List<Level> levels = initializeDungeonLevelsStarted();
     int startingLevel = 1;
 
-    return new Dungeon(players, adversaries, startingLevel, levels);
+    return new Dungeon(players, startingLevel, levels);
   }
 
   //Initialize simple Dungeon with no level started
@@ -570,7 +569,7 @@ public class ModelCreator {
     List<Level> levels = initializeSimpleDungeonLevels();
     int startingLevel = 1;
 
-    return new Dungeon(players, adversaries, startingLevel, levels);
+    return new Dungeon(players, startingLevel, levels);
   }
 
   public static List<Point> initWinningMoves() {
