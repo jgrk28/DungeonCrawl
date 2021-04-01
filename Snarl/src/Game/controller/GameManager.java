@@ -81,9 +81,11 @@ public class GameManager {
   }
   
   /**
-   * TODO Add comments
-   * @param numZombies
-   * @param numGhosts
+   * Registers a specified number of Zombies and Ghosts with the GameManager.
+   * Creates a LocalZombie and LocalGhost for each corresponding Zombie and
+   * Ghost
+   * @param numZombies - the number of Zombies to register
+   * @param numGhosts - the number of Ghosts to register
    */
   public void registerAdversaries(int numZombies, int numGhosts) {
 	  for (int i = 0; i < numZombies; i++) {
@@ -302,8 +304,9 @@ public class GameManager {
   }
 
   /**
-   * TODO comment
-   * @param level
+   * Sends all AdversaryClients in the current level the corresponding level
+   * information
+   * @param level - the level to send
    */
   private void sendAdversariesLevel(Level level) {
     for (AdversaryClient client : adversaryClients.values()) {

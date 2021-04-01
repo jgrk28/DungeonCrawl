@@ -25,16 +25,21 @@ import Manager.TestManager;
 import Player.LocalPlayer;
 
 /**
- * TODO Add comments
+ * Integrates the GameManager, Player, and Adversary components to allow local 
+ * game play for one player
  */
 public class LocalSnarl {
 	
 	/**
-	 * TODO Add comment
-	 * @param args
-	 * @throws FileNotFoundException 
+	 * Parses the command line arguments to create a game of Snarl. Registers 
+	 * players and adversaries, creates the corresponding levels, and allows
+	 * one LocalPlayer to play the game
+	 * @param args - the command line arguments
+	 * @throws FileNotFoundException if the file containing JSON level specifications
+	 * cannot be found or opened 
 	 */
 	public static void main(String[] args) throws FileNotFoundException {
+		//Set the defaults for the game
 		String fileName = "snarl.levels";
 		int numPlayers = 1;
 		int startLevel = 1;
@@ -78,9 +83,10 @@ public class LocalSnarl {
 	}
 	
 	/**
-	 * TODO Add comment
-	 * @param manager
-	 * @param numPlayers
+	 * Registers players with the game manager and creates the corresponding
+	 * LocalPlayer
+	 * @param manager - the game manager
+	 * @param numPlayers - the number of players in the game
 	 */
 	private void registerPlayers(GameManager manager, int numPlayers) {
 		for (int i = 0; i < numPlayers; i++) {
@@ -93,9 +99,11 @@ public class LocalSnarl {
 	}
 	
 	/**
-	 * TODO Add comment
-	 * @param numLevels
-	 * @param manager
+	 * Registers adversries with the game manager. Creates the maximum number
+	 * of Ghosts and Zombies for the game. A subsection of these adversaries
+	 * may be used based on the current level number
+	 * @param numLevels - the total number of levels in the game (the max)
+	 * @param manager - the game manager
 	 */
 	private void registerAdversaries(GameManager manager, int numLevels) {
 		//Max number of ghosts and zombies needed for the game
@@ -105,10 +113,11 @@ public class LocalSnarl {
 	}
 	
 	/**
-	 * TODO Add comment
-	 * @param fileName
-	 * @return
-	 * @throws FileNotFoundException 
+	 * Generates all levels contained within the level specifications
+	 * @param fileName - the name of the file containing the level specifications
+	 * @return the list of levels generated based on this specification
+	 * @throws FileNotFoundException if the file containing JSON level specifications
+	 * cannot be found or opened 
 	 */
 	private List<Level> generateLevels(String fileName) throws FileNotFoundException {
 		List<Level> levels = new ArrayList<>();
@@ -116,6 +125,8 @@ public class LocalSnarl {
 		Object value = inputTokens.nextValue();
 		int numLevels = (int)value;
 		
+		//Get the JSON Object for each level in the file. Parse the levelMap and items.
+		//Create the corresponding level and add it to the list
 		for (int i = 0; i < numLevels; i++) {
 			JSONObject JSONLevel = (JSONObject)inputTokens.nextValue();
 			List<LevelComponent> levelMap = TestLevel.parseLevelMap(JSONLevel);

@@ -521,16 +521,18 @@ public class LevelImpl implements Level {
 	}
 
 	/**
-	 * TODO add comment
-	 * @return
+	 * Finds a random room in the level map that is not the provided LevelComponent
+	 * @return a random room from the level map
 	 */
 	private Room findRandomRoom(LevelComponent source) {
 		List<Room> rooms = new ArrayList<>();
 		for (LevelComponent component : this.levelMap) {
+			//Add all rooms that are not the source
 			if (component instanceof Room && !component.equals(source)) {
 				rooms.add((Room)component);
 			}
 		}
+		//Select a random index in the list and return the room at that index
 		int index = new Random().nextInt(rooms.size());
 		return rooms.get(index);
 	}

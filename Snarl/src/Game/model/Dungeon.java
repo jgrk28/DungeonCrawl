@@ -42,9 +42,10 @@ public class Dungeon implements RuleChecker, DungeonModelView {
 	}
 	
 	/**
-	 * TODO Add comments
-	 * @param currLevel
-	 * @param levels
+	 * Initializes a dungeon with all of the levels for the game, as well as the index
+	 * for the current level
+	 * @param currLevel - the index of the current level
+	 * @param levels - the list of all levels in the game
 	 */
 	public Dungeon(int currLevel, List<Level> levels) {
 		this.currLevel = currLevel;	
@@ -64,10 +65,11 @@ public class Dungeon implements RuleChecker, DungeonModelView {
 	}
 	
 	/**
-	 * TODO Add comments
-	 * @param players
-	 * @param adversaries
-	 * @return
+	 * Starts the current level by placing all players and adversaries randomly
+	 * within the level map
+	 * @param players - all players in the level
+	 * @param adversaries - all adversaries in the level
+	 * @return the level with the placed actors
 	 */
 	public Level startCurrentLevel(List<Player> players, List<Adversary> adversaries) {
 		Level currLevel = getCurrentLevel();
