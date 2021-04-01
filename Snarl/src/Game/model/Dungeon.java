@@ -74,7 +74,7 @@ public class Dungeon implements RuleChecker, DungeonModelView {
 	public Level startCurrentLevel(List<Player> players, List<Adversary> adversaries) {
 		Level currLevel = getCurrentLevel();
 		//TODO implement this
-		currLevel.placeActorsRandomly(players, adversaries);
+		//currLevel.placeActorsRandomly(players, adversaries);
 		return currLevel;
 	}
 
