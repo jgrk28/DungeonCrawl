@@ -49,7 +49,7 @@ public abstract class AbstractLocalAdversary implements AdversaryClient {
 	@Override
 	public void updateActorLocations(Map<Player, Point> playerLocations,
 			Map<Adversary, Point> adversaryLocations, Adversary adversaryAvatar) {
-		//if they exist, remove old adversaries and players from our level
+		//If they exist, remove old adversaries and players from our level
 		for (Adversary adversary : this.adversaryLocations.keySet()) {
 			this.level.removeActor(adversary);
 		}
@@ -62,7 +62,7 @@ public abstract class AbstractLocalAdversary implements AdversaryClient {
 		this.adversaryAvatar = adversaryAvatar;
 		this.currentLocation = adversaryLocations.get(adversaryAvatar);
 
-		//add new adversaries and players from our level
+		//Add new adversaries and players from our level
 		this.level.placeActorsSpecifiedLocation(this.playerLocations, this.adversaryLocations);
 	}
 

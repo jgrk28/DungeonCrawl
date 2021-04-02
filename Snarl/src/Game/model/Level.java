@@ -42,7 +42,8 @@ public interface Level extends LevelModelView {
 	void placeActorsRandomly(List<Player> players, List<Adversary> adversaries);
 
 	/**
-	 * TODO add comment
+	 * Removes the given actor from the level
+	 * @throws IllegalArgumentException if the actor is not in the level
 	 */
 	void removeActor(Actor actor);
 
