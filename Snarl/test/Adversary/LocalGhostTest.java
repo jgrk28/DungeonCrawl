@@ -45,7 +45,7 @@ public class LocalGhostTest {
     this.playerLocations = new HashMap<>();
     playerLocations.put(this.player1, new Point(4, 2));
     playerLocations.put(this.player2, new Point(6, 11));
-    playerLocations.put(this.player2, new Point(2, 14));
+    playerLocations.put(this.player3, new Point(2, 14));
   }
 
   /*
@@ -142,7 +142,7 @@ public class LocalGhostTest {
     assertTrue(this.ghostClient.checkValidMove(new Point(2, 2)));
     assertTrue(this.ghostClient.checkValidMove(new Point(2, 0)));
 
-    this.ghostClient.updateActorLocations(this.playerLocations, adversaryLocation, this.ghost1);
+    this.ghostClient.updateActorLocations(this.playerLocations, adversaryLocation, this.ghost2);
     assertTrue(this.ghostClient.checkValidMove(new Point(9, 11)));
     assertTrue(this.ghostClient.checkValidMove(new Point(7, 11)));
     assertTrue(this.ghostClient.checkValidMove(new Point(8, 10)));

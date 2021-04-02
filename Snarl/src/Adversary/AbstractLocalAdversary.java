@@ -1,9 +1,13 @@
 package Adversary;
 
+import Game.model.LevelComponent;
 import Game.model.LevelImpl;
 import Game.model.Player;
+import Game.model.Tile;
+import Game.model.Wall;
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -19,9 +23,6 @@ public abstract class AbstractLocalAdversary implements AdversaryClient {
 	
 	//The full level information for the current level
 	protected Level level;
-
-	//The level with the current actors placed
-	protected Level occupiedLevel;
 	
 	//All player and adversary locations in the level
 	protected Map<Player, Point> playerLocations;
@@ -32,16 +33,29 @@ public abstract class AbstractLocalAdversary implements AdversaryClient {
 	
 	//The avatar that represents the AdversaryClient within the game
 	protected Adversary adversaryAvatar;
-	
+
+	public AbstractLocalAdversary() {
+		this.playerLocations = new HashMap<>();
+		this.adversaryLocations = new HashMap<>();
+	}
+
 	@Override
 	public void getLevelStart(Level startLevel) {
 		this.level = startLevel;	
 	}
 
+	//TODO Make a version that does not edit the given level as in the local version the level
+	//object will be updated
 	@Override
 	public void updateActorLocations(Map<Player, Point> playerLocations,
 			Map<Adversary, Point> adversaryLocations, Adversary adversaryAvatar) {
 		//if they exist, remove old adversaries and players from our level
+		for (Adversary adversary : this.adversaryLocations.keySet()) {
+			this.level.removeActor(adversary);
+		}
+		for (Player player : this.playerLocations.keySet()) {
+			this.level.removeActor(player);
+		}
 
 		this.playerLocations = playerLocations;
 		this.adversaryLocations = adversaryLocations;
@@ -49,15 +63,7 @@ public abstract class AbstractLocalAdversary implements AdversaryClient {
 		this.currentLocation = adversaryLocations.get(adversaryAvatar);
 
 		//add new adversaries and players from our level
-
-		//This is not actually copying the level because the level map is not copied
-		this.occupiedLevel = new LevelImpl(
-				this.playerLocations,
-				this.adversaryLocations,
-				this.level.getLevelMap(),
-				this.level.getExitUnlocked(),
-				this.level.getLevelExited(),
-				this.level.getItems());
+		this.level.placeActorsSpecifiedLocation(this.playerLocations, this.adversaryLocations);
 	}
 
 	/**
@@ -89,7 +95,16 @@ public abstract class AbstractLocalAdversary implements AdversaryClient {
 		
 		//Find all valid moves
 		for (Point move : potentialMoves) {
-			if (checkValidMove(move)) {
+			LevelComponent component;
+			try {
+				component = this.level.findComponent(move);
+			} catch (IllegalArgumentException e) {
+				//If the move is not in any component it will never be valid
+				continue;
+			}
+			Tile tile = component.getDestinationTile(move);
+			//This should never move onto a wall even if that is a valid move
+			if (checkValidMove(move) && !(tile instanceof Wall)) {
 				validMoves.add(move);
 			}
 		}

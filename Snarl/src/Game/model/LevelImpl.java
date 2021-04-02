@@ -160,40 +160,7 @@ public class LevelImpl implements Level {
 			placeItem(item);
 		}
 
-		//Add players to the corresponding LevelComponent
-		for (Map.Entry<Player, Point> entry : players.entrySet()) {
-			//Find the component based on the position of the player
-			LevelComponent component = findComponent(entry.getValue());
-			
-			//Track the player and the LevelComponent they are located in
-			playerLocations.put(entry.getKey(), component);
-			
-			//Check that the destination of the player is a space and place the actor
-			//If the location is not a space, throw the corresponding error
-			Tile destinationTile = component.getDestinationTile(entry.getValue());
-			EntityType destinationEntity = component.getEntityType(destinationTile);
-			if (!(entry.getKey().isTraversable(destinationEntity))) {
-				throw new IllegalArgumentException("Cannot place player, destination is not a space"); 
-			}
-			component.placeActor(entry.getKey(), entry.getValue());
-		}
-		//Add adversaries to corresponding LevelComponent
-		for (Map.Entry<Adversary, Point> entry : adversaries.entrySet()) {
-			//Find the component based on the position of the adversary
-			LevelComponent component = findComponent(entry.getValue());
-			
-			//Track the adversary and the LevelComponent they are located in
-			adversaryLocations.put(entry.getKey(), component);
-			
-			//Check that the destination of the adversary is a space and place the actor
-			//If the location is not a space, throw the corresponding error
-			Tile destinationTile = component.getDestinationTile(entry.getValue());
-			EntityType destinationEntity = component.getEntityType(destinationTile);
-			if (!(entry.getKey().isTraversable(destinationEntity))) {
-				throw new IllegalArgumentException("Cannot place adversary, destination is not a space"); 
-			}
-			component.placeActor(entry.getKey(), entry.getValue());
-		}
+		placeActorsSpecifiedLocation(players, adversaries);
 	}
 
 	/**
@@ -222,6 +189,46 @@ public class LevelImpl implements Level {
 		for (Adversary adversary : adversaries) {
 			adversaryLocations.put(adversary, bottomRightRoom);
 			placeActorValidly(adversary, bottomRightRoom);
+		}
+	}
+
+	@Override
+	public void placeActorsSpecifiedLocation(Map<Player, Point> players,
+			Map<Adversary, Point> adversaries) {
+
+		//Add players to the corresponding LevelComponent
+		for (Map.Entry<Player, Point> entry : players.entrySet()) {
+			//Find the component based on the position of the player
+			LevelComponent component = findComponent(entry.getValue());
+
+			//Track the player and the LevelComponent they are located in
+			this.playerLocations.put(entry.getKey(), component);
+
+			//Check that the destination of the player is a space and place the actor
+			//If the location is not a space, throw the corresponding error
+			Tile destinationTile = component.getDestinationTile(entry.getValue());
+			EntityType destinationEntity = component.getEntityType(destinationTile);
+			if (!(entry.getKey().isTraversable(destinationEntity))) {
+				throw new IllegalArgumentException("Cannot place player, destination is not a space");
+			}
+			component.placeActor(entry.getKey(), entry.getValue());
+		}
+		//Add adversaries to corresponding LevelComponent
+		for (Map.Entry<Adversary, Point> entry : adversaries.entrySet()) {
+			//Find the component based on the position of the adversary
+			LevelComponent component = findComponent(entry.getValue());
+
+			//Track the adversary and the LevelComponent they are located in
+			this.adversaryLocations.put(entry.getKey(), component);
+
+			//Check that the destination of the adversary is a space and place the actor
+			//If the location is not a space, throw the corresponding error
+			Tile destinationTile = component.getDestinationTile(entry.getValue());
+			EntityType destinationEntity = component.getEntityType(destinationTile);
+			if (!(entry.getKey().isTraversable(destinationEntity))) {
+				throw new IllegalArgumentException("Cannot place adversary, destination is not a space");
+			}
+			component.placeActor(entry.getKey(), entry.getValue());
 		}
 	}
 
@@ -357,6 +364,26 @@ public class LevelImpl implements Level {
 			} catch (IllegalArgumentException e) {
 				//Do nothing
 			}
+		}
+	}
+
+
+	@Override
+	public void removeActor(Actor actor) {
+		if (actor instanceof Player) {
+			if (!this.playerLocations.containsKey(actor)) {
+				throw new IllegalArgumentException("Player does not exist in the level");
+			}
+			LevelComponent playerLocation = this.playerLocations.get(actor);
+			playerLocation.removeActor(actor);
+			this.playerLocations.remove(actor);
+		} else if (actor instanceof Adversary) {
+			if (!this.adversaryLocations.containsKey(actor)) {
+				throw new IllegalArgumentException("Adversary does not exist in the level");
+			}
+			LevelComponent adversaryLocation = this.adversaryLocations.get(actor);
+			adversaryLocation.removeActor(actor);
+			this.adversaryLocations.remove(actor);
 		}
 	}
 
@@ -903,13 +930,7 @@ public class LevelImpl implements Level {
 	public Boolean getLevelExited() { return this.levelExited; }
 
 	@Override
-	public List<LevelComponent> getLevelMap() {
-		List<LevelComponent> mapCopy = new ArrayList<>();
-		for (LevelComponent component : this.levelMap) {
-			component.copy();
-		}
-		return mapCopy;
-	}
+	public List<LevelComponent> getLevelMap() { return this.levelMap; }
 
 	@Override
 	public List<Item> getItems() {

@@ -25,8 +25,12 @@ public class Zombie extends Adversary {
 
 	@Override
 	public InteractionResult getInteractionResult(EntityType entityType) {
-		//An adversary cannot move to a space that has a key, exit, wall, or another adversary
+		//An adversary cannot move to a space that has a wall, or another adversary
 		switch (entityType) {
+			case KEY:
+				//This will return the same result as space
+			case EXIT:
+				//This will return the same result as space
 			case HALL_SPACE:
 				//This will return the same result as space
 			case SPACE:
@@ -41,8 +45,12 @@ public class Zombie extends Adversary {
 	@Override
 	public InteractionResult getTileInteractionResult(Tile destTile) {
 		EntityType destType = destTile.getEntityType();
-		//An adversary cannot move to a space that has a key, exit, wall, or another adversary
+		//An adversary cannot move to a space that has a wall, or another adversary
 		switch (destType) {
+			case KEY:
+				//This will return the same result as space
+			case EXIT:
+				//This will return the same result as space
 			case HALL_SPACE:
 				//This will return the same result as space
 			case SPACE:

@@ -210,14 +210,6 @@ public class Room implements LevelComponent {
 		}
 		return entityMap;
 	}
-
-
-	@Override
-	public LevelComponent copy() {
-		//How would we copy the doors
-		//Still will always point to the same place
-		return null;
-	}
 	
 	@Override
 	public int hashCode() {

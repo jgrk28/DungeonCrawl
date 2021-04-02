@@ -101,10 +101,10 @@ public class LocalGhost extends AbstractLocalAdversary {
 	 * or location of the wall adjacent to the door
 	 */
 	private Point stepTowardsBoundary(Point closestDoor) {
-		LevelComponent component = this.level.findComponent(this.currentLocation);
 		if (this.currentLocation.equals(closestDoor)) {
 			List<Point> possibleMoves = generatePotentialMoves();
 			for (Point move : possibleMoves) {
+				LevelComponent component = this.level.findComponent(move);
 				Tile tile = component.getDestinationTile(move);
 				if (tile instanceof Wall) {
 					return move;
@@ -122,8 +122,7 @@ public class LocalGhost extends AbstractLocalAdversary {
 	 * @return true if the move is valid, false otherwise
 	 */
 	protected Boolean checkValidMove(Point move) {
-		return this.occupiedLevel.checkValidMove(adversaryAvatar, move)
-		&& !adversaryLocations.values().contains(move);
+		return this.level.checkValidMove(adversaryAvatar, move);
 	}
 
 }

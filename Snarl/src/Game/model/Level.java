@@ -28,11 +28,23 @@ public interface Level extends LevelModelView {
 	void placeActors(List<Player> players, List<Adversary> adversaries);
 
 	/**
+	 * Places the actors at their specified locations in the level
+	 * @param players - all players and their location in the level
+	 * @param adversaries - all adversaries and their location in the level
+	 */
+	void placeActorsSpecifiedLocation(Map<Player, Point> players, Map<Adversary, Point> adversaries);
+
+	/**
 	 * Places the actors randomly in the level
 	 * @param players - all players in the level
 	 * @param adversaries - all adversaries in the level
 	 */
 	void placeActorsRandomly(List<Player> players, List<Adversary> adversaries);
+
+	/**
+	 * TODO add comment
+	 */
+	void removeActor(Actor actor);
 
 	/**
      * Processes a player's action by moving the player and

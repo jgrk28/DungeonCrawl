@@ -83,10 +83,11 @@ public class LocalZombie extends AbstractLocalAdversary {
 	protected Boolean checkValidMove(Point move) {
 		LevelComponent zombieComponent = this.level.findComponent(this.currentLocation);
 		Set<Point> doors = zombieComponent.getDoors().keySet();
+		LevelComponent moveComponent = this.level.findComponent(move);
 
-		return this.occupiedLevel.checkValidMove(adversaryAvatar, move)
-		&& !adversaryLocations.values().contains(move)
-		&& !doors.contains(move);
+		return this.level.checkValidMove(adversaryAvatar, move)
+		&& !doors.contains(move)
+		&& zombieComponent.equals(moveComponent);
 	}
 
 }
