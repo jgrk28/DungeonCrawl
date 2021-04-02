@@ -102,12 +102,12 @@ public class PlayerModelView {
   public String getName() { return this.player.getName(); }
 
   /**
-   * TODO add comment
+   * Gets the number of keys that this player has found over the course of the game
    */
   public int getKeysFound() { return this.player.getKeysFound(); }
 
   /**
-   * TODO add comment
+   * Gets the number of times the player has exited over the course of the game
    */
   public int getNumExits() { return this.player.getNumExits(); }
   

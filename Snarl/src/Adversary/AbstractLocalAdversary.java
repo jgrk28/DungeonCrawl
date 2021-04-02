@@ -1,6 +1,5 @@
 package Adversary;
 
-import Game.model.Actor;
 import Game.model.LevelImpl;
 import Game.model.Player;
 import java.awt.Point;

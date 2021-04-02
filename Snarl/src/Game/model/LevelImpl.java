@@ -332,9 +332,9 @@ public class LevelImpl implements Level {
 	}
 
 	/**
-	 * TODO add comment
-	 * @param actor
-	 * @param room
+	 * Places the provided actor at a random position in the room
+	 * @param actor - the actor to place
+	 * @param room - the room to place them in
 	 */
 	private void placeActorRandomly(Actor actor, Room room) {
 		Point roomTopLeft = room.getTopLeftBound();

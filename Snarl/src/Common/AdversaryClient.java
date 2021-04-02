@@ -1,6 +1,5 @@
 package Common;
 
-import Game.model.Actor;
 import java.awt.Point;
 import java.util.Map;
 

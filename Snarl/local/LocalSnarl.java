@@ -1,17 +1,11 @@
 
 import Observer.LocalObserver;
-import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.PrintStream;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
@@ -21,7 +15,6 @@ import Game.model.Level;
 import Game.model.LevelComponent;
 import Game.model.LevelImpl;
 import Level.TestLevel;
-import Manager.TestManager;
 import Player.LocalPlayer;
 
 /**

@@ -290,28 +290,28 @@ public class Player extends AbstractActor {
 	}
 
 	/**
-	 * TODO add comment
+	 * Increments the keysFound field when the player finds a key in the level
 	 */
 	public void foundKey() {
 		this.keysFound++;
 	}
 
 	/**
-	 * TODO add comment
+	 * Increments the numExits field when the player exits the level
 	 */
 	public void exited() {
 		this.numExits++;
 	}
 
 	/**
-	 * TODO add comment
+	 * Getter for the keysFound field
 	 */
 	public int getKeysFound() {
 		return this.keysFound;
 	}
 
 	/**
-	 * TODO add comment
+	 * Getter for the numExits field
 	 */
 	public int getNumExits() {
 		return this.numExits;
