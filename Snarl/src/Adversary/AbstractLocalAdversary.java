@@ -41,10 +41,16 @@ public abstract class AbstractLocalAdversary implements AdversaryClient {
 	@Override
 	public void updateActorLocations(Map<Player, Point> playerLocations,
 			Map<Adversary, Point> adversaryLocations, Adversary adversaryAvatar) {
+		//if they exist, remove old adversaries and players from our level
+
 		this.playerLocations = playerLocations;
 		this.adversaryLocations = adversaryLocations;
 		this.adversaryAvatar = adversaryAvatar;
 		this.currentLocation = adversaryLocations.get(adversaryAvatar);
+
+		//add new adversaries and players from our level
+
+		//This is not actually copying the level because the level map is not copied
 		this.occupiedLevel = new LevelImpl(
 				this.playerLocations,
 				this.adversaryLocations,

@@ -904,7 +904,11 @@ public class LevelImpl implements Level {
 
 	@Override
 	public List<LevelComponent> getLevelMap() {
-		return this.levelMap;
+		List<LevelComponent> mapCopy = new ArrayList<>();
+		for (LevelComponent component : this.levelMap) {
+			component.copy();
+		}
+		return mapCopy;
 	}
 
 	@Override

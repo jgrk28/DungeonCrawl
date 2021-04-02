@@ -84,8 +84,8 @@ public class GameManagerTest {
 		this.gameManager.registerPlayer("Jacob", player1);
 		this.gameManager.startGame(this.levels);
 		Level firstLevel = this.gameManager.dungeon.getCurrentLevel();
-		Map<Actor, Point> players = firstLevel.getActivePlayers();
-		Map<Actor, Point> expectedPlayers = new HashMap<>();
+		Map<Player, Point> players = firstLevel.getActivePlayers();
+		Map<Player, Point> expectedPlayers = new HashMap<>();
 		expectedPlayers.put(new Player("Jacob"), new Point(1, 1));
 
 		assertEquals(1, this.gameManager.dungeon.getCurrentLevelIndex());
@@ -109,7 +109,7 @@ public class GameManagerTest {
 		} catch (IllegalStateException e) {
 			//Do nothing this will happen when the player runs out of moves
 		}
-		Map<Actor, Point> players = firstLevel.getActivePlayers();
+		Map<Player, Point> players = firstLevel.getActivePlayers();
 
 		assertEquals(1, this.gameManager.dungeon.getCurrentLevelIndex());
 		assertEquals(this.levels.get(0), this.gameManager.dungeon.getCurrentLevel());
@@ -132,7 +132,7 @@ public class GameManagerTest {
 			//Do nothing this will happen when the player runs out of moves
 		}
 		Level secondLevel = this.gameManager.dungeon.getCurrentLevel();
-		Map<Actor, Point> players = secondLevel.getActivePlayers();
+		Map<Player, Point> players = secondLevel.getActivePlayers();
 
 		assertEquals(2, this.gameManager.dungeon.getCurrentLevelIndex());
 		assertEquals(this.levels.get(1), secondLevel);
@@ -167,8 +167,8 @@ public class GameManagerTest {
 		this.gameManager.playLevel(firstLevel);
 
 		Level currLevel = this.gameManager.dungeon.getCurrentLevel();
-		Map<Actor, Point> players = currLevel.getActivePlayers();
-		Map<Actor, Point> expectedPlayers = new HashMap<>();
+		Map<Player, Point> players = currLevel.getActivePlayers();
+		Map<Player, Point> expectedPlayers = new HashMap<>();
 
 		assertEquals(1, this.gameManager.dungeon.getCurrentLevelIndex());
 		assertEquals(this.levels.get(0), currLevel);

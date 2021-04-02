@@ -464,6 +464,13 @@ public class Hall implements LevelComponent {
 	}
 
 	@Override
+	public LevelComponent copy() {
+		//How would we copy the rooms
+		//Still will always point to the same place
+		return null;
+	}
+
+	@Override
 	public int hashCode() {
 	  return this.waypoints.hashCode() 
 			  * this.componentMap.hashCode()

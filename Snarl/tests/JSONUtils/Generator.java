@@ -60,9 +60,9 @@ public class Generator {
    * @param actors - a map of all actors and their locations
    * @return a JSONActor list of JSONObjects 
    */
-  static public JSONArray generateJSONActorList(Map<Actor, Point> actors) {
+  static public JSONArray generateJSONActorList(Map<? extends Actor, Point> actors) {
     JSONArray actorPositionList = new JSONArray();
-    for (Map.Entry<Actor, Point> actorEntry : actors.entrySet()) {
+    for (Map.Entry<? extends Actor, Point> actorEntry : actors.entrySet()) {
       JSONObject actorJSON = new JSONObject();
       Actor actor = actorEntry.getKey();
       Point position = actorEntry.getValue();

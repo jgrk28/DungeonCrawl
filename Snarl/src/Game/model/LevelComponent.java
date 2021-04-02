@@ -84,4 +84,9 @@ public interface LevelComponent {
    */
   Map<Point, Hall> getDoors();
 
+  /**
+   * TODO add comment
+   */
+  LevelComponent copy();
+
 }
