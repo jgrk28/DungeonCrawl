@@ -380,6 +380,7 @@ public void endGame() {
       output.append(player.getName() + ": Exited " + player.getNumExits() + " times. " +
           "Found " + player.getKeysFound() + " keys.\n");
     }
+    output.append("\n");
 
     //Output the player rankings to all observers and players
     String stringOut = output.toString();

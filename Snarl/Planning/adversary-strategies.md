@@ -2,7 +2,7 @@
 
 Adversaries are the enemies in the dungeon and have automated movements to chase down the player and provide an interesting game experience. The movement strategies are different for each type of adversary. Ghosts have the ability to move freely through the level, and can also teleport randomly by moving into walls. Zombies are constrained to the room that they are spawned in. If a player is located within that room, they will chase the player. Otherwise, they will move arbitrarily. 
 
-###Ghosts###
+### Ghosts ###
 - Checks if there is a player within a 6 step radius of the Ghost
 - If players exist within that radius, take 1 step towards the closest player
 - If there are no players in that radius, move towards the closest door and teleport through an adjacent Wall
@@ -48,7 +48,7 @@ XXXX    X...X
 ```
 In this example, the Ghost will move towards the closest door since the player is not in their chase radius. Once the Ghost reaches the door, they will teleport.
 
-###Zombies###
+### Zombies ###
 - Checks if there is a player in the Zombie's LevelComponent
 - If there are players in the LevelComponent, take 1 step towards the closest player
 - If there are no players in the LevelComponent,make some valid random move

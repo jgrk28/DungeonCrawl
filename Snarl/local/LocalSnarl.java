@@ -33,7 +33,7 @@ public class LocalSnarl {
 	 */
 	public static void main(String[] args) throws FileNotFoundException {
 		//Set the defaults for the game
-		String fileName = "local/snarl.levels";
+		String fileName = "snarl.levels";
 		int numPlayers = 1;
 		int startLevel = 1;
 		Boolean observer = false;
@@ -41,7 +41,7 @@ public class LocalSnarl {
 		for (int i = 0; i < args.length; i++) {
 			switch (args[i]) {
 				case "--levels":
-					fileName = "local/" + args[i + 1];
+					fileName = args[i + 1];
 					i++;
 					break;
 				case "--players":

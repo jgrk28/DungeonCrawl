@@ -49,14 +49,14 @@ public class TextualPlayerView extends AbstractTextualView {
 		StringBuilder toOutput = new StringBuilder();
 		switch (gameStatus) {
 			case WON:
-				toOutput.append("Congratulations! You Won!\n");
+				toOutput.append("Congratulations! You Won!\n\n");
 				break;
 			case LOST:
-				toOutput.append("Sorry. You lost on level " + playerModelView.getCurrentLevel() + " :(\n");
+				toOutput.append("Sorry. You lost on level " + playerModelView.getCurrentLevel() + " :(\n\n");
 				break;
 			case ACTIVE:
 				if (levelStatus.equals(GameState.WON)) {
-					toOutput.append("You beat the level! Continuing to next level.\n");
+					toOutput.append("You beat the level! Continuing to next level.\n\n");
 				} else {
 					toOutput.append(drawActiveLevel());
 				}
