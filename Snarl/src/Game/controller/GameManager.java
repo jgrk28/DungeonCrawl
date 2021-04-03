@@ -13,6 +13,7 @@ import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import Adversary.LocalGhost;
 import Adversary.LocalZombie;
@@ -221,11 +222,10 @@ public class GameManager {
       sendAdversariesLevel(currLevel);
       int levelNum = this.dungeon.getCurrentLevelIndex();
       List<Adversary> adversaries = getLevelAdversaries(levelNum);
-      this.dungeon.startCurrentLevel(adversaries);
+      this.dungeon.startCurrentLevelRandom(adversaries);
+      notifyAllObservers();
       playLevel(currLevel);
     }
-    //When the game is over notify all observers of the end state
-    notifyAllObservers();
   }
 
   /**
@@ -241,8 +241,6 @@ public class GameManager {
       //Adversary turns
       processAdversaryTurns(level);
     }
-    //Display to observers when the level ends to provide result
-    notifyAllObservers();
   }
   
   /**
@@ -272,9 +270,12 @@ public class GameManager {
             notifyAllObservers();
           } else {
             //If user entered invalid move notify them and skip their turn
-            client.displayMessage("Invalid move, turn skipped");
+            client.displayMessage("Invalid move, turn skipped\n");
           }
-        }
+         if (!this.ruleChecker.isLevelOver().equals(GameState.ACTIVE)) {
+        	 break;
+         }
+	  }
   }
   
   /**
@@ -284,6 +285,10 @@ public class GameManager {
    */
   private void processAdversaryTurns(Level level) {
 	  for (Map.Entry<Adversary, AdversaryClient> currAdversary : adversaryClients.entrySet()) {
+          if (!this.ruleChecker.isLevelOver().equals(GameState.ACTIVE)) {
+          	 break;
+           }
+          
           Map<Player, Point> players = level.getActivePlayers();
           Map<Adversary, Point> adversaries = level.getActiveAdversaries();
           AdversaryClient client = currAdversary.getValue();
@@ -299,7 +304,18 @@ public class GameManager {
 
           if (this.ruleChecker.checkValidMove(adversary, adversaryDestination)) {
             //Execute the move and corresponding interaction
-            level.adversaryAction(adversary, adversaryDestination);
+        	
+            InteractionResult result = level.adversaryAction(adversary, adversaryDestination);
+            
+            //If a player is removed, update the PlayerClient
+            if (result.equals(InteractionResult.REMOVE_PLAYER)) {
+            	Map<Player, Point> activePlayersAfterMove = level.getActivePlayers();
+            	Set<Player> allActivePlayers = players.keySet();   	
+            	allActivePlayers.removeAll(activePlayersAfterMove.keySet());
+            	for (Player player : allActivePlayers) {
+            		processResult(result, player, this.playerClients.get(player));
+            	}
+            }
 
             //Notify all observers of the current game state for each turn
             notifyAllObservers();
@@ -319,14 +335,14 @@ public class GameManager {
   private void processResult(InteractionResult result, Player player, Common.Player client) {
     switch (result) {
       case FOUND_KEY:
-        client.displayMessage("Player " + player.getName() + " found the key.");
+        client.displayMessage("Player " + player.getName() + " found the key.\n");
         player.foundKey();
         break;
       case REMOVE_PLAYER:
-        client.displayMessage("Player " + player.getName() + " was expelled.");
+        client.displayMessage("Player " + player.getName() + " was expelled.\n");
         break;
       case EXIT:
-        client.displayMessage("Player " + player.getName() + " exited.");
+        client.displayMessage("Player " + player.getName() + " exited.\n");
         player.exited();
         break;
 	default:
@@ -339,7 +355,8 @@ public class GameManager {
    * If there is more than one player, rank the players by the number of times they exited (most 
    * to least), followed by the number of keys (most to least)
    */
-  public void endGame() {
+  @SuppressWarnings("unchecked")
+public void endGame() {
     List<Player> orderedPlayers = new ArrayList<>(this.playerClients.keySet());
 
     //Compare all players by the number of times they exited and the number of keys they found

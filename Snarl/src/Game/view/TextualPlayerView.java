@@ -1,6 +1,8 @@
 package Game.view;
 
 import Game.model.GameState;
+
+import java.awt.Point;
 import java.io.PrintStream;
 import java.util.List;
 
@@ -73,13 +75,15 @@ public class TextualPlayerView extends AbstractTextualView {
 	private String drawActiveLevel() {
 		int currLevelIndex = playerModelView.getCurrentLevel();
 		Boolean isAlive = playerModelView.isPlayerAlive();
+		Point playerLocation = playerModelView.getPosition();
 
 		StringBuilder toOutput = new StringBuilder();
 		toOutput.append("You are currently on level: " + currLevelIndex + "\n");
 		if (isAlive) {
 			toOutput.append("You are active in the level\n");
+			toOutput.append("Current location: [" + playerLocation.x + "," + playerLocation.y + "]\n");
 			List<List<EntityType>> level = playerModelView.getMap();
-			toOutput.append(drawLevelMap(level));
+			toOutput.append(drawLevelMap(level) + "\n");
 		} else {
 			toOutput.append("You are no longer active in the level\n");
 		}

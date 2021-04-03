@@ -10,6 +10,8 @@ import Common.Observer;
 public class LocalObserver implements Observer {
 
 	@Override
-	public void update(String gameState) { System.out.println(gameState); }
+	public void update(String gameState) { 
+		System.out.print("OBSERVER VIEW\n");
+		System.out.print(gameState); }
 
 }

@@ -41,14 +41,15 @@ public class LocalSnarl {
 		for (int i = 0; i < args.length; i++) {
 			switch (args[i]) {
 				case "--levels":
-					fileName = args[i + 1];
+					fileName = "local/" + args[i + 1];
 					i++;
 					break;
 				case "--players":
 					numPlayers = Integer.parseInt(args[i + 1]);
 					i++;
 					if (numPlayers != 1) {
-						throw new IllegalArgumentException("Only one player is supported");
+						System.out.println("Only one player is supported. Ending game.");
+						return;
 					}
 					break;
 				case "--start":
@@ -85,12 +86,12 @@ public class LocalSnarl {
 	 * @param manager - the game manager
 	 * @param numPlayers - the number of players in the game
 	 */
+	@SuppressWarnings("resource")
 	private void registerPlayers(GameManager manager, int numPlayers) {
 		for (int i = 0; i < numPlayers; i++) {
 			System.out.println("Enter name for player " + i);
 			Scanner in = new Scanner(System.in);
 			String name = in.next();
-			in.close();
 			manager.registerPlayer(name, new LocalPlayer());
 		}		
 	}

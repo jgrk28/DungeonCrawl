@@ -44,26 +44,13 @@ public abstract class AbstractLocalAdversary implements AdversaryClient {
 		this.level = startLevel;	
 	}
 
-	//TODO Make a version that does not edit the given level as in the local version the level
-	//object will be updated
 	@Override
 	public void updateActorLocations(Map<Player, Point> playerLocations,
 			Map<Adversary, Point> adversaryLocations, Adversary adversaryAvatar) {
-		//If they exist, remove old adversaries and players from our level
-		for (Adversary adversary : this.adversaryLocations.keySet()) {
-			this.level.removeActor(adversary);
-		}
-		for (Player player : this.playerLocations.keySet()) {
-			this.level.removeActor(player);
-		}
-
 		this.playerLocations = playerLocations;
 		this.adversaryLocations = adversaryLocations;
 		this.adversaryAvatar = adversaryAvatar;
 		this.currentLocation = adversaryLocations.get(adversaryAvatar);
-
-		//Add new adversaries and players from our level
-		this.level.placeActorsSpecifiedLocation(this.playerLocations, this.adversaryLocations);
 	}
 
 	/**

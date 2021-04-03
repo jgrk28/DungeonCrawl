@@ -17,6 +17,7 @@ public class LocalPlayer implements Player {
 
 	private Point currentLocation;
 
+	@SuppressWarnings("resource")
 	@Override
     public Point takeTurn(List<Point> validMoves) {
 		//Prompt the user to take a turn
@@ -29,7 +30,6 @@ public class LocalPlayer implements Player {
 			int x = in.nextInt();
 			System.out.println("Enter y position");
 			int y = in.nextInt();
-			in.close();
 			//Create a new point based on the input
 			return new Point(x,y);
 		} catch (java.util.InputMismatchException e) {
@@ -64,13 +64,19 @@ public class LocalPlayer implements Player {
 	//state of their immediate surroundings
     @Override
     public void update(PlayerModelView gameState) {
-			this.currentLocation = gameState.getPosition();
-			TextualPlayerView playerView = new TextualPlayerView(gameState, System.out);
+    	try {
+    		this.currentLocation = gameState.getPosition();
+    	} catch (NullPointerException e) {
+    		//If the player is no longer in the level
+    		this.currentLocation = null;
+    	} 
+		TextualPlayerView playerView = new TextualPlayerView(gameState, System.out);
+		System.out.println("PLAYER VIEW");
  	    playerView.draw();
     }
 
 	@Override
 	public void displayMessage(String message) {
-		System.out.println(message);
+		System.out.println("PLAYER VIEW\n" + message);
 	}
 }

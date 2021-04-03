@@ -1,7 +1,9 @@
 package Adversary;
 
 import java.awt.Point;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
 
 import Game.model.LevelComponent;
@@ -66,13 +68,21 @@ public class LocalZombie extends AbstractLocalAdversary {
 	 */
 	private Point arbitraryMove() {
 		List<Point> potentialMoves = generatePotentialMoves();
+		List<Point> validMoves = new ArrayList<>();
 		
 		for (Point move : potentialMoves) {
 			if (checkValidMove(move)) {
-				return move;
+				validMoves.add(move);
 			}
 		}	
-		return this.currentLocation;
+		
+		if (validMoves.isEmpty()) {
+			return this.currentLocation;
+		}
+		
+		Random random = new Random();
+		int index = random.nextInt(validMoves.size());
+		return validMoves.get(index);
 	}
 	
 	/**
