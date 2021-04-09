@@ -60,7 +60,7 @@ public class GameManager {
    */
   public void registerPlayer(String name, Common.Player playerClient) {
 	  if (playerClients.size() >= 4) {
-		  throw new IllegalArgumentException("No more players can be added to the game");
+		  throw new IllegalStateException("No more players can be added to the game");
 	  }
 	  if (!checkUniqueName(name)) {
 		  throw new IllegalArgumentException("A unique name must be provided");
@@ -249,6 +249,8 @@ public class GameManager {
    * @throws IllegalArgumentException if the player's turn is invalid
    */
   private void processPlayerTurns(Level level) {
+	  int maxAttempts = 3;
+	  
 	  for (Map.Entry<Player, Common.Player> currPlayer : playerClients.entrySet()) {
           Player player = currPlayer.getKey();
           Common.Player client = currPlayer.getValue();
@@ -260,17 +262,26 @@ public class GameManager {
           PlayerModelView playerModelView = new PlayerModelView(player, this.dungeon);
       	  List<Point> validMoves = playerModelView.getValidMoves();
           Point playerDestination = client.takeTurn(validMoves);
+          
+          for (int i = 0; i < maxAttempts; i++ ) {
+              
+        	  if (playerDestination == null) {
+            	  playerDestination = playerModelView.getPosition();
+              }
+              
+        	  if (this.ruleChecker.checkValidMove(player, playerDestination)) {
+        		  //Execute the move and corresponding interaction
+        		  InteractionResult result = level.playerAction(player, playerDestination);
+        		  processResult(result, player, client);
 
-          if (this.ruleChecker.checkValidMove(player, playerDestination)) {
-            //Execute the move and corresponding interaction
-            InteractionResult result = level.playerAction(player, playerDestination);
-            processResult(result, player, client);
-
-            //Notify all observers of the current game state for each turn
-            notifyAllObservers();
-          } else {
-            //If user entered invalid move notify them and skip their turn
-            client.displayMessage("Invalid move, turn skipped\n");
+        		  //Notify all observers of the current game state for each turn
+        		  notifyAllObservers();
+        		  
+        		  break;
+        	  } else {
+        		  //If user entered invalid move notify them and skip their turn
+        		  playerDestination = client.takeTurn(validMoves);
+        	  }
           }
          if (!this.ruleChecker.isLevelOver().equals(GameState.ACTIVE)) {
         	 break;
