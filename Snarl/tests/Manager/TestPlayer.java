@@ -142,4 +142,14 @@ public class TestPlayer implements Player {
 		// Do Nothing
 	}
 
+	@Override
+	public void sendLevelStart(int levelIndex, Set<Game.model.Player> levelPlayers) {
+		// Do Nothing
+	}
+
+	@Override
+	public void sendLevelEnd(Set<Game.model.Player> levelPlayers) {
+		// Do Nothing
+	}
+
 }

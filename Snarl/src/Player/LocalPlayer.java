@@ -7,6 +7,7 @@ import java.util.Scanner;
 import Common.Player;
 import Game.modelView.PlayerModelView;
 import Game.view.TextualPlayerView;
+import java.util.Set;
 
 /**
  * The LocalPlayer represents a local connection to the user in a game of Snarl.
@@ -78,5 +79,15 @@ public class LocalPlayer implements Player {
 	@Override
 	public void displayMessage(String message) {
 		System.out.println("PLAYER VIEW\n" + message);
+	}
+
+	@Override
+	public void sendLevelStart(int levelIndex, Set<Game.model.Player> levelPlayers) {
+		//TODO implement if we want local start level
+	}
+
+	@Override
+	public void sendLevelEnd(Set<Game.model.Player> levelPlayers) {
+		//TODO implement if we want local end level
 	}
 }

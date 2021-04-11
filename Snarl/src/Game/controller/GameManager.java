@@ -140,6 +140,7 @@ public class GameManager {
 
     sendAdversariesLevel(this.dungeon.getCurrentLevel());
     this.dungeon.startCurrentLevel(adversaries);
+    sendLevelStart();
     notifyAllObservers();
   }
   
@@ -164,6 +165,7 @@ public class GameManager {
     sendAdversariesLevel(this.dungeon.getCurrentLevel());
     List<Adversary> adversaries = getLevelAdversaries(startLevel);
     this.dungeon.startCurrentLevelRandom(adversaries);
+    sendLevelStart();
     notifyAllObservers();
   }
 
@@ -241,6 +243,7 @@ public class GameManager {
       //Adversary turns
       processAdversaryTurns(level);
     }
+    sendLevelEnd();
   }
   
   /**
@@ -438,6 +441,27 @@ public void endGame() {
 	  for (Map.Entry<Player, Common.Player> currPlayer : playerClients.entrySet()) {
 		  PlayerModelView playerModelView = new PlayerModelView(currPlayer.getKey(), this.dungeon);
 		  currPlayer.getValue().update(playerModelView);
+    }
+  }
+
+  /**
+   * TODO
+   */
+  private void sendLevelStart() {
+    for (Map.Entry<Player, Common.Player> currPlayer : playerClients.entrySet()) {
+      Common.Player playerClient = currPlayer.getValue();
+      int levelIndex = this.dungeon.getCurrentLevelIndex();
+      playerClient.sendLevelStart(levelIndex, playerClients.keySet());
+    }
+  }
+
+  /**
+   * TODO
+   */
+  private void sendLevelEnd() {
+    for (Map.Entry<Player, Common.Player> currPlayer : playerClients.entrySet()) {
+      Common.Player playerClient = currPlayer.getValue();
+      playerClient.sendLevelEnd(playerClients.keySet());
     }
   }
 

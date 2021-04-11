@@ -4,6 +4,7 @@ import java.awt.Point;
 import java.util.List;
 
 import Game.modelView.PlayerModelView;
+import java.util.Set;
 
 /**
  * Represents the interests of the human behind the keyboard
@@ -32,4 +33,14 @@ public interface Player {
 	 * @param message - the message to be displayed
 	 */
 	void displayMessage(String message);
+
+	/**
+	 * TODO
+	 */
+	void sendLevelStart(int levelIndex, Set<Game.model.Player> levelPlayers);
+
+	/**
+	 * TODO
+	 */
+	void sendLevelEnd(Set<Game.model.Player> levelPlayers);
 }

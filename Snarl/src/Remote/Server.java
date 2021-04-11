@@ -1,5 +1,11 @@
 package Remote;
 
+import Game.model.Actor;
+import Game.model.Item;
+import Game.model.Player;
+import Game.modelView.EntityType;
+import Game.modelView.PlayerModelView;
+import JSONUtils.Generator;
 import java.awt.Point;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -10,9 +16,12 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
+import java.util.Set;
+import javax.swing.InternalFrameFocusTraversalPolicy;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONTokener;
@@ -31,6 +40,9 @@ public class Server {
 	private GameManager gameManager;
 	private ServerSocket socket;
 	private Map<String, Socket> playerSockets;
+	private Map<String, Integer> playerKeys;
+	private Map<String, Integer> playerExits;
+	private Map<String, Integer> playerEjects;
 	
 	/**
 	 * TODO
@@ -48,6 +60,9 @@ public class Server {
 		this.gameManager = new GameManager();
 		this.welcomeMessage = generateWelcomeMessage(ipAddress, port);
 		this.playerSockets = new HashMap<>();
+		this.playerKeys = new HashMap<>();
+		this.playerExits = new HashMap<>();
+		this.playerEjects = new HashMap<>();
 	}
 	
 	/**
@@ -82,10 +97,12 @@ public class Server {
 		if (observe) {
 			this.gameManager.attachObserver(new LocalObserver());
 		}
-		
+
 		this.gameManager.startGame(levels, 1);	
 		this.gameManager.playGame();
 		this.gameManager.endGame();
+		//TODO send end-game
+		//TODO disconnect clients
 	}
 	
 
@@ -126,25 +143,61 @@ public class Server {
 			}
 			
 			this.playerSockets.put(name, playerSocket);
+			this.playerKeys.put(name, 0);
+			this.playerExits.put(name, 0);
+			this.playerEjects.put(name, 0);
 			
 		}
 		
 	}
-	
+
+	/**
+	 * TODO
+	 * @param name
+	 * @param levelIndex
+	 * @param levelPlayers
+	 * @return
+	 */
+	public void sendLevelStart(String name, int levelIndex, Set<Player> levelPlayers) {
+		Socket playerSocket = this.playerSockets.get(name);
+		JSONObject startLevel = new JSONObject();
+		JSONArray nameList = new JSONArray();
+		for (Player player : levelPlayers) {
+			nameList.put(player.getName());
+		}
+		startLevel.put("type", "start-level");
+		startLevel.put("level", levelIndex);
+		startLevel.put("players", nameList);
+
+		try {
+			DataOutputStream outputToClient = new DataOutputStream(playerSocket.getOutputStream());
+
+			outputToClient.writeBytes(startLevel.toString());
+		} catch (IOException e) {
+			throw new IllegalStateException("Unable to communicate with player socket");
+		}
+
+	}
+
+	//TODO make sure player client can handle no movement
 	/**
 	 * TODO
 	 * @param name
 	 * @param validMoves
 	 * @return
-	 * @throws IOException
 	 */
-	public Point takeTurn(String name, List<Point> validMoves) throws IOException {
+	public Point takeTurn(String name, List<Point> validMoves) {
 		Socket playerSocket = this.playerSockets.get(name);
-		
-		DataOutputStream outputToClient = new DataOutputStream(playerSocket.getOutputStream());
-		BufferedReader inputFromClient = new BufferedReader(new InputStreamReader(playerSocket.getInputStream()));
-		
-		outputToClient.writeBytes("move");
+		BufferedReader inputFromClient;
+		try {
+			DataOutputStream outputToClient = new DataOutputStream(playerSocket.getOutputStream());
+			inputFromClient = new BufferedReader(
+					new InputStreamReader(playerSocket.getInputStream()));
+
+			outputToClient.writeBytes("move");
+		} catch (IOException e) {
+			throw new IllegalStateException("Unable to communicate with player socket");
+		}
 		JSONTokener tokener = new JSONTokener(inputFromClient);
 		Object value = tokener.nextValue();
 		
@@ -161,6 +214,137 @@ public class Server {
 			return Utils.ParseUtils.parsePoint((JSONArray)move);
 		}
 		
+	}
+
+
+	/**
+	 * TODO
+	 * @param name
+	 * @param gameState
+	 * @return
+	 */
+	public void update(String name, PlayerModelView gameState) {
+		Socket playerSocket = this.playerSockets.get(name);
+		JSONObject playerUpdate = new JSONObject();
+
+		//TODO handle if player is dead
+		if (gameState.isPlayerAlive()) {
+			List<List<EntityType>> playerMap = gameState.getMap();
+			Point absolutePosition = gameState.getPosition();
+			List<Point> visibleDoors = gameState.getVisibleDoors();
+			List<Item> visibleItems = gameState.getVisibleItems();
+			Map<Actor, Point> visibleActors = gameState.getVisibleActors();
+
+			//Generate the JSON representation of the player's state
+			JSONArray layout = generateLayout(playerMap, absolutePosition, visibleDoors);
+			JSONArray position = Generator.generateJSONPoint(absolutePosition);
+			JSONArray objects = Generator.generateJSONObjects(visibleItems);
+			JSONArray actors = Generator.generateJSONActorList(visibleActors);
+
+			//Place in the JSONObject format
+			playerUpdate = new JSONObject();
+			playerUpdate.put("type", "player-update");
+			playerUpdate.put("layout", layout);
+			playerUpdate.put("position", position);
+			playerUpdate.put("objects", objects);
+			playerUpdate.put("actors", actors);
+			//TODO add more specific messages
+			playerUpdate.put("message", JSONObject.NULL);
+		}
+
+		try {
+			DataOutputStream outputToClient = new DataOutputStream(playerSocket.getOutputStream());
+
+			outputToClient.writeBytes(playerUpdate.toString());
+		} catch (IOException e) {
+			throw new IllegalStateException("Unable to communicate with player socket");
+		}
+	}
+
+	/**
+	 * Generates the layout of the room that the player is currently located
+	 * in, based on the range of their view
+	 * @param playerMap - a matrix of EntityType that the player can view
+	 * @param playerPosition - the player's position
+	 * @param doors - the locations of the doors in the room
+	 * @return a JSONArray representing the layout of the room
+	 */
+	private JSONArray generateLayout(List<List<EntityType>> playerMap, Point playerPosition, List<Point> doors) {
+		Point topLeftPosition = new Point(playerPosition.x - 2, playerPosition.y - 2);
+		JSONArray layoutOutput = new JSONArray();
+		Set<Point> relativeDoors = new HashSet<>();
+
+		//Get the relative position of the doors
+		for (Point point : doors) {
+			Point relPoint = new Point(point.x - topLeftPosition.x, point.y - topLeftPosition.y);
+			relativeDoors.add(relPoint);
+		}
+
+		for (int i = 0; i < playerMap.size(); i++) {
+			List<EntityType> entityRow = playerMap.get(i);
+			JSONArray JSONRow = new JSONArray();
+			for (int j = 0; j < entityRow.size(); j++) {
+				EntityType entity = entityRow.get(j);
+
+				//If the entity is empty or a wall, place a 0
+				if (entity.equals(EntityType.EMPTY) || entity.equals(EntityType.WALL)) {
+					JSONRow.put(0);
+				}
+				//If the location is a door, place a 2
+				else if (relativeDoors.contains(new Point(j, i))) {
+					JSONRow.put(2);
+				}
+				//Otherwise, place a 1
+				else {
+					JSONRow.put(1);
+				}
+			}
+			layoutOutput.put(JSONRow);
+		}
+		return layoutOutput;
+	}
+
+	/**
+	 * TODO
+	 * @param name
+	 * @param levelPlayers
+	 * @return
+	 */
+	public void sendLevelEnd(String name, Set<Player> levelPlayers) {
+		Socket playerSocket = this.playerSockets.get(name);
+		JSONObject endLevel = new JSONObject();
+
+		String keyName = "";
+		JSONArray exitNameList = new JSONArray();
+		JSONArray ejectsNameList = new JSONArray();
+		for (Player player : levelPlayers) {
+			String playerName = player.getName();
+			int newKeysFound = player.getKeysFound();
+			int newNumExits = player.getNumExits();
+
+			if (newKeysFound > this.playerKeys.get(playerName)) {
+				keyName = playerName;
+			}
+			if (newNumExits > this.playerExits.get(playerName)) {
+				exitNameList.put(playerName);
+			} else {
+				ejectsNameList.put(playerName);
+			}
+		}
+
+		endLevel.put("type", "end-level");
+		endLevel.put("key", keyName);
+		endLevel.put("exits", exitNameList);
+		endLevel.put("ejects", ejectsNameList);
+
+		try {
+			DataOutputStream outputToClient = new DataOutputStream(playerSocket.getOutputStream());
+
+			outputToClient.writeBytes(endLevel.toString());
+		} catch (IOException e) {
+			throw new IllegalStateException("Unable to communicate with player socket");
+		}
+
 	}
 
 }

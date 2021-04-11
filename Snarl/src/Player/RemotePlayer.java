@@ -6,6 +6,7 @@ import java.util.List;
 import Common.Player;
 import Game.modelView.PlayerModelView;
 import Remote.Server;
+import java.util.Set;
 
 /**
  * TODO Add comments
@@ -26,15 +27,22 @@ public class RemotePlayer implements Player {
 	}
 
 	@Override
-	public void update(PlayerModelView gameState) {
-		// TODO Auto-generated method stub
+	public void update(PlayerModelView gameState) { this.server.update(this.name, gameState); }
+
+	@Override
+	public void displayMessage(String message) {
+		// TODO Might want to implement this
 		
 	}
 
 	@Override
-	public void displayMessage(String message) {
-		// TODO Auto-generated method stub
-		
+	public void sendLevelStart(int levelIndex, Set<Game.model.Player> levelPlayers) {
+		this.server.sendLevelStart(this.name, levelIndex, levelPlayers);
+	}
+
+	@Override
+	public void sendLevelEnd(Set<Game.model.Player> levelPlayers) {
+		this.server.sendLevelEnd(this.name, levelPlayers);
 	}
 
 }
