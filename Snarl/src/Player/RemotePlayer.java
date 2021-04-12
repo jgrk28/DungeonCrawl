@@ -27,13 +27,12 @@ public class RemotePlayer implements Player {
 	}
 
 	@Override
-	public void update(PlayerModelView gameState) { this.server.update(this.name, gameState); }
+	public void update(PlayerModelView gameState, String message) { 
+		this.server.update(this.name, gameState, message); 
+	}
 
 	@Override
-	public void displayMessage(String message) {
-		// TODO Might want to implement this
-		
-	}
+	public void displayMessage(String message) { this.server.displayMessage(this.name, message); }
 
 	@Override
 	public void sendLevelStart(int levelIndex, Set<Game.model.Player> levelPlayers) {

@@ -21,7 +21,6 @@ import java.util.List;
 import java.util.Map;
 
 import java.util.Set;
-import javax.swing.InternalFrameFocusTraversalPolicy;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONTokener;
@@ -84,7 +83,7 @@ public class Server {
 	}
 	
 	/**
-	 * 
+	 * TODO
 	 * @param levels
 	 * @param maxPlayers
 	 * @param waitTime
@@ -101,13 +100,13 @@ public class Server {
 		this.gameManager.startGame(levels, 1);	
 		this.gameManager.playGame();
 		this.gameManager.endGame();
-		//TODO send end-game
-		//TODO disconnect clients
+		sendEndGame();
+		disconnectClients();
 	}
 	
 
 	/**
-	 * 
+	 * TODO
 	 * @param maxPlayers
 	 * @param waitTime
 	 * @throws IOException
@@ -159,7 +158,6 @@ public class Server {
 	 * @return
 	 */
 	public void sendLevelStart(String name, int levelIndex, Set<Player> levelPlayers) {
-		Socket playerSocket = this.playerSockets.get(name);
 		JSONObject startLevel = new JSONObject();
 		JSONArray nameList = new JSONArray();
 		for (Player player : levelPlayers) {
@@ -168,15 +166,8 @@ public class Server {
 		startLevel.put("type", "start-level");
 		startLevel.put("level", levelIndex);
 		startLevel.put("players", nameList);
-
-		try {
-			DataOutputStream outputToClient = new DataOutputStream(playerSocket.getOutputStream());
-
-			outputToClient.writeBytes(startLevel.toString());
-		} catch (IOException e) {
-			throw new IllegalStateException("Unable to communicate with player socket");
-		}
-
+		
+		displayMessage(name, startLevel.toString());
 	}
 
 	//TODO make sure player client can handle no movement
@@ -215,6 +206,21 @@ public class Server {
 		}
 		
 	}
+	
+	/**
+	 * TODO
+	 * @param name
+	 * @param message
+	 */
+	public void displayMessage(String name, String message) {
+		Socket playerSocket = this.playerSockets.get(name);
+		try {
+			DataOutputStream outputToClient = new DataOutputStream(playerSocket.getOutputStream());
+			outputToClient.writeBytes(message);
+		} catch (IOException e) {
+			throw new IllegalStateException("Unable to communicate with player socket");
+		}	
+	}
 
 
 	/**
@@ -223,8 +229,7 @@ public class Server {
 	 * @param gameState
 	 * @return
 	 */
-	public void update(String name, PlayerModelView gameState) {
-		Socket playerSocket = this.playerSockets.get(name);
+	public void update(String name, PlayerModelView gameState, String message) {
 		JSONObject playerUpdate = new JSONObject();
 
 		//TODO handle if player is dead
@@ -248,17 +253,14 @@ public class Server {
 			playerUpdate.put("position", position);
 			playerUpdate.put("objects", objects);
 			playerUpdate.put("actors", actors);
-			//TODO add more specific messages
-			playerUpdate.put("message", JSONObject.NULL);
+			if (message == null) {
+				playerUpdate.put("message", JSONObject.NULL);
+			} else {
+				playerUpdate.put("message", message);
+			}
 		}
 
-		try {
-			DataOutputStream outputToClient = new DataOutputStream(playerSocket.getOutputStream());
-
-			outputToClient.writeBytes(playerUpdate.toString());
-		} catch (IOException e) {
-			throw new IllegalStateException("Unable to communicate with player socket");
-		}
+		displayMessage(name, playerUpdate.toString());
 	}
 
 	/**
@@ -311,7 +313,6 @@ public class Server {
 	 * @return
 	 */
 	public void sendLevelEnd(String name, Set<Player> levelPlayers) {
-		Socket playerSocket = this.playerSockets.get(name);
 		JSONObject endLevel = new JSONObject();
 
 		String keyName = "";
@@ -324,11 +325,15 @@ public class Server {
 
 			if (newKeysFound > this.playerKeys.get(playerName)) {
 				keyName = playerName;
+				this.playerKeys.replace(playerName, newKeysFound);
 			}
 			if (newNumExits > this.playerExits.get(playerName)) {
 				exitNameList.put(playerName);
+				this.playerExits.replace(playerName, newNumExits);
 			} else {
 				ejectsNameList.put(playerName);
+				int numExits = this.playerEjects.get(playerName);
+				this.playerEjects.replace(playerName, numExits + 1);
 			}
 		}
 
@@ -336,15 +341,46 @@ public class Server {
 		endLevel.put("key", keyName);
 		endLevel.put("exits", exitNameList);
 		endLevel.put("ejects", ejectsNameList);
-
-		try {
-			DataOutputStream outputToClient = new DataOutputStream(playerSocket.getOutputStream());
-
-			outputToClient.writeBytes(endLevel.toString());
-		} catch (IOException e) {
-			throw new IllegalStateException("Unable to communicate with player socket");
+		
+		displayMessage(name, endLevel.toString());
+	}
+	
+	/**
+	 * TODO
+	 */
+	private void sendEndGame() {
+		JSONObject endGame = new JSONObject();
+		JSONArray playerScoreList = new JSONArray();		
+		endGame.put("type", "end-game");
+		
+		for (String name : this.playerSockets.keySet()) {
+			JSONObject playerScore = new JSONObject();
+			playerScore.put("type", "player-score");
+			playerScore.put("name", name);
+			playerScore.put("exits", this.playerExits.get(name));
+			playerScore.put("ejects", this.playerEjects.get(name));
+			playerScore.put("keys", this.playerKeys.get(name));		
+			playerScoreList.put(playerScore);
 		}
-
+		
+		endGame.put("scores", playerScoreList);
+		
+		for (String name : this.playerSockets.keySet()) {
+			displayMessage(name, endGame.toString());
+		}		
+	}
+	
+	/**
+	 * TODO
+	 */
+	private void disconnectClients() {
+		for (Socket socket : this.playerSockets.values()) {
+			try {
+				socket.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 }

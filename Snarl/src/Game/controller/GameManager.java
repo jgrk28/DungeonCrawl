@@ -141,7 +141,7 @@ public class GameManager {
     sendAdversariesLevel(this.dungeon.getCurrentLevel());
     this.dungeon.startCurrentLevel(adversaries);
     sendLevelStart();
-    notifyAllObservers();
+    notifyAllObservers(null);
   }
   
   /**
@@ -166,7 +166,7 @@ public class GameManager {
     List<Adversary> adversaries = getLevelAdversaries(startLevel);
     this.dungeon.startCurrentLevelRandom(adversaries);
     sendLevelStart();
-    notifyAllObservers();
+    notifyAllObservers(null);
   }
 
   /**
@@ -225,7 +225,7 @@ public class GameManager {
       int levelNum = this.dungeon.getCurrentLevelIndex();
       List<Adversary> adversaries = getLevelAdversaries(levelNum);
       this.dungeon.startCurrentLevelRandom(adversaries);
-      notifyAllObservers();
+      notifyAllObservers(null);
       playLevel(currLevel);
     }
   }
@@ -274,15 +274,18 @@ public class GameManager {
               
         	  if (this.ruleChecker.checkValidMove(player, playerDestination)) {
         		  //Execute the move and corresponding interaction
-        		  InteractionResult result = level.playerAction(player, playerDestination);
-        		  processResult(result, player, client);
+        		  InteractionResult interactionResult = level.playerAction(player, playerDestination);
+        		  String message = processResult(interactionResult, player, client);
+        		  String result = interactionResultToString(interactionResult);
+        		  client.displayMessage(result);
 
         		  //Notify all observers of the current game state for each turn
-        		  notifyAllObservers();
+        		  notifyAllObservers(message);
         		  
         		  break;
         	  } else {
         		  //If user entered invalid move notify them and skip their turn
+        		  client.displayMessage("Invalid");
         		  playerDestination = client.takeTurn(validMoves);
         	  }
           }
@@ -291,6 +294,26 @@ public class GameManager {
          }
 	  }
   }
+  
+	/**
+	 * Converts an InteractionResult to the corresponding string value for the JSON output
+	 * @param interactionResult - the result of a move
+	 * @return a string representing the result of a move
+	 */
+	private String interactionResultToString(InteractionResult interactionResult) {
+		switch (interactionResult) {
+			case NONE:
+				return "OK";
+			case FOUND_KEY:
+				return "Key";
+			case EXIT:
+				return "Exit";
+			case REMOVE_PLAYER:
+				return "Eject";
+			default:
+				throw new IllegalArgumentException("Invalid interaction result type");
+		}
+	}
   
   /**
    * Processes the turns for all adversaries in the level
@@ -321,18 +344,20 @@ public class GameManager {
         	
             InteractionResult result = level.adversaryAction(adversary, adversaryDestination);
             
+            String message = null;
+            
             //If a player is removed, update the PlayerClient
             if (result.equals(InteractionResult.REMOVE_PLAYER)) {
             	Map<Player, Point> activePlayersAfterMove = level.getActivePlayers();
             	Set<Player> allActivePlayers = players.keySet();   	
             	allActivePlayers.removeAll(activePlayersAfterMove.keySet());
             	for (Player player : allActivePlayers) {
-            		processResult(result, player, this.playerClients.get(player));
+            		message = processResult(result, player, this.playerClients.get(player));
             	}
             }
 
             //Notify all observers of the current game state for each turn
-            notifyAllObservers();
+            notifyAllObservers(message);
           } else {
             //If adversary is not a local implementation we will need to handle invalid moves
             throw new IllegalArgumentException("Invalid adversary moves");
@@ -346,21 +371,18 @@ public class GameManager {
    * @param player - the player's avatar 
    * @param client - the client on the user's side
    */
-  private void processResult(InteractionResult result, Player player, Common.Player client) {
+  private String processResult(InteractionResult result, Player player, Common.Player client) {
     switch (result) {
       case FOUND_KEY:
-        client.displayMessage("Player " + player.getName() + " found the key.\n");
         player.foundKey();
-        break;
+        return "Player " + player.getName() + " found the key.\n";
       case REMOVE_PLAYER:
-        client.displayMessage("Player " + player.getName() + " was expelled.\n");
-        break;
+        return "Player " + player.getName() + " was expelled.\n";
       case EXIT:
-        client.displayMessage("Player " + player.getName() + " exited.\n");
         player.exited();
-        break;
+        return "Player " + player.getName() + " exited.\n";
 	default:
-		break;
+		return null;
     }
   }
 
@@ -428,7 +450,7 @@ public void endGame() {
    * as well as players. The players are updated of the game state relative to
    * their view, whereas the observer can see the entire game
    */
-  public void notifyAllObservers() {
+  public void notifyAllObservers(String message) {
 	  for (Observer observer : this.observers) {
 		  ByteArrayOutputStream gameState = new ByteArrayOutputStream();
 		  PrintStream printStream = new PrintStream(gameState);
@@ -440,7 +462,7 @@ public void endGame() {
 
 	  for (Map.Entry<Player, Common.Player> currPlayer : playerClients.entrySet()) {
 		  PlayerModelView playerModelView = new PlayerModelView(currPlayer.getKey(), this.dungeon);
-		  currPlayer.getValue().update(playerModelView);
+		  currPlayer.getValue().update(playerModelView, message);
     }
   }
 

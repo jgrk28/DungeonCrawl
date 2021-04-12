@@ -3,6 +3,7 @@ package Common;
 import java.awt.Point;
 import java.util.List;
 
+import Game.model.InteractionResult;
 import Game.modelView.PlayerModelView;
 import java.util.Set;
 
@@ -24,9 +25,11 @@ public interface Player {
 	/**
 	 * Updates the player on the state of the game, based on their view
 	 * @param gameState - all information relevant to the state of the
+	 * @param message - optional message for important information to convey
+	 * to the player
 	 * game that the user can see
 	 */
-	void update(PlayerModelView gameState);
+	void update(PlayerModelView gameState, String message);
 	
 	/**
 	 * Displays a message to the user
