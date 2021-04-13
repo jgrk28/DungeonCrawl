@@ -40,7 +40,7 @@ public interface Player {
 	/**
 	 * TODO
 	 */
-	void sendLevelStart(int levelIndex, Set<Game.model.Player> levelPlayers);
+	void sendLevelStart(int levelIndex, Set<String> levelPlayers);
 
 	/**
 	 * TODO

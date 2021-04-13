@@ -157,11 +157,11 @@ public class Server {
 	 * @param levelPlayers
 	 * @return
 	 */
-	public void sendLevelStart(String name, int levelIndex, Set<Player> levelPlayers) {
+	public void sendLevelStart(String name, int levelIndex, Set<String> levelPlayers) {
 		JSONObject startLevel = new JSONObject();
 		JSONArray nameList = new JSONArray();
-		for (Player player : levelPlayers) {
-			nameList.put(player.getName());
+		for (String playerName : levelPlayers) {
+			nameList.put(playerName);
 		}
 		startLevel.put("type", "start-level");
 		startLevel.put("level", levelIndex);

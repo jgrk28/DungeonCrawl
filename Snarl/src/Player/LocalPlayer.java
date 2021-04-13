@@ -61,20 +61,30 @@ public class LocalPlayer implements Player {
 		return output.toString();
 	}
 
+
 	//This can receive an update containing the avatar's position and the current
 	//state of their immediate surroundings
-    @Override
-    public void update(PlayerModelView gameState) {
-    	try {
-    		this.currentLocation = gameState.getPosition();
-    	} catch (NullPointerException e) {
-    		//If the player is no longer in the level
-    		this.currentLocation = null;
-    	} 
+	@Override
+	public void update(PlayerModelView gameState, String message) {
+		try {
+			this.currentLocation = gameState.getPosition();
+		} catch (NullPointerException e) {
+			//If the player is no longer in the level
+			this.currentLocation = null;
+		}
 		TextualPlayerView playerView = new TextualPlayerView(gameState, System.out);
 		System.out.println("PLAYER VIEW");
- 	    playerView.draw();
-    }
+		playerView.draw();
+	}
+
+	/**
+	 * TODO add comments
+	 * @param position
+	 */
+	public void updatePosition(Point position) {
+		this.currentLocation = position;
+	}
+
 
 	@Override
 	public void displayMessage(String message) {
@@ -82,7 +92,7 @@ public class LocalPlayer implements Player {
 	}
 
 	@Override
-	public void sendLevelStart(int levelIndex, Set<Game.model.Player> levelPlayers) {
+	public void sendLevelStart(int levelIndex, Set<String> levelPlayers) {
 		//TODO implement if we want local start level
 	}
 

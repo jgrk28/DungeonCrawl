@@ -35,7 +35,7 @@ public class RemotePlayer implements Player {
 	public void displayMessage(String message) { this.server.displayMessage(this.name, message); }
 
 	@Override
-	public void sendLevelStart(int levelIndex, Set<Game.model.Player> levelPlayers) {
+	public void sendLevelStart(int levelIndex, Set<String> levelPlayers) {
 		this.server.sendLevelStart(this.name, levelIndex, levelPlayers);
 	}
 
