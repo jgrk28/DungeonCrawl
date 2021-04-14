@@ -41,6 +41,29 @@ public class LocalPlayer implements Player {
 			return this.currentLocation;
 		}
 	}
+
+	/**
+	 * TODO Add comment
+	 * @return
+	 */
+    public Point takeTurn() {
+		//Prompt the user to take a turn
+		try {
+			Scanner in = new Scanner(System.in);
+			System.out.println("Enter x position");
+			int x = in.nextInt();
+			System.out.println("Enter y position");
+			int y = in.nextInt();
+			//Create a new point based on the input
+			return new Point(x,y);
+		} catch (java.util.InputMismatchException e) {
+			//If the move was not an integer throw error out
+			throw new java.util.InputMismatchException();
+		} catch (java.util.NoSuchElementException e) {
+			//If the move was empty return the players current position
+			return null;
+		}
+	}		
 	
 	/**
 	 * Converts all valid moves for the player from a list of 
@@ -88,7 +111,7 @@ public class LocalPlayer implements Player {
 
 	@Override
 	public void displayMessage(String message) {
-		System.out.println("PLAYER VIEW\n" + message);
+		System.out.println(message);
 	}
 
 	@Override

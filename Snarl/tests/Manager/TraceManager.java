@@ -13,7 +13,6 @@ import Game.model.InteractionResult;
 import Game.model.Level;
 import Game.model.Player;
 import Game.modelView.PlayerModelView;
-import Utils.ParseUtils;
 
 /**
  * Represents the TraceManager. Extends the GameManager
@@ -72,7 +71,7 @@ public class TraceManager extends GameManager {
 					this.output.put(traceEntry);
 
 					//Notify all observers of the current game state for each turn
-					notifyAllObservers();
+					notifyAllObservers(null);
 	      }
 	      
 	      turnCount++;
@@ -80,7 +79,7 @@ public class TraceManager extends GameManager {
 	      //Add adversary turns once we implement the AdversaryClient or at least a stub
 	    }
 	    //Display to observers when the level ends to provide result
-	    notifyAllObservers();	
+	    notifyAllObservers(null);	
 	}
 	
 	/**

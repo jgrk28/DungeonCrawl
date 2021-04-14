@@ -148,7 +148,7 @@ public class GameManagerTest {
 		this.gameManager.registerPlayer("Juliette", player2);
 		this.gameManager.initDungeon(this.levels);
 		this.gameManager.dungeon.startCurrentLevel(new ArrayList<>());
-		this.gameManager.notifyAllObservers();
+		this.gameManager.notifyAllObservers(null);
 
 		String expectedOut = new String(Files.readAllBytes(Paths.get("test/Game/Controller/notify-simple.json")));
 		JSONTokener expectedTokens = new JSONTokener(expectedOut);

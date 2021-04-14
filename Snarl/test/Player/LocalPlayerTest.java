@@ -55,7 +55,7 @@ public class LocalPlayerTest {
     PlayerModelView playerModelView = new PlayerModelView(creator.getPlayer1(), dungeonModelView);
 
     LocalPlayer player = new LocalPlayer();
-    player.update(playerModelView);
+    player.update(playerModelView, null);
 
     ByteArrayOutputStream output = new ByteArrayOutputStream();
     PrintStream print = new PrintStream(output);
@@ -126,7 +126,7 @@ public class LocalPlayerTest {
     System.setOut(print);
 
     LocalPlayer player = new LocalPlayer();
-    player.update(playerModelView);
+    player.update(playerModelView, null);
 
     String expectedOut = "You are currently on level: 1\n"
         + "You are active in the level\n"
@@ -151,7 +151,7 @@ public class LocalPlayerTest {
     System.setOut(print);
 
     LocalPlayer player = new LocalPlayer();
-    player.update(playerModelView);
+    player.update(playerModelView, null);
 
     String expectedOut = "You are currently on level: 1\n"
         + "You are active in the level\n"

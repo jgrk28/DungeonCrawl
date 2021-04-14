@@ -7,7 +7,6 @@ import JSONUtils.Generator;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,7 +21,6 @@ import Game.model.Level;
 import Game.model.LevelComponent;
 import Game.model.LevelImpl;
 import Game.model.Player;
-import Game.model.Zombie;
 import Level.TestLevel;
 
 /**
@@ -191,7 +189,7 @@ public class TestManager {
 	 */
 	private void playGame() {
 		this.gameManager.initDungeon(new ArrayList<>(Arrays.asList(this.level)));
-		this.gameManager.notifyAllObservers();
+		this.gameManager.notifyAllObservers(null);
 		try {
 			this.gameManager.playLevelTrace(this.level, this.maxNumTurns);		
 		} catch (IllegalStateException e) {

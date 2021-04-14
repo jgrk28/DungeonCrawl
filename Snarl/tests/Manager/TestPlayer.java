@@ -62,7 +62,7 @@ public class TestPlayer implements Player {
 	 * }
 	 */
 	@Override
-	public void update(PlayerModelView gameState) {
+	public void update(PlayerModelView gameState, String message) {
 		//Gather all information for the player
 		if (gameState.isPlayerAlive()) {
 			List<List<EntityType>> playerMap = gameState.getMap();
@@ -143,7 +143,7 @@ public class TestPlayer implements Player {
 	}
 
 	@Override
-	public void sendLevelStart(int levelIndex, Set<Game.model.Player> levelPlayers) {
+	public void sendLevelStart(int levelIndex, Set<String> levelPlayers) {
 		// Do Nothing
 	}
 
