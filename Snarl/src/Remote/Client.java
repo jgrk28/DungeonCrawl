@@ -30,11 +30,15 @@ public class Client {
 	private JSONTokener inputFromServer;
 	private PrintStream outputToServer;
 
-	public Client(String ipAddress, int port) throws IOException {
+	public Client(String ipAddress, int port) {
 		this.player = new LocalPlayer();
-		this.socket = new Socket(ipAddress, port);
-		this.inputFromServer = new JSONTokener(this.socket.getInputStream());
-		this.outputToServer = new PrintStream(this.socket.getOutputStream());
+		try {
+			this.socket = new Socket(ipAddress, port);
+			this.inputFromServer = new JSONTokener(this.socket.getInputStream());
+			this.outputToServer = new PrintStream(this.socket.getOutputStream());
+		} catch (IOException e) {
+			throw new IllegalArgumentException("Unable to create client");
+		}
 	}
 
 	public void run() {
@@ -103,7 +107,7 @@ public class Client {
 
 	private void startLevel(JSONObject json) {
 		int levelIndex = json.getInt("level");
-		JSONArray nameList = json.getJSONArray("nameList");
+		JSONArray nameList = json.getJSONArray("players");
 		Set<String> names = new HashSet<String>();
 		for (int i = 0; i < nameList.length(); i++) {
 			names.add(nameList.getString(i));
@@ -112,7 +116,6 @@ public class Client {
 	}
 
 	private void updatePlayer(JSONObject json) {
-		String message = json.getString("message");
 		JSONArray layout = json.getJSONArray("layout");
 		JSONArray JSONPosition = json.getJSONArray("position");
 		Point position = Utils.ParseUtils.parsePoint(JSONPosition);
@@ -123,7 +126,8 @@ public class Client {
 		this.player.updatePosition(position);
 		this.player.displayMessage("Current position: [" + position.x + "," + position.y + "]");
 		this.player.displayMessage(renderedMap);
-		if (message != null) {
+		if (!json.isNull("message")) {
+			String message = json.getString("message");
 			this.player.displayMessage(message);
 		}
 	}
@@ -134,6 +138,9 @@ public class Client {
 		List<List<Integer>> layout = generateLayout(JSONLayout);
 		int layoutHalfLength = layout.size() / 2;
 		Point topLeft = new Point(position.x - layoutHalfLength, position.y - layoutHalfLength);
+		this.player.displayMessage(JSONActors.toString());
+		this.player.displayMessage(actorPositionMap.toString());
+
 
 		StringBuilder mapBuilder = new StringBuilder();
 		int rowIndex = topLeft.y;
@@ -141,9 +148,11 @@ public class Client {
 		for (List<Integer> row : layout) {
 			colIndex = topLeft.x;
 			for (Integer tile : row) {
-				Point currPos = new Point(rowIndex, colIndex);
+				Point currPos = new Point(colIndex, rowIndex);
 				if (tile == 0) {
 					mapBuilder.append('X');
+				} else if (position.equals(currPos)) {
+					mapBuilder.append('P');
 				} else if (actorPositionMap.containsKey(currPos)) {
 					mapBuilder.append(actorPositionMap.get(currPos));
 				} else if (itemPositionMap.containsKey(currPos)) {

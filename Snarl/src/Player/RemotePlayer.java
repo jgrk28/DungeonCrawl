@@ -50,11 +50,9 @@ public class RemotePlayer implements Player {
 	}
 
 	@Override
-	public void update(PlayerModelView gameState, String message) { 
-		JSONObject playerUpdate = new JSONObject();
-
-		//TODO handle if player is dead
+	public void update(PlayerModelView gameState, String message) {
 		if (gameState.isPlayerAlive()) {
+			JSONObject playerUpdate = new JSONObject();
 			List<List<EntityType>> playerMap = gameState.getMap();
 			Point absolutePosition = gameState.getPosition();
 			List<Point> visibleDoors = gameState.getVisibleDoors();
@@ -79,9 +77,8 @@ public class RemotePlayer implements Player {
 			} else {
 				playerUpdate.put("message", message);
 			}
+			this.server.sendMessage(this.name, playerUpdate.toString());
 		}
-
-		this.server.sendMessage(this.name, playerUpdate.toString());
 	}
 	
 	/**

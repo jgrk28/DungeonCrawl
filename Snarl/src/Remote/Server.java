@@ -1,6 +1,7 @@
 package Remote;
 
 import Game.model.Player;
+import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils.IO;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -14,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 import java.util.Set;
+import javafx.animation.ScaleTransition;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONTokener;
@@ -42,13 +44,15 @@ public class Server {
 	 * @param port
 	 * @throws IOException
 	 */
-	public Server(String ipAddress, int port) throws IOException {
+	public Server(String ipAddress, int port) {
 		try {
 			InetAddress inetAddress = InetAddress.getByName(ipAddress);
 			this.socket = new ServerSocket(port, 50, inetAddress);
 		} catch (UnknownHostException e) {
 			throw new IllegalArgumentException("Unknown IP address");
-		}	
+		}	catch (IOException e) {
+			throw new IllegalArgumentException("Unable to create server");
+		}
 		this.gameManager = new GameManager();
 		this.welcomeMessage = generateWelcomeMessage(ipAddress, port);
 		this.playerSockets = new HashMap<>();
@@ -83,8 +87,12 @@ public class Server {
 	 * @param observe
 	 * @throws IOException
 	 */
-	public void run(List<Level> levels, int maxPlayers, int waitTime, boolean observe) throws IOException {
-		registerPlayers(maxPlayers, waitTime);
+	public void run(List<Level> levels, int maxPlayers, int waitTime, boolean observe) {
+		try {
+			registerPlayers(maxPlayers, waitTime);
+		} catch (IOException e) {
+			throw new IllegalStateException("Unable to register players so cannot continue with game");
+		}
 		
 		if (observe) {
 			this.gameManager.attachObserver(new LocalObserver());
@@ -120,9 +128,9 @@ public class Server {
 			DataOutputStream outputToClient = new DataOutputStream(playerSocket.getOutputStream());
 			BufferedReader inputFromClient = new BufferedReader(new InputStreamReader(playerSocket.getInputStream()));
 			
-			outputToClient.writeBytes(this.welcomeMessage.toString());
+			outputToClient.writeBytes(this.welcomeMessage.toString() + "\n");
 			while (true) {
-				outputToClient.writeBytes("name");
+				outputToClient.writeBytes("name\n");
 				name = inputFromClient.readLine();
 				try {
 					RemotePlayer remotePlayer = new RemotePlayer(this, name);
@@ -151,7 +159,7 @@ public class Server {
 		Socket playerSocket = this.playerSockets.get(name);
 		try {
 			DataOutputStream outputToClient = new DataOutputStream(playerSocket.getOutputStream());
-			outputToClient.writeBytes(message);
+			outputToClient.writeBytes(message + "\n");
 		} catch (IOException e) {
 			throw new IllegalStateException("Unable to communicate with player socket");
 		}	
