@@ -10,6 +10,7 @@ import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -45,6 +46,10 @@ public class GameManager {
   
   //All observers in the game to notify when the game state changes
   private List<Observer> observers;
+
+  private String levelKeyFinder;
+  private List<String> levelExitedPlayers;
+  private List<String> levelEjectedPlayers;
 
   //Constructs the game manager with empty clients and observer fields
   public GameManager() {
@@ -226,9 +231,11 @@ public class GameManager {
       int levelNum = this.dungeon.getCurrentLevelIndex();
       List<Adversary> adversaries = getLevelAdversaries(levelNum);
       this.dungeon.startCurrentLevelRandom(adversaries);
+      sendLevelStart();
       notifyAllObservers(null);
       playLevel(currLevel);
     }
+    sendEndGame();
   }
 
   /**
@@ -236,6 +243,9 @@ public class GameManager {
    * @param level - the level being played
    */
   public void playLevel(Level level) {
+    this.levelKeyFinder = null;
+    this.levelExitedPlayers = new ArrayList<>();
+    this.levelEjectedPlayers = new ArrayList<>();
 	  //While the level has not been won or lost, execute turns for each player
 	  //and adversary
     while (this.ruleChecker.isLevelOver().equals(GameState.ACTIVE)) {
@@ -354,6 +364,7 @@ public class GameManager {
             	allActivePlayers.removeAll(activePlayersAfterMove.keySet());
             	for (Player player : allActivePlayers) {
             		message = processResult(result, player, this.playerClients.get(player));
+                this.playerClients.get(player).displayMessage("Eject");
             	}
             }
 
@@ -376,11 +387,15 @@ public class GameManager {
     switch (result) {
       case FOUND_KEY:
         player.foundKey();
+        this.levelKeyFinder = player.getName();
         return "Player " + player.getName() + " found the key.\n";
       case REMOVE_PLAYER:
+        player.eject();
+        this.levelEjectedPlayers.add(player.getName());
         return "Player " + player.getName() + " was expelled.\n";
       case EXIT:
         player.exited();
+        this.levelExitedPlayers.add(player.getName());
         return "Player " + player.getName() + " exited.\n";
 	default:
 		return null;
@@ -488,7 +503,25 @@ public void endGame() {
   private void sendLevelEnd() {
     for (Map.Entry<Player, Common.Player> currPlayer : playerClients.entrySet()) {
       Common.Player playerClient = currPlayer.getValue();
-      playerClient.sendLevelEnd(playerClients.keySet());
+      playerClient.sendLevelEnd(this.levelKeyFinder, this.levelExitedPlayers, this.levelEjectedPlayers);
+    }
+  }
+
+  /**
+   * TODO
+   */
+  private void sendEndGame() {
+    Map<String, Integer> keysFound = new HashMap<>();
+    Map<String, Integer> numEjects = new HashMap<>();
+    Map<String, Integer> numExits = new HashMap<>();
+    for (Player currPlayer : playerClients.keySet()) {
+      String name  = currPlayer.getName();
+      keysFound.put(name, currPlayer.getKeysFound());
+      numEjects.put(name, currPlayer.getNumEjects());
+      numExits.put(name, currPlayer.getNumExits());
+    }
+    for (Common.Player playerClient : playerClients.values()) {
+      playerClient.sendEndGame(keysFound, numEjects, numExits);
     }
   }
 

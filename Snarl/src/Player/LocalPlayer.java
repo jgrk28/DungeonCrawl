@@ -2,6 +2,7 @@ package Player;
 
 import java.awt.Point;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
 import Common.Player;
@@ -120,7 +121,13 @@ public class LocalPlayer implements Player {
 	}
 
 	@Override
-	public void sendLevelEnd(Set<Game.model.Player> levelPlayers) {
+	public void sendLevelEnd(String keyFinder, List<String> exitedPlayers, List<String> ejectedPlayers) {
 		//TODO implement if we want local end level
+	}
+
+	@Override
+	public void sendEndGame(Map<String, Integer> keysFound, Map<String, Integer> numEjects,
+			Map<String, Integer> numExits) {
+		//TODO implement if we want local end game
 	}
 }

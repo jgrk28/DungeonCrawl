@@ -142,8 +142,14 @@ public class RemotePlayer implements Player {
 	}
 
 	@Override
-	public void sendLevelEnd(Set<Game.model.Player> levelPlayers) {
-		this.server.sendLevelEnd(this.name, levelPlayers);
+	public void sendLevelEnd(String keyFinder, List<String> exitedPlayers, List<String> ejectedPlayers) {
+		this.server.sendLevelEnd(this.name, keyFinder, exitedPlayers, ejectedPlayers);
+	}
+
+	@Override
+	public void sendEndGame(Map<String, Integer> keysFound, Map<String, Integer> numEjects,
+			Map<String, Integer> numExits) {
+		this.server.sendEndGame(this.name, keysFound, numEjects, numExits);
 	}
 
 }

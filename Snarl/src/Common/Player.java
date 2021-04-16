@@ -5,6 +5,7 @@ import java.util.List;
 
 import Game.model.InteractionResult;
 import Game.modelView.PlayerModelView;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -45,5 +46,10 @@ public interface Player {
 	/**
 	 * TODO
 	 */
-	void sendLevelEnd(Set<Game.model.Player> levelPlayers);
+	void sendLevelEnd(String keyFinder, List<String> exitedPlayers, List<String> ejectedPlayers);
+
+	/**
+	 * TODO
+	 */
+	void sendEndGame(Map<String, Integer> keysFound, Map<String, Integer> numEjects, Map<String, Integer> numExits);
 }

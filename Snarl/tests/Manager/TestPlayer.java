@@ -148,7 +148,14 @@ public class TestPlayer implements Player {
 	}
 
 	@Override
-	public void sendLevelEnd(Set<Game.model.Player> levelPlayers) {
+	public void sendLevelEnd(String keyFinder, List<String> exitedPlayers,
+			List<String> ejectedPlayers) {
+		// Do Nothing
+	}
+
+	@Override
+	public void sendEndGame(Map<String, Integer> keysFound, Map<String, Integer> numEjects,
+			Map<String, Integer> numExits) {
 		// Do Nothing
 	}
 

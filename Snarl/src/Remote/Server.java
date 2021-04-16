@@ -34,10 +34,7 @@ public class Server {
 	private GameManager gameManager;
 	private ServerSocket socket;
 	private Map<String, Socket> playerSockets;
-	private Map<String, Integer> playerKeys;
-	private Map<String, Integer> playerExits;
-	private Map<String, Integer> playerEjects;
-	
+
 	/**
 	 * TODO
 	 * @param ipAddress
@@ -56,9 +53,6 @@ public class Server {
 		this.gameManager = new GameManager();
 		this.welcomeMessage = generateWelcomeMessage(ipAddress, port);
 		this.playerSockets = new HashMap<>();
-		this.playerKeys = new HashMap<>();
-		this.playerExits = new HashMap<>();
-		this.playerEjects = new HashMap<>();
 	}
 	
 	/**
@@ -93,6 +87,8 @@ public class Server {
 		} catch (IOException e) {
 			throw new IllegalStateException("Unable to register players so cannot continue with game");
 		}
+		int numLevels = levels.size();
+		registerAdversaries(numLevels);
 		
 		if (observe) {
 			this.gameManager.attachObserver(new LocalObserver());
@@ -100,7 +96,6 @@ public class Server {
 
 		this.gameManager.startGame(levels, 1);	
 		this.gameManager.playGame();
-		sendEndGame();
 		disconnectClients();
 	}
 	
@@ -142,12 +137,22 @@ public class Server {
 			}
 			
 			this.playerSockets.put(name, playerSocket);
-			this.playerKeys.put(name, 0);
-			this.playerExits.put(name, 0);
-			this.playerEjects.put(name, 0);
 			
 		}
 		
+	}
+
+	/**
+	 * Registers adversries with the game manager. Creates the maximum number
+	 * of Ghosts and Zombies for the game. A subsection of these adversaries
+	 * may be used based on the current level number
+	 * @param numLevels - the total number of levels in the game (the max)
+	 */
+	private void registerAdversaries(int numLevels) {
+		//Max number of ghosts and zombies needed for the game
+		int numZombies = Math.floorDiv(numLevels, 2) + 1;
+		int numGhosts = Math.floorDiv((numLevels - 1), 2);
+		this.gameManager.registerAdversaries(numZombies, numGhosts);
 	}
 	
 	/**
@@ -186,36 +191,23 @@ public class Server {
 	/**
 	 * TODO
 	 * @param name
-	 * @param levelPlayers
+	 * @param keyFinder
+	 * @param exitedPlayers
+	 * @param ejectedPlayers
 	 * @return
 	 */
-	public void sendLevelEnd(String name, Set<Player> levelPlayers) {
+	public void sendLevelEnd(String name, String keyFinder, List<String> exitedPlayers, List<String> ejectedPlayers) {
 		JSONObject endLevel = new JSONObject();
 
-		String keyName = "";
-		JSONArray exitNameList = new JSONArray();
-		JSONArray ejectsNameList = new JSONArray();
-		for (Player player : levelPlayers) {
-			String playerName = player.getName();
-			int newKeysFound = player.getKeysFound();
-			int newNumExits = player.getNumExits();
-
-			if (newKeysFound > this.playerKeys.get(playerName)) {
-				keyName = playerName;
-				this.playerKeys.replace(playerName, newKeysFound);
-			}
-			if (newNumExits > this.playerExits.get(playerName)) {
-				exitNameList.put(playerName);
-				this.playerExits.replace(playerName, newNumExits);
-			} else {
-				ejectsNameList.put(playerName);
-				int numExits = this.playerEjects.get(playerName);
-				this.playerEjects.replace(playerName, numExits + 1);
-			}
-		}
+		JSONArray exitNameList = new JSONArray(exitedPlayers);
+		JSONArray ejectsNameList = new JSONArray(ejectedPlayers);
 
 		endLevel.put("type", "end-level");
-		endLevel.put("key", keyName);
+		if (keyFinder == null) {
+			endLevel.put("key", JSONObject.NULL);
+		} else {
+			endLevel.put("key", keyFinder);
+		}
 		endLevel.put("exits", exitNameList);
 		endLevel.put("ejects", ejectsNameList);
 		
@@ -225,26 +217,25 @@ public class Server {
 	/**
 	 * TODO
 	 */
-	private void sendEndGame() {
+	public void sendEndGame(String name, Map<String, Integer> keysFound, Map<String, Integer> numEjects,
+			Map<String, Integer> numExits) {
 		JSONObject endGame = new JSONObject();
 		JSONArray playerScoreList = new JSONArray();		
 		endGame.put("type", "end-game");
 		
-		for (String name : this.playerSockets.keySet()) {
+		for (String currName : this.playerSockets.keySet()) {
 			JSONObject playerScore = new JSONObject();
 			playerScore.put("type", "player-score");
-			playerScore.put("name", name);
-			playerScore.put("exits", this.playerExits.get(name));
-			playerScore.put("ejects", this.playerEjects.get(name));
-			playerScore.put("keys", this.playerKeys.get(name));		
+			playerScore.put("name", currName);
+			playerScore.put("exits", numExits.get(currName));
+			playerScore.put("ejects", numEjects.get(currName));
+			playerScore.put("keys", keysFound.get(currName));
 			playerScoreList.put(playerScore);
 		}
 		
 		endGame.put("scores", playerScoreList);
 		
-		for (String name : this.playerSockets.keySet()) {
-			sendMessage(name, endGame.toString());
-		}		
+		sendMessage(name, endGame.toString());
 	}
 	
 	/**

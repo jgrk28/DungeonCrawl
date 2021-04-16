@@ -17,6 +17,7 @@ public class Player extends AbstractActor {
 
 	private int keysFound;
 	private int numExits;
+	private int numEjects;
 
 	/**
 	 * Initialize a Player with a unique name
@@ -26,6 +27,7 @@ public class Player extends AbstractActor {
 		super(name);
 		this.keysFound = 0;
 		this.numExits = 0;
+		this.numEjects = 0;
 	}
 
 	/**
@@ -304,6 +306,13 @@ public class Player extends AbstractActor {
 	}
 
 	/**
+	 * Increments the numEjects field when the player is ejected the level
+	 */
+	public void eject() {
+		this.numEjects++;
+	}
+
+	/**
 	 * Getter for the keysFound field
 	 */
 	public int getKeysFound() {
@@ -317,6 +326,12 @@ public class Player extends AbstractActor {
 		return this.numExits;
 	}
 
+	/**
+	 * Getter for the numEjects field
+	 */
+	public int getNumEjects() {
+		return this.numEjects;
+	}
 
 	/**
 	 * Finds all doors that are within the player's view

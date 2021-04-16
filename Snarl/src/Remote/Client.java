@@ -42,7 +42,7 @@ public class Client {
 	}
 
 	public void run() {
-		while (socket.isConnected()) {
+		while (!socket.isClosed()) {
 			Object value = inputFromServer.nextValue();
 			if (isJSONCommand(value, "welcome")) {
 				welcomePlayer((JSONObject) value);
@@ -138,9 +138,6 @@ public class Client {
 		List<List<Integer>> layout = generateLayout(JSONLayout);
 		int layoutHalfLength = layout.size() / 2;
 		Point topLeft = new Point(position.x - layoutHalfLength, position.y - layoutHalfLength);
-		this.player.displayMessage(JSONActors.toString());
-		this.player.displayMessage(actorPositionMap.toString());
-
 
 		StringBuilder mapBuilder = new StringBuilder();
 		int rowIndex = topLeft.y;
@@ -248,17 +245,22 @@ public class Client {
 		if (result.equals("Invalid")) {
 			this.player.displayMessage("The move was invalid");
 		}
+		if (result.equals("Exit")) {
+			this.player.displayMessage("You exited the level");
+		}
+		if (result.equals("Eject")) {
+			this.player.displayMessage("You were ejected from the level");
+		}
 	}
 	
 	private void endLevel(JSONObject json) {
-		String keyFinder = json.getString("key");
 		JSONArray exitedPlayers = json.getJSONArray("exits");
 		JSONArray ejectedPlayers = json.getJSONArray("ejects");
 		this.player.displayMessage("The level is over");
-		if (keyFinder == null) {
+		if (json.isNull("key")) {
 			this.player.displayMessage("No one found the key");
 		} else {
-			this.player.displayMessage("The key was found by: " + keyFinder);
+			this.player.displayMessage("The key was found by: " + json.getString("key"));
 		}
 		
 		if (exitedPlayers.length() == 0) {
@@ -285,9 +287,15 @@ public class Client {
 			int numKeys = playerScore.getInt("keys");
 			
 			this.player.displayMessage(name + ": exited " + numExits + " times and was ejected " + numEjects +
-			          "times. Found " + numKeys + " keys");
+			          " times. Found " + numKeys + " keys");
 
 		}
+		try {
+			this.socket.close();
+		} catch (IOException e) {
+			throw new IllegalArgumentException("Unable to close connection");
+		}
+
 	}
 
 }
