@@ -183,7 +183,9 @@ public class Client {
 		for (int i = 0; i < nameList.length(); i++) {
 			names.add(nameList.getString(i));
 		}
-		this.player.sendLevelStart(levelIndex, names);
+		
+		String message = "Starting level " + levelIndex + " with players "  + nameList.toString();
+		this.player.displayMessage(message);
 	}
 
 	/**
