@@ -1,7 +1,5 @@
 package Remote;
 
-import Game.model.Player;
-import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils.IO;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -14,8 +12,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import java.util.Set;
-import javafx.animation.ScaleTransition;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONTokener;
@@ -26,19 +22,21 @@ import Observer.LocalObserver;
 import Player.RemotePlayer;
 
 /**
- * TODO Add comments
+ * Represents the server within a distributed game of Snarl. Waits for player clients to connect via a 
+ * TCP socket. Once all players have joined, the server communicates with the GameManager to start and 
+ * play a game of Snarl
  */
 public class Server {
 	
-	private JSONObject welcomeMessage;
 	private GameManager gameManager;
 	private ServerSocket socket;
 	private Map<String, Socket> playerSockets;
+	private JSONObject welcomeMessage;
 
 	/**
-	 * TODO
-	 * @param ipAddress
-	 * @param port
+	 * Creates the server at the specified IP address and port
+	 * @param ipAddress - the IP address where the server will listen for connections
+	 * @param port - the port to listen on
 	 * @throws IOException
 	 */
 	public Server(String ipAddress, int port) {
@@ -56,10 +54,10 @@ public class Server {
 	}
 	
 	/**
-	 * TODO
-	 * @param ipAddress
-	 * @param port
-	 * @return
+	 * Generates the welcome message to send to all connected player clients
+	 * @param ipAddress - the IP address that the server is listening on
+	 * @param port - the port that the server is listening on
+	 * @return a JSONObject containing the welcome message
 	 */
 	private JSONObject generateWelcomeMessage(String ipAddress, int port) {
 		JSONObject message = new JSONObject();
@@ -74,12 +72,14 @@ public class Server {
 	}
 	
 	/**
-	 * TODO
-	 * @param levels
-	 * @param maxPlayers
-	 * @param waitTime
-	 * @param observe
-	 * @throws IOException
+	 * Runs the server with the provided levels. Registers up to the max number of players,
+	 * with a specified wait time between registrations. Creates an observer for the game if 
+	 * specified. Starts and plays the game. Disconnects all clients once the game is over
+	 * @param levels - the list of levels for the game
+	 * @param maxPlayers - the maximum number of clients the server will wait for before starting the game
+	 * @param waitTime - the number of seconds to wait for the next client to connect
+	 * @param observe - if true, the server will start a local observer to display the progress of the game
+	 * @throws IOException if players cannot be registered 
 	 */
 	public void run(List<Level> levels, int maxPlayers, int waitTime, boolean observe) {
 		try {
@@ -87,6 +87,7 @@ public class Server {
 		} catch (IOException e) {
 			throw new IllegalStateException("Unable to register players so cannot continue with game");
 		}
+		
 		int numLevels = levels.size();
 		registerAdversaries(numLevels);
 		
@@ -101,16 +102,21 @@ public class Server {
 	
 
 	/**
-	 * TODO
-	 * @param maxPlayers
-	 * @param waitTime
-	 * @throws IOException
+	 * Registers player clients for a game of Snarl and prompts the clients
+	 * to provide a name for the player 
+	 * @param maxPlayers - the maximum number of clients the server will wait for before starting the game
+	 * @param waitTime - the number of seconds to wait for the next client to connect
+	 * @throws IOException if the socket is not connected
+	 * 
 	 */
 	public void registerPlayers(int maxPlayers, int waitTime) throws IOException {
+		
+		//Up to the max number of players to wait for 
 		for (int i = 0; i < maxPlayers; i++) {
 			Socket playerSocket;
 			String name;
 			
+			//The timeout to wait for before no longer accepting players 
 			this.socket.setSoTimeout(waitTime * 1000);
 			
 			try {
@@ -123,7 +129,11 @@ public class Server {
 			DataOutputStream outputToClient = new DataOutputStream(playerSocket.getOutputStream());
 			BufferedReader inputFromClient = new BufferedReader(new InputStreamReader(playerSocket.getInputStream()));
 			
+			//Send the welcome message to the client
 			outputToClient.writeBytes(this.welcomeMessage.toString() + "\n");
+			
+			//Prompt the client to enter a name. If the name is not valid with the game manager,
+			//continue to prompt the client to enter a name
 			while (true) {
 				outputToClient.writeBytes("name\n");
 				name = inputFromClient.readLine();
@@ -136,8 +146,8 @@ public class Server {
 				}
 			}
 			
-			this.playerSockets.put(name, playerSocket);
-			
+			//Add the name and player socket to the map of playerSockets
+			this.playerSockets.put(name, playerSocket);	
 		}
 		
 	}
@@ -156,9 +166,10 @@ public class Server {
 	}
 	
 	/**
-	 * TODO
-	 * @param name
-	 * @param message
+	 * Sends a message to the corresponding playerSocket based on the name
+	 * of the player
+	 * @param name - the name of the player
+	 * @param message - the message to send
 	 */
 	public void sendMessage(String name, String message) {
 		Socket playerSocket = this.playerSockets.get(name);
@@ -171,9 +182,9 @@ public class Server {
 	}
 	
 	/**
-	 * TODO
-	 * @param name
-	 * @return
+	 * Receives a message from the playerSocket that corresponds to the provided name
+	 * @param name - the name of the player
+	 * @return the Object that is received from the playerClient
 	 */
 	public Object receiveMessage(String name) {
 		Socket playerSocket = this.playerSockets.get(name);
@@ -189,12 +200,11 @@ public class Server {
 	}
 
 	/**
-	 * TODO
-	 * @param name
-	 * @param keyFinder
-	 * @param exitedPlayers
-	 * @param ejectedPlayers
-	 * @return
+	 * Sends the end level message to the playerClient that corresponds to the provided name
+	 * @param name - the name of the player
+	 * @param keyFinder - the name of the player that found the key in the level
+	 * @param exitedPlayers - the names of the players that exited the level
+	 * @param ejectedPlayers - the names of the players that were ejected from the level
 	 */
 	public void sendLevelEnd(String name, String keyFinder, List<String> exitedPlayers, List<String> ejectedPlayers) {
 		JSONObject endLevel = new JSONObject();
@@ -215,7 +225,11 @@ public class Server {
 	}
 	
 	/**
-	 * TODO
+	 * Sends the end game message to the playerClient that corresponds to the provided name
+	 * @param name - the name of the player
+	 * @param keysFound - the map of player names to the total keys found during the game
+	 * @param numEjects - the map of player names to the total number of ejects during the game
+	 * @param numExits - the map of player names to the total number of exits during the game
 	 */
 	public void sendEndGame(String name, Map<String, Integer> keysFound, Map<String, Integer> numEjects,
 			Map<String, Integer> numExits) {
@@ -239,7 +253,7 @@ public class Server {
 	}
 	
 	/**
-	 * TODO
+	 * Disconnects all clients from the server at the end of the game
 	 */
 	private void disconnectClients() {
 		for (Socket socket : this.playerSockets.values()) {

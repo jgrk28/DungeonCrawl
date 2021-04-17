@@ -18,13 +18,20 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 /**
- * TODO Add comments
+ * Represents a remote player on the server side. Generates
+ * the corresponding JSON messages for this player that are
+ * sent to the client
  */
 public class RemotePlayer implements Player {
 	
 	Server server;
 	String name;
 	
+	/**
+	 * Creates a remote player with the server and a name
+	 * @param server - the server this player is communicating through
+	 * @param name - the name of this player
+	 */
 	public RemotePlayer(Server server, String name) {
 		this.server = server;
 		this.name = name;
@@ -32,6 +39,8 @@ public class RemotePlayer implements Player {
 
 	@Override
 	public Point takeTurn(List<Point> validMove) {
+		//Prompts the player to move and receives the 
+		//corresponding move from the client
 		this.server.sendMessage(this.name, "move");
 		Object value = server.receiveMessage(this.name);
 		
@@ -45,12 +54,14 @@ public class RemotePlayer implements Player {
 		if (move == null) {
 			return null;
 		} else {
+			//Return the Point for the provided move
 			return Utils.ParseUtils.parsePoint((JSONArray)move);
 		}
 	}
 
 	@Override
 	public void update(PlayerModelView gameState, String message) {
+		//If the player is still active in the level, send the corresponding update
 		if (gameState.isPlayerAlive()) {
 			JSONObject playerUpdate = new JSONObject();
 			List<List<EntityType>> playerMap = gameState.getMap();

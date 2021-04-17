@@ -44,8 +44,10 @@ public class LocalPlayer implements Player {
 	}
 
 	/**
-	 * TODO Add comment
-	 * @return
+	 * Prompts the user to take a turn by providing the x and y position of their 
+	 * next move. This was primarily created for the player client, which does not
+	 * have the valid move information available 
+	 * @return the point entered by the user
 	 */
     public Point takeTurn() {
 		//Prompt the user to take a turn
@@ -102,8 +104,8 @@ public class LocalPlayer implements Player {
 	}
 
 	/**
-	 * TODO add comments
-	 * @param position
+	 * Updates the current position of the player
+	 * @param position - the position of the player in the game
 	 */
 	public void updatePosition(Point position) {
 		this.currentLocation = position;

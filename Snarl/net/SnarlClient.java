@@ -1,22 +1,16 @@
-import Game.controller.GameManager;
-import Game.model.Level;
-import Observer.LocalObserver;
 import Remote.Client;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.List;
 
+/**
+ * Starts the player client with the provided command line arguments
+ */
 public class SnarlClient {
+
   /**
-   * TODO fix this
-   * Parses the command line arguments to create a game of Snarl. Registers
-   * players and adversaries, creates the corresponding levels, and allows
-   * one LocalPlayer to play the game
-   * @param args - the command line arguments
-   * @throws FileNotFoundException if the file containing JSON level specifications
-   * cannot be found or opened
+   * Parses the provided command line arguments, creates a player client,
+   * and starts the player client 
+   * @param args - command line arguments 
    */
-  public static void main(String[] args) throws FileNotFoundException {
+  public static void main(String[] args){
     //Set the defaults for the game
     String ipAddress = "127.0.0.1";
     int port = 45678;
@@ -36,6 +30,7 @@ public class SnarlClient {
       }
     }
 
+    //Create and run the client
     Client client = new Client(ipAddress, port);
     client.run();
   }

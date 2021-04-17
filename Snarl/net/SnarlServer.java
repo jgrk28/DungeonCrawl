@@ -1,10 +1,8 @@
-import Game.controller.GameManager;
 import Game.model.Item;
 import Game.model.Level;
 import Game.model.LevelComponent;
 import Game.model.LevelImpl;
 import Level.TestLevel;
-import Observer.LocalObserver;
 import Remote.Server;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -13,13 +11,14 @@ import java.util.List;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
+/**
+ * Starts the server with the provided command line arguments
+ */
 public class SnarlServer {
+
   /**
-   * TODO fix this
-   * Parses the command line arguments to create a game of Snarl. Registers
-   * players and adversaries, creates the corresponding levels, and allows
-   * one LocalPlayer to play the game
-   * @param args - the command line arguments
+   * Parses the command line arguments. Creates and starts the server.
+   * @param args - command line arguments
    * @throws FileNotFoundException if the file containing JSON level specifications
    * cannot be found or opened
    */
@@ -46,7 +45,6 @@ public class SnarlServer {
             System.out.println("Invalid number of players. Ending game.");
             return;
           }
-
           break;
         case "--wait":
           wait = Integer.parseInt(args[i + 1]);
@@ -68,11 +66,14 @@ public class SnarlServer {
       }
     }
 
+    //Create a server with the specified IP address and port
     Server server = new Server(ipAddress, port);
-
     SnarlServer snarlServer = new SnarlServer();
+    
+    //Convert the provided file into a list of levels
     List<Level> levels = snarlServer.generateLevels(fileName);
 
+    //Run the server
     server.run(levels, numClients, wait, observer);
   }
 

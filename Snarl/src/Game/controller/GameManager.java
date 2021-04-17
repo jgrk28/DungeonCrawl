@@ -482,23 +482,30 @@ public void endGame() {
     }
   }
 
+
   /**
-   * TODO
+   * Sends the level start information to all playerClients in the game. This includes
+   * the current level index and the names of all players in the level. 
    */
   private void sendLevelStart() {
     for (Map.Entry<Player, Common.Player> currPlayer : playerClients.entrySet()) {
       Common.Player playerClient = currPlayer.getValue();
+      
+      //Get the level index and names of all players in the level
       int levelIndex = this.dungeon.getCurrentLevelIndex();
       Set<String> nameList = new HashSet<>();
       for (Player player : playerClients.keySet()) {
         nameList.add(player.getName());
       }
+      //Send to the current player client
       playerClient.sendLevelStart(levelIndex, nameList);
     }
   }
 
   /**
-   * TODO
+   * Sends the end level information to all playerClients in the game. This includes the 
+   * name of the player that found the key, the names of the players that exited the level,
+   * and the names of the players that were ejected from the level
    */
   private void sendLevelEnd() {
     for (Map.Entry<Player, Common.Player> currPlayer : playerClients.entrySet()) {
@@ -508,7 +515,9 @@ public void endGame() {
   }
 
   /**
-   * TODO
+   * Sends the end game information to all playerClients in the game. This includes the number
+   * of keys found by each player, the number of times each player exited a level, and the number
+   * of times each player was ejected from a level
    */
   private void sendEndGame() {
     Map<String, Integer> keysFound = new HashMap<>();

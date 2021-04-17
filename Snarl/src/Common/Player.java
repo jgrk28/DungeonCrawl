@@ -2,8 +2,6 @@ package Common;
 
 import java.awt.Point;
 import java.util.List;
-
-import Game.model.InteractionResult;
 import Game.modelView.PlayerModelView;
 import java.util.Map;
 import java.util.Set;
@@ -39,17 +37,27 @@ public interface Player {
 	void displayMessage(String message);
 
 	/**
-	 * TODO
+	 * Sends the start level information to the player
+	 * @param levelIndex - the current level index
+	 * @param levelPlayers - the names of all players in the level
 	 */
 	void sendLevelStart(int levelIndex, Set<String> levelPlayers);
 
+
 	/**
-	 * TODO
+	 * Sends the end level information to the user
+	 * @param keyFinder - the name of the player that found the key
+	 * @param exitedPlayers - the names of the players that exited the level
+	 * @param ejectedPlayers - the names of the players that were ejected from the level
 	 */
 	void sendLevelEnd(String keyFinder, List<String> exitedPlayers, List<String> ejectedPlayers);
 
+
 	/**
-	 * TODO
+	 * Sends the end game information to the user
+	 * @param keysFound - a map of player names to the number of keys found during the game
+	 * @param numEjects - a map of player names to the number of times they were ejected from the game
+	 * @param numExits  - a map of player names to the number of times they exited a level
 	 */
 	void sendEndGame(Map<String, Integer> keysFound, Map<String, Integer> numEjects, Map<String, Integer> numExits);
 }
