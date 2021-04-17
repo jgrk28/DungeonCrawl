@@ -29,7 +29,7 @@ import Player.RemotePlayer;
 public class Server {
 	
 	private GameManager gameManager;
-	private ServerSocket socket;
+	protected ServerSocket socket;
 	protected Map<String, Socket> playerSockets;
 	private JSONObject welcomeMessage;
 
@@ -42,7 +42,7 @@ public class Server {
 	public Server(String ipAddress, int port) {
 		try {
 			InetAddress inetAddress = InetAddress.getByName(ipAddress);
-			setSocket(new ServerSocket(port, 50, inetAddress));
+			this.socket = new ServerSocket(port, 50, inetAddress);
 		} catch (UnknownHostException e) {
 			throw new IllegalArgumentException("Unknown IP address");
 		}	catch (IOException e) {
@@ -51,14 +51,6 @@ public class Server {
 		this.gameManager = new GameManager();
 		this.welcomeMessage = generateWelcomeMessage(ipAddress, port);
 		this.playerSockets = new HashMap<>();
-	}
-
-	/**
-	 * Sets the socket field to the given socket
-	 * @param socket - the socket to use
-	 */
-	protected void setSocket(ServerSocket socket) {
-		this.socket = socket;
 	}
 	
 	/**

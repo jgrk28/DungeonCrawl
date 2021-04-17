@@ -2,15 +2,11 @@ package Remote;
 
 import static org.junit.Assert.*;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.io.PrintStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
@@ -23,22 +19,14 @@ import java.util.Map;
 import java.util.Set;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.json.JSONTokener;
 import org.junit.Before;
 import org.junit.Test;
 
 public class ServerTest {
   private class MockServer extends Server {
-    /**
-     * TODO
-     *
-     * @param ipAddress
-     * @param port
-     * @throws IOException
-     */
     public MockServer(String ipAddress, int port, MockServerSocket socket) {
       super(ipAddress, port);
-      setSocket(socket);
+      this.socket = socket;
     }
 
     public Set<String> getPlayerNames() {
@@ -78,7 +66,7 @@ public class ServerTest {
     }
   }
 
-  private class MockSocket extends Socket {
+  public static class MockSocket extends Socket {
     private ArrayList<String> becomesInput;
     private OutputStream streamOut;
 
@@ -247,10 +235,5 @@ public class ServerTest {
 
     String[] output1Lines = socket1.getLines();
     assertEquals(expectedEndGame.toString(), output1Lines[2]);
-  }
-
-  @Test
-  public void testRun() {
-    //TODO or remove
   }
 }

@@ -57,6 +57,24 @@ public class Client {
 	}
 
 	/**
+	 * Creates a Client for testing purposes
+	 * @param player - the player to control
+	 * @param socket - the socket used for communication with the server
+	 * @throws IllegalArgumentException if the socket is not connected when attempting to
+	 * get the input or output stream
+	 */
+	public Client(LocalPlayer player, Socket socket) {
+		this.player = player;
+		try {
+			this.socket = socket;
+			this.inputFromServer = new JSONTokener(this.socket.getInputStream());
+			this.outputToServer = new PrintStream(this.socket.getOutputStream());
+		} catch (IOException e) {
+			throw new IllegalArgumentException("Unable to create client");
+		}
+	}
+
+	/**
 	 * Handles messages to and from the server while the socket is connected.
 	 * Parses the corresponding JSON commands for:
 	 * - welcome
@@ -154,7 +172,7 @@ public class Client {
 	 * and port number that the client is connected to
 	 * @param json - the JSON command containing the IP address and port number
 	 */
-	private void welcomePlayer(JSONObject json) {
+	protected void welcomePlayer(JSONObject json) {
 		JSONObject serverInfo = json.getJSONObject("info");
 		String ipAddress = serverInfo.getString("ip-address");
 		int port = serverInfo.getInt("port");
@@ -164,7 +182,7 @@ public class Client {
 	/**
 	 * Prompts the player to provide a name and outputs this name to the server
 	 */
-	private void getPlayerName() {
+	protected void getPlayerName() {
 		Scanner in = new Scanner(System.in);
 		System.out.println("Enter player name:");
 		String name = in.next();
@@ -176,7 +194,7 @@ public class Client {
 	 * names of all players in the level
 	 * @param json - the JSON command containing the level index and list of players
 	 */
-	private void startLevel(JSONObject json) {
+	protected void startLevel(JSONObject json) {
 		int levelIndex = json.getInt("level");
 		JSONArray nameList = json.getJSONArray("players");
 		Set<String> names = new HashSet<String>();
@@ -194,7 +212,7 @@ public class Client {
 	 * and potentially a message regarding their status in the level
 	 * @param json - the JSON command containing the layout, position, objects, actors, and message
 	 */
-	private void updatePlayer(JSONObject json) {
+	protected void updatePlayer(JSONObject json) {
 		JSONArray layout = json.getJSONArray("layout");
 		JSONArray JSONPosition = json.getJSONArray("position");
 		Point position = Utils.ParseUtils.parsePoint(JSONPosition);
@@ -354,7 +372,7 @@ public class Client {
 	 * Prompts the local player to take a turn, and sends the corresponding
 	 * move to the server
 	 */
-	private void movePlayer() {
+	protected void movePlayer() {
 		Point move = this.player.takeTurn();
 		JSONObject JSONMove = new JSONObject();
 		JSONMove.put("type", "move");
@@ -374,7 +392,7 @@ public class Client {
 	 * to the player
 	 * @param result - the result to process
 	 */
-	private void processResult(String result) {
+	protected void processResult(String result) {
 		if (result.equals("Invalid")) {
 			this.player.displayMessage("The move was invalid");
 		}
@@ -392,7 +410,7 @@ public class Client {
 	 * that were ejected from the level 
 	 * @param json - the end-level message to parse 
 	 */
-	private void endLevel(JSONObject json) {
+	protected void endLevel(JSONObject json) {
 		JSONArray exitedPlayers = json.getJSONArray("exits");
 		JSONArray ejectedPlayers = json.getJSONArray("ejects");
 		this.player.displayMessage("The level is over");
@@ -421,7 +439,7 @@ public class Client {
 	 * Once all scores are displayed, the socket is closed
 	 * @param json - the end-game message to parse 
 	 */
-	private void endGame(JSONObject json) {
+	protected void endGame(JSONObject json) {
 		this.player.displayMessage("PLAYER SCORES");
 		JSONArray scores = json.getJSONArray("scores");
 		for (int i = 0; i < scores.length(); i++) {
