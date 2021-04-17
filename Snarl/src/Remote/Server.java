@@ -30,7 +30,7 @@ public class Server {
 	
 	private GameManager gameManager;
 	private ServerSocket socket;
-	private Map<String, Socket> playerSockets;
+	protected Map<String, Socket> playerSockets;
 	private JSONObject welcomeMessage;
 
 	/**
@@ -42,7 +42,7 @@ public class Server {
 	public Server(String ipAddress, int port) {
 		try {
 			InetAddress inetAddress = InetAddress.getByName(ipAddress);
-			this.socket = new ServerSocket(port, 50, inetAddress);
+			setSocket(new ServerSocket(port, 50, inetAddress));
 		} catch (UnknownHostException e) {
 			throw new IllegalArgumentException("Unknown IP address");
 		}	catch (IOException e) {
@@ -51,6 +51,10 @@ public class Server {
 		this.gameManager = new GameManager();
 		this.welcomeMessage = generateWelcomeMessage(ipAddress, port);
 		this.playerSockets = new HashMap<>();
+	}
+
+	protected void setSocket(ServerSocket socket) {
+		this.socket = socket;
 	}
 	
 	/**
