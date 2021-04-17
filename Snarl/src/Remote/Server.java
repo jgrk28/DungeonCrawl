@@ -53,6 +53,10 @@ public class Server {
 		this.playerSockets = new HashMap<>();
 	}
 
+	/**
+	 * Sets the socket field to the given socket
+	 * @param socket - the socket to use
+	 */
 	protected void setSocket(ServerSocket socket) {
 		this.socket = socket;
 	}
