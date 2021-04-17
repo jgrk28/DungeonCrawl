@@ -438,7 +438,6 @@ public class Client {
 		} catch (IOException e) {
 			throw new IllegalArgumentException("Unable to close connection");
 		}
-
 	}
 
 }

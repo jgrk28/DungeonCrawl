@@ -100,7 +100,6 @@ public class Server {
 		disconnectClients();
 	}
 	
-
 	/**
 	 * Registers player clients for a game of Snarl and prompts the clients
 	 * to provide a name for the player 
@@ -153,7 +152,7 @@ public class Server {
 	}
 
 	/**
-	 * Registers adversries with the game manager. Creates the maximum number
+	 * Registers adversaries with the game manager. Creates the maximum number
 	 * of Ghosts and Zombies for the game. A subsection of these adversaries
 	 * may be used based on the current level number
 	 * @param numLevels - the total number of levels in the game (the max)

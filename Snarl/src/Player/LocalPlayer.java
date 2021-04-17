@@ -87,7 +87,6 @@ public class LocalPlayer implements Player {
 		return output.toString();
 	}
 
-
 	//This can receive an update containing the avatar's position and the current
 	//state of their immediate surroundings
 	@Override
@@ -110,7 +109,6 @@ public class LocalPlayer implements Player {
 	public void updatePosition(Point position) {
 		this.currentLocation = position;
 	}
-
 
 	@Override
 	public void displayMessage(String message) {
