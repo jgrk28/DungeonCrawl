@@ -14,10 +14,13 @@ import java.util.Set;
 public class Player extends AbstractActor {
 	private static final int maxMoveDistance = 2;
 	private static final int sightBoxWidth = 2;
+	private static final int startingHealthPoints = 20;
 
 	private int keysFound;
 	private int numExits;
 	private int numEjects;
+	
+	private int healthPoints;
 
 	/**
 	 * Initialize a Player with a unique name
@@ -28,6 +31,7 @@ public class Player extends AbstractActor {
 		this.keysFound = 0;
 		this.numExits = 0;
 		this.numEjects = 0;
+		this.healthPoints = startingHealthPoints;
 	}
 
 	/**
@@ -79,7 +83,12 @@ public class Player extends AbstractActor {
 			case GHOST:
 				//Same as ZOMBIE
 			case ZOMBIE:
-				return InteractionResult.REMOVE_PLAYER;
+				Adversary adversary = (Adversary)destTile.getActor();
+				if (isFatal(adversary.getDamage())) {
+					return InteractionResult.REMOVE_PLAYER;
+				} else {
+					return InteractionResult.DAMAGE_PLAYER;
+				}
 			case PLAYER:
 				if (this.equals(destTile.getActor())) {
 					Item item = destTile.getItem();
@@ -331,6 +340,36 @@ public class Player extends AbstractActor {
 	 */
 	public int getNumEjects() {
 		return this.numEjects;
+	}
+		
+	/**
+	 * TODO
+	 * @param damage
+	 */
+	public void decreaseHealth(int damage) {
+		this.healthPoints = this.healthPoints - damage;
+	}
+	
+	/**
+	 * TODO
+	 * @return
+	 */
+	public boolean isFatal(int damage) {
+		return this.healthPoints <= damage;
+	}
+	
+	/**
+	 * TODO
+	 */
+	public int getCurrentHealth() { 
+		return this.healthPoints; 
+	}
+	  
+	/**
+	 * TODO
+	 */
+	public int getMaxHealth() { 
+		return startingHealthPoints; 
 	}
 
 	/**

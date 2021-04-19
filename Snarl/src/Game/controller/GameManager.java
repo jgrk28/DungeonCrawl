@@ -397,6 +397,8 @@ public class GameManager {
         player.exited();
         this.levelExitedPlayers.add(player.getName());
         return "Player " + player.getName() + " exited.\n";
+      case DAMAGE_PLAYER:
+    	return "Player " + player.getName() + " was damaged.\n";
 	default:
 		return null;
     }

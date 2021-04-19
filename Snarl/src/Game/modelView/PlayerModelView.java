@@ -111,4 +111,13 @@ public class PlayerModelView {
    */
   public int getNumExits() { return this.player.getNumExits(); }
   
+  /**
+   * TODO
+   */
+  public int getCurrentHealth() { return this.player.getCurrentHealth(); }
+  
+  /**
+   * TODO
+   */
+  public int getMaxHealth() { return this.player.getMaxHealth(); }
 }

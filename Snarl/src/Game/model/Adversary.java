@@ -47,4 +47,10 @@ public abstract class Adversary extends AbstractActor {
 	public int getMaxMoveDistance() {
 		return maxMoveDistance;
 	}
+	
+	/**
+	 * TODO
+	 * @return
+	 */
+	public abstract int getDamage();
 }

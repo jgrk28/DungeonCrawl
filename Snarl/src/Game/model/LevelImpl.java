@@ -533,21 +533,29 @@ public class LevelImpl implements Level {
 		//instead of moving them
 		boolean removePlayer = interaction.equals(InteractionResult.EXIT)
 				|| interaction.equals(InteractionResult.REMOVE_PLAYER);
-			
-		//If player is moving to a new room, remove them from the source room
-		//Otherwise, remove them from their current position
-		if (!destinationComponent.equals(sourceComponent)) {
-			sourceComponent.removeActor(player);
-		} else {
-			destinationComponent.removeActor(player);
-		}
 		
-		//If the player is not removed from the level, place them at the destination
-		if (!removePlayer) {
-			destinationComponent.placeActor(player, destination);
-			this.playerLocations.replace(player, destinationComponent);
+		//TODO Add comment
+		if (interaction.equals(InteractionResult.DAMAGE_PLAYER)) {
+			//TODO maybe move incrementally if there is a valid tile between the player
+			//and the destination 
+			Adversary adversary = (Adversary)destTile.getActor();
+			player.decreaseHealth(adversary.getDamage());
 		} else {
-			this.playerLocations.remove(player);
+			//If player is moving to a new room, remove them from the source room
+			//Otherwise, remove them from their current position
+			if (!destinationComponent.equals(sourceComponent)) {
+				sourceComponent.removeActor(player);
+			} else {
+				destinationComponent.removeActor(player);
+			}
+			
+			//If the player is not removed from the level, place them at the destination
+			if (!removePlayer) {
+				destinationComponent.placeActor(player, destination);
+				this.playerLocations.replace(player, destinationComponent);
+			} else {
+				this.playerLocations.remove(player);
+			}		
 		}
 
 		if (interaction.equals(InteractionResult.FOUND_KEY)) {
@@ -572,28 +580,35 @@ public class LevelImpl implements Level {
 		Tile destTile = destinationComponent.getDestinationTile(destination);
 		InteractionResult interaction = adversary.getTileInteractionResult(destTile);
 			
-		//If adversary is moving to a new room, remove them from the source room
-		//Otherwise, remove them from their current position
-		if (!destinationComponent.equals(sourceComponent)) {
-			sourceComponent.removeActor(adversary);
+		//TODO Add comment
+		if (interaction.equals(InteractionResult.DAMAGE_PLAYER)) {
+			Player player = (Player)destTile.getActor();
+			player.decreaseHealth(adversary.getDamage());
 		} else {
-			destinationComponent.removeActor(adversary);
-		}	
-	
-		//If the adversary interacts with a player, remove the player from the level
-		if (interaction.equals(InteractionResult.REMOVE_PLAYER)) {
-			Tile destinationTile = destinationComponent.getDestinationTile(destination);
-			this.playerLocations.remove(destinationTile.getActor());
-		}	
-		
-		//Place the adversary and update their location, if they are teleporting place in random room
-		if (interaction.equals(InteractionResult.TELEPORT)) {
-			Room randomRoom = findRandomRoom(sourceComponent);
-			placeActorValidly(adversary, randomRoom);
-			this.adversaryLocations.replace(adversary, randomRoom);
-		} else {
-			destinationComponent.placeActor(adversary, destination);
-			this.adversaryLocations.replace(adversary, destinationComponent);
+			//If adversary is moving to a new room, remove them from the source room
+			//Otherwise, remove them from their current position
+			if (!destinationComponent.equals(sourceComponent)) {
+				sourceComponent.removeActor(adversary);
+			} else {
+				destinationComponent.removeActor(adversary);
+			}	
+			
+			//If the adversary interacts with a player, remove the player from the level
+			if (interaction.equals(InteractionResult.REMOVE_PLAYER)) {
+				Tile destinationTile = destinationComponent.getDestinationTile(destination);
+				this.playerLocations.remove(destinationTile.getActor());
+			}	
+			
+			//Place the adversary and update their location, if they are teleporting place in random room
+			if (interaction.equals(InteractionResult.TELEPORT)) {
+				Room randomRoom = findRandomRoom(sourceComponent);
+				placeActorValidly(adversary, randomRoom);
+				this.adversaryLocations.replace(adversary, randomRoom);
+			} else {
+				destinationComponent.placeActor(adversary, destination);
+				this.adversaryLocations.replace(adversary, destinationComponent);
+			}
+			
 		}
 
 		return interaction;

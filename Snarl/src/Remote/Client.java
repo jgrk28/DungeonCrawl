@@ -219,11 +219,14 @@ public class Client {
 		List<Item> items = TestLevel.parseObjects(json);
 		JSONArray JSONActors = json.getJSONArray("actors");
 		String renderedMap = renderMap(layout, position, items, JSONActors);
+		int currentHealth = json.getInt("current-health");
+		int maxHealth = json.getInt("max-health");
 
 		//Update the local player with their current position
 		this.player.updatePosition(position);
 		
 		this.player.displayMessage("Current position: [" + position.x + "," + position.y + "]");
+		this.player.displayMessage("You have " + currentHealth + " out of " + maxHealth + " health points\n");
 		this.player.displayMessage(renderedMap);
 		if (!json.isNull("message")) {
 			String message = json.getString("message");

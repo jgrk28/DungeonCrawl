@@ -69,6 +69,8 @@ public class RemotePlayer implements Player {
 			List<Point> visibleDoors = gameState.getVisibleDoors();
 			List<Item> visibleItems = gameState.getVisibleItems();
 			Map<Actor, Point> visibleActors = gameState.getVisibleActors();
+			int currentHealth = gameState.getCurrentHealth();
+			int maxHealth = gameState.getMaxHealth();
 
 			//Generate the JSON representation of the player's state
 			JSONArray layout = generateLayout(playerMap, absolutePosition, visibleDoors);
@@ -88,6 +90,8 @@ public class RemotePlayer implements Player {
 			} else {
 				playerUpdate.put("message", message);
 			}
+			playerUpdate.put("current-health", currentHealth);
+			playerUpdate.put("max-health", maxHealth);
 			this.server.sendMessage(this.name, playerUpdate.toString());
 		}
 	}

@@ -7,6 +7,8 @@ import Game.modelView.EntityType;
  * The ASCII representation of a Ghost is "Z"
  */
 public class Zombie extends Adversary {
+	
+	private static final int damage = 7;
 
 	/**
 	 * Initialize a Zombie with a unique name
@@ -56,7 +58,12 @@ public class Zombie extends Adversary {
 			case SPACE:
 				return InteractionResult.NONE;
 			case PLAYER:
-				return InteractionResult.REMOVE_PLAYER;
+				Player player = (Player)destTile.getActor();
+				if (player.isFatal(this.getDamage())) {
+					return InteractionResult.REMOVE_PLAYER;
+				} else {
+					return InteractionResult.DAMAGE_PLAYER;
+				}
 			case ZOMBIE:
 				//This will return the same result as ghost
 			case GHOST:
@@ -73,6 +80,11 @@ public class Zombie extends Adversary {
 	@Override
 	public EntityType getEntityType() {
 		return EntityType.ZOMBIE;
+	}
+
+	@Override
+	public int getDamage() {
+		return damage;
 	}
 
 }

@@ -5,5 +5,5 @@ package Game.model;
  * tile.
  */
 public enum InteractionResult {
-	EXIT, FOUND_KEY, REMOVE_PLAYER, NONE, TELEPORT
+	EXIT, FOUND_KEY, DAMAGE_PLAYER, REMOVE_PLAYER, NONE, TELEPORT
 }
