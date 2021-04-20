@@ -534,7 +534,8 @@ public class LevelImpl implements Level {
 		boolean removePlayer = interaction.equals(InteractionResult.EXIT)
 				|| interaction.equals(InteractionResult.REMOVE_PLAYER);
 		
-		//TODO Add comment
+		//If the player is damaged by an adversary, decrease their health
+		//Otherwise, move the player
 		if (interaction.equals(InteractionResult.DAMAGE_PLAYER)) {
 			//TODO maybe move incrementally if there is a valid tile between the player
 			//and the destination 
@@ -580,7 +581,8 @@ public class LevelImpl implements Level {
 		Tile destTile = destinationComponent.getDestinationTile(destination);
 		InteractionResult interaction = adversary.getTileInteractionResult(destTile);
 			
-		//TODO Add comment
+		//If the adversary damages a player, decrease the player's health
+		//Otherwise, move the adversary
 		if (interaction.equals(InteractionResult.DAMAGE_PLAYER)) {
 			Player player = (Player)destTile.getActor();
 			player.decreaseHealth(adversary.getDamage());
@@ -591,8 +593,7 @@ public class LevelImpl implements Level {
 				sourceComponent.removeActor(adversary);
 			} else {
 				destinationComponent.removeActor(adversary);
-			}	
-			
+			}			
 			//If the adversary interacts with a player, remove the player from the level
 			if (interaction.equals(InteractionResult.REMOVE_PLAYER)) {
 				Tile destinationTile = destinationComponent.getDestinationTile(destination);

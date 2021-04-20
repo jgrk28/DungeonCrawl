@@ -51,7 +51,7 @@ public class GameManagerTest {
 		this.gameManager.registerPlayer("Juliette", player2);
 	}
 	
-	@Test (expected = IllegalArgumentException.class)
+	@Test (expected = IllegalStateException.class)
 	public void registerActorsTooManyPlayers() {
 		Common.Player player1 = new TestPlayer(new ArrayList<>(), new JSONArray());
 		Common.Player player2 = new TestPlayer(new ArrayList<>(), new JSONArray());

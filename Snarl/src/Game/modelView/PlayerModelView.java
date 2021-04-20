@@ -112,12 +112,12 @@ public class PlayerModelView {
   public int getNumExits() { return this.player.getNumExits(); }
   
   /**
-   * TODO
+   * Gets the current health points for the player
    */
   public int getCurrentHealth() { return this.player.getCurrentHealth(); }
   
   /**
-   * TODO
+   * Gets the starting number of health points for the player
    */
   public int getMaxHealth() { return this.player.getMaxHealth(); }
 }

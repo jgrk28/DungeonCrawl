@@ -49,8 +49,8 @@ public abstract class Adversary extends AbstractActor {
 	}
 	
 	/**
-	 * TODO
-	 * @return
+	 * Returns the damage that this adversary does when interacting with a player
+	 * @return the value corresponding to the damage done
 	 */
 	public abstract int getDamage();
 }

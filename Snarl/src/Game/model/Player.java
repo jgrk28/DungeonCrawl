@@ -343,30 +343,32 @@ public class Player extends AbstractActor {
 	}
 		
 	/**
-	 * TODO
-	 * @param damage
+	 * Decreases the player's health points
+	 * @param damage - the amount to decrease this player's health 
+	 * points by
 	 */
 	public void decreaseHealth(int damage) {
 		this.healthPoints = this.healthPoints - damage;
 	}
 	
 	/**
-	 * TODO
-	 * @return
+	 * Determines if the provided damage value would be fatal for the
+	 * player
+	 * @return true if the damage is fatal, false otherwise
 	 */
 	public boolean isFatal(int damage) {
 		return this.healthPoints <= damage;
 	}
 	
 	/**
-	 * TODO
+	 * Getter for the current health points of this player
 	 */
 	public int getCurrentHealth() { 
 		return this.healthPoints; 
 	}
 	  
 	/**
-	 * TODO
+	 * Getter for the starting number of health points for this player
 	 */
 	public int getMaxHealth() { 
 		return startingHealthPoints; 
