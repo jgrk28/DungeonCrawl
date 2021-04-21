@@ -89,6 +89,7 @@ public class TraceManager extends GameManager {
 	 */
 	private String interactionResultToString(InteractionResult interactionResult) {
 		switch (interactionResult) {
+			case DAMAGE_PLAYER:
 			case NONE:
 				return "OK";
 			case FOUND_KEY:

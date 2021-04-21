@@ -1,4 +1,5 @@
 # Hit Point & Combat System
+Our hit point system gives adversaries the ability to attack players. Each player starts with a certain number of health points that protect them from adversary attacks. When a player's health points reach 0, they are expelled from the level. When an adversary attacks a player they reduce that player's health points by the amount of "damage" they do. Since ghosts are more mobile, they do less damage than zombies. Players do not have the ability to attack other players or adversaries.
 
 ## Players
 * Players are unable to damage to adversaries or players
@@ -19,4 +20,18 @@
 ### Zombies
 * The damage by a zombie is 7 health points
 
-//TODO add notes about snarl protocol changes
+## Snarl Protocol
+Two additional fields have been added to the player update message for the Snarl protocol. These fields indicate the player's current and maximum health points. 
+```
+A (player-update-message) is a JSON object containing a player update and an optional message from the server.
+
+{ "type": "player-update",
+  "current-health": (natural),
+  "max-health": (natural),
+  "layout": (tile-layout),
+  "position": (point),
+  "objects": (object-list),
+  "actors": (actor-position-list),
+  "message": (maybe-string)
+}
+```

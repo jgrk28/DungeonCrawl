@@ -313,7 +313,9 @@ public class GameManager {
 	 */
 	private String interactionResultToString(InteractionResult interactionResult) {
 		switch (interactionResult) {
-			case NONE:
+      case DAMAGE_PLAYER:
+        //return "OK"
+      case NONE:
 				return "OK";
 			case FOUND_KEY:
 				return "Key";
@@ -398,7 +400,7 @@ public class GameManager {
         this.levelExitedPlayers.add(player.getName());
         return "Player " + player.getName() + " exited.\n";
       case DAMAGE_PLAYER:
-    	return "Player " + player.getName() + " was damaged.\n";
+    	  return "Player " + player.getName() + " was damaged.\n";
 	default:
 		return null;
     }
