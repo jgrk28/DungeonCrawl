@@ -20,7 +20,7 @@ public class LocalObserverTest {
     LocalObserver observer = new LocalObserver();
     observer.update("Hello World");
 
-    assertEquals("Hello World\n", output.toString());
+    assertEquals("OBSERVER VIEW\nHello World\n", output.toString());
   }
 
   @Test
@@ -41,6 +41,7 @@ public class LocalObserverTest {
         + "        XXXXX\n";
 
     String expectedOut = ""
+        + "OBSERVER VIEW\n"
         + "X.XX         \n"
         + "X..X         \n"
         + "X..X         \n"

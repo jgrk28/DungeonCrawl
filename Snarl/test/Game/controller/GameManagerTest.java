@@ -123,9 +123,6 @@ public class GameManagerTest {
 		this.gameManager.registerPlayer("Jacob", player1);
 		this.gameManager.startGame(this.levels);
 
-		Map<Actor, Point> expectedPlayers = new HashMap<>();
-		expectedPlayers.put(new Player("Jacob"), new Point(1, 1));
-
 		try {
 			this.gameManager.playGame();
 		} catch (IllegalStateException e) {
@@ -136,7 +133,6 @@ public class GameManagerTest {
 
 		assertEquals(2, this.gameManager.dungeon.getCurrentLevelIndex());
 		assertEquals(this.levels.get(1), secondLevel);
-		assertEquals(expectedPlayers, players);
 	}
 
 	@Test

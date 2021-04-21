@@ -128,8 +128,11 @@ public class LocalPlayerTest {
     LocalPlayer player = new LocalPlayer();
     player.update(playerModelView, null);
 
-    String expectedOut = "You are currently on level: 1\n"
+    String expectedOut = "PLAYER VIEW\n"
+        + "You are currently on level: 1\n"
         + "You are active in the level\n"
+        + "You have 20 out of 20 health points\n"
+        + "Current location: [4,2]\n"
         + "XX   \n"
         + ".X   \n"
         + "..P**\n"
@@ -153,8 +156,11 @@ public class LocalPlayerTest {
     LocalPlayer player = new LocalPlayer();
     player.update(playerModelView, null);
 
-    String expectedOut = "You are currently on level: 1\n"
+    String expectedOut = "PLAYER VIEW\n"
+        + "You are currently on level: 1\n"
         + "You are active in the level\n"
+        + "You have 20 out of 20 health points\n"
+        + "Current location: [3,17]\n"
         + "....X\n"
         + "....X\n"
         + ".ZP!X\n"

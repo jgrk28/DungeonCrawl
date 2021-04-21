@@ -247,6 +247,11 @@ public class LevelTest {
   @Test
   public void testPlayerActionSelfElim() {
     level.playerAction(this.player2, new Point(7, 8));
+    level.playerAction(this.player2, new Point(7, 8));
+    level.playerAction(this.player2, new Point(7, 8));
+    level.playerAction(this.player2, new Point(7, 8));
+    level.playerAction(this.player3, new Point(2, 17));
+    level.playerAction(this.player3, new Point(2, 17));
     level.playerAction(this.player3, new Point(2, 17));
 
     String expectedOut = ""
@@ -277,6 +282,9 @@ public class LevelTest {
     level.playerAction(this.player1, new Point(6, 4));
     level.playerAction(this.player1, new Point(6, 6));
     level.playerAction(this.player1, new Point(6, 8));
+    level.playerAction(this.player1, new Point(7, 8));
+    level.playerAction(this.player1, new Point(7, 8));
+    level.playerAction(this.player1, new Point(7, 8));
     level.playerAction(this.player1, new Point(7, 8));
     Assert.assertEquals(GameState.LOST, level.isLevelOver());
   }
@@ -316,10 +324,15 @@ public class LevelTest {
 
     //Eliminate both the players so the game ends
     level.playerAction(this.player3, new Point(2, 17));
+    level.playerAction(this.player3, new Point(2, 17));
+    level.playerAction(this.player3, new Point(2, 17));
     level.playerAction(this.player1, new Point(6, 2));
     level.playerAction(this.player1, new Point(6, 4));
     level.playerAction(this.player1, new Point(6, 6));
     level.playerAction(this.player1, new Point(6, 8));
+    level.playerAction(this.player1, new Point(7, 8));
+    level.playerAction(this.player1, new Point(7, 8));
+    level.playerAction(this.player1, new Point(7, 8));
     level.playerAction(this.player1, new Point(7, 8));
     assertEquals(GameState.WON, level.isLevelOver());
   }
@@ -499,6 +512,11 @@ public class LevelTest {
   public void testAdversaryActionRemovePlayer() {
     level.adversaryAction(this.ghost1, new Point(7, 9));
     level.adversaryAction(this.ghost1, new Point(7, 10));
+    level.adversaryAction(this.ghost1, new Point(7, 10));
+    level.adversaryAction(this.ghost1, new Point(7, 10));
+    level.adversaryAction(this.ghost1, new Point(7, 10));
+    level.adversaryAction(this.zombie, new Point(3, 17));
+    level.adversaryAction(this.zombie, new Point(3, 17));
     level.adversaryAction(this.zombie, new Point(3, 17));
 
     String expectedOut = ""
@@ -535,6 +553,9 @@ public class LevelTest {
     level.adversaryAction(this.ghost1, new Point(6, 3));
     level.adversaryAction(this.ghost1, new Point(6, 2));
     level.adversaryAction(this.ghost1, new Point(5, 2));
+    level.adversaryAction(this.ghost1, new Point(4, 2));
+    level.adversaryAction(this.ghost1, new Point(4, 2));
+    level.adversaryAction(this.ghost1, new Point(4, 2));
     level.adversaryAction(this.ghost1, new Point(4, 2));
     assertEquals(GameState.LOST, level.isLevelOver());
   }

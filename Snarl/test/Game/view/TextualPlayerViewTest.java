@@ -69,6 +69,8 @@ public class TextualPlayerViewTest {
 
 		String expectedOut = "You are currently on level: 1\n"
 				+ "You are active in the level\n"
+				+ "You have 20 out of 20 health points\n"
+				+ "Current location: [4,2]\n"
 				+ "XX   \n"
 				+ ".X   \n"
 				+ "..P**\n"
@@ -84,6 +86,8 @@ public class TextualPlayerViewTest {
 
 		String expectedOut = "You are currently on level: 1\n"
 				+ "You are active in the level\n"
+				+ "You have 20 out of 20 health points\n"
+				+ "Current location: [7,10]\n"
 				+ "X.GX \n"
 				+ "X..X \n"
 				+ "X.PX \n"
@@ -99,6 +103,8 @@ public class TextualPlayerViewTest {
 		
 		String expectedOut = "You are currently on level: 1\n"
 				+ "You are active in the level\n"
+				+ "You have 20 out of 20 health points\n"
+				+ "Current location: [3,17]\n"
 				+ "....X\n"
 				+ "....X\n"
 				+ ".ZP!X\n"
@@ -120,6 +126,8 @@ public class TextualPlayerViewTest {
 		
 		String expectedOut = "You are currently on level: 2\n"
 				+ "You are active in the level\n"
+				+ "You have 20 out of 20 health points\n"
+				+ "Current location: [2,1]\n"
 				+ "     \n"
 				+ "XXXX \n"
 				+ "XPPX \n"
@@ -128,7 +136,6 @@ public class TextualPlayerViewTest {
 
 		testDrawPlayerView(playerModelView, expectedOut);
 	}
-	
 	
 	//Test for when a player is no longer in the level
 	@Test
@@ -148,6 +155,9 @@ public class TextualPlayerViewTest {
 		level.playerAction(player2, new Point(6, 10));
 		level.playerAction(player2, new Point(7, 11));
 		level.playerAction(player2, new Point(9, 11));
+		level.playerAction(player2, new Point(13, 11));
+		level.playerAction(player2, new Point(13, 11));
+		level.playerAction(player2, new Point(13, 11));
 		level.playerAction(player2, new Point(13, 11));
 
 		DungeonModelView view = this.dungeon;

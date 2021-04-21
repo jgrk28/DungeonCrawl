@@ -84,6 +84,9 @@ public class PlayerModelViewTest {
 		firstLevel.playerAction(player0, new Point(6, 8));
 		assertTrue(playerModelView0.isPlayerAlive());
 		firstLevel.playerAction(player0, new Point(7, 8));
+		firstLevel.playerAction(player0, new Point(7, 8));
+		firstLevel.playerAction(player0, new Point(7, 8));
+		firstLevel.playerAction(player0, new Point(7, 8));
 		assertFalse(playerModelView0.isPlayerAlive());
 	}
 		

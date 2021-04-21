@@ -112,6 +112,8 @@ public class ClientTest {
 
     JSONObject updateJSON = new JSONObject();
     updateJSON.put("type", "player-update");
+    updateJSON.put("current-health", 20);
+    updateJSON.put("max-health", 20);
     updateJSON.put("layout", layout);
     updateJSON.put("position", position);
     updateJSON.put("objects", objectList);
@@ -121,13 +123,15 @@ public class ClientTest {
     this.client.updatePlayer(updateJSON);
 
     String expectedMessage1 = "Current position: [5,3]";
-    String expectedMessage2 = "XXXXX\n"
+    String expectedMessage2 = "You have 20 out of 20 health points\n";
+    String expectedMessage3 = "XXXXX\n"
         + "XXXXX\n"
         + "..PXX\n"
         + ".@.|.\n"
         + "...XX\n";
     assertEquals(expectedMessage1, this.player.messages.get(0));
     assertEquals(expectedMessage2, this.player.messages.get(1));
+    assertEquals(expectedMessage3, this.player.messages.get(2));
   }
 
   @Test

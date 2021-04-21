@@ -75,18 +75,18 @@ public class TextualPlayerView extends AbstractTextualView {
 	private String drawActiveLevel() {
 		int currLevelIndex = playerModelView.getCurrentLevel();
 		Boolean isAlive = playerModelView.isPlayerAlive();
-		Point playerLocation = playerModelView.getPosition();
 		int currentHealth = playerModelView.getCurrentHealth();
 		int maxHealth = playerModelView.getMaxHealth();
 
 		StringBuilder toOutput = new StringBuilder();
 		toOutput.append("You are currently on level: " + currLevelIndex + "\n");
 		if (isAlive) {
+			Point playerLocation = playerModelView.getPosition();
 			toOutput.append("You are active in the level\n");
 			toOutput.append("You have " + currentHealth + " out of " + maxHealth + " health points\n");
 			toOutput.append("Current location: [" + playerLocation.x + "," + playerLocation.y + "]\n");
 			List<List<EntityType>> level = playerModelView.getMap();
-			toOutput.append(drawLevelMap(level) + "\n");
+			toOutput.append(drawLevelMap(level));
 		} else {
 			toOutput.append("You are no longer active in the level\n");
 		}

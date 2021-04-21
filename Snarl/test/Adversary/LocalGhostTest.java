@@ -2,7 +2,6 @@ package Adversary;
 
 import static org.junit.Assert.*;
 
-import Game.model.Actor;
 import Game.model.Adversary;
 import Game.model.Level;
 import Game.model.ModelCreator;
@@ -25,6 +24,7 @@ public class LocalGhostTest {
   Adversary zombie1;
   Adversary zombie2;
   Map<Player, Point> playerLocations;
+  Level level;
 
   //These tests also implicitly test getLevelStart and updateActorLocations
   @Before
@@ -32,7 +32,7 @@ public class LocalGhostTest {
     ModelCreator creator = new ModelCreator();
 
     this.ghostClient = new LocalGhost();
-    Level level = creator.initializeLevel1NoActor();
+    this.level = creator.initializeLevel1NoActor();
     this.ghostClient.getLevelStart(level);
 
     this.player1 = creator.getPlayer1();
@@ -81,6 +81,7 @@ public class LocalGhostTest {
     adversaryLocation.put(this.zombie1, new Point(7,9));
     adversaryLocation.put(this.zombie2, new Point(6,2));
 
+    this.level.placeActorsSpecifiedLocation(this.playerLocations, adversaryLocation);
     this.ghostClient.updateActorLocations(this.playerLocations, adversaryLocation, this.ghost1);
 
     Set<Point> acceptableMoves = new HashSet<>();
@@ -100,6 +101,7 @@ public class LocalGhostTest {
     adversaryLocation.put(this.zombie1, new Point(6,10));
     adversaryLocation.put(this.zombie2, new Point(4,15));
 
+    this.level.placeActorsSpecifiedLocation(this.playerLocations, adversaryLocation);
     this.ghostClient.updateActorLocations(this.playerLocations, adversaryLocation, this.ghost1);
     assertEquals(new Point(2, 2), this.ghostClient.takeTurn());
 
@@ -115,6 +117,7 @@ public class LocalGhostTest {
     adversaryLocation.put(this.zombie1, new Point(6,10));
     adversaryLocation.put(this.zombie2, new Point(4,15));
 
+    this.level.placeActorsSpecifiedLocation(this.playerLocations, adversaryLocation);
     this.ghostClient.updateActorLocations(this.playerLocations, adversaryLocation, this.ghost1);
     Set<Point> acceptableMoves1 = new HashSet<>();
     acceptableMoves1.add(new Point(13,12));
@@ -136,6 +139,7 @@ public class LocalGhostTest {
     adversaryLocation.put(this.zombie1, new Point(6,10));
     adversaryLocation.put(this.zombie2, new Point(4,15));
 
+    this.level.placeActorsSpecifiedLocation(this.playerLocations, adversaryLocation);
     this.ghostClient.updateActorLocations(this.playerLocations, adversaryLocation, this.ghost1);
     assertTrue(this.ghostClient.checkValidMove(new Point(1, 1)));
     assertTrue(this.ghostClient.checkValidMove(new Point(3, 1)));
@@ -157,6 +161,7 @@ public class LocalGhostTest {
     adversaryLocation.put(this.zombie1, new Point(6,10));
     adversaryLocation.put(this.zombie2, new Point(4,15));
 
+    this.level.placeActorsSpecifiedLocation(this.playerLocations, adversaryLocation);
     this.ghostClient.updateActorLocations(this.playerLocations, adversaryLocation, this.ghost1);
     assertFalse(this.ghostClient.checkValidMove(new Point(7, 2)));
     assertFalse(this.ghostClient.checkValidMove(new Point(6, 1)));

@@ -11,7 +11,7 @@ public class LocalObserver implements Observer {
 
 	@Override
 	public void update(String gameState) { 
-		System.out.print("OBSERVER VIEW\n");
-		System.out.print(gameState); }
+		System.out.println("OBSERVER VIEW");
+		System.out.println(gameState); }
 
 }

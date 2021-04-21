@@ -24,6 +24,7 @@ public class LocalZombieTest {
   Adversary zombie1;
   Adversary zombie2;
   Map<Player, Point> playerLocations;
+  Level level;
 
   //These tests also implicitly test getLevelStart and updateActorLocations
   @Before
@@ -31,7 +32,7 @@ public class LocalZombieTest {
     ModelCreator creator = new ModelCreator();
 
     this.zombieClient = new LocalZombie();
-    Level level = creator.initializeLevel1NoActor();
+    this.level = creator.initializeLevel1NoActor();
     this.zombieClient.getLevelStart(level);
 
     this.player1 = creator.getPlayer1();
@@ -80,6 +81,7 @@ public class LocalZombieTest {
     adversaryLocation.put(this.zombie1, new Point(7,9));
     adversaryLocation.put(this.zombie2, new Point(2,16));
 
+    this.level.placeActorsSpecifiedLocation(this.playerLocations, adversaryLocation);
     this.zombieClient.updateActorLocations(this.playerLocations, adversaryLocation, this.zombie1);
 
     Set<Point> acceptableMoves = new HashSet<>();
@@ -99,6 +101,7 @@ public class LocalZombieTest {
     adversaryLocation.put(this.zombie1, new Point(6,9));
     adversaryLocation.put(this.zombie2, new Point(3,15));
 
+    this.level.placeActorsSpecifiedLocation(this.playerLocations, adversaryLocation);
     this.zombieClient.updateActorLocations(this.playerLocations, adversaryLocation, this.zombie1);
     assertEquals(new Point(7, 9), this.zombieClient.takeTurn());
 
@@ -114,6 +117,7 @@ public class LocalZombieTest {
     adversaryLocation.put(this.zombie1, new Point(2,2));
     adversaryLocation.put(this.zombie2, new Point(16,13));
 
+    this.level.placeActorsSpecifiedLocation(this.playerLocations, adversaryLocation);
     this.zombieClient.updateActorLocations(this.playerLocations, adversaryLocation, this.zombie1);
     assertEquals(new Point(1, 2), this.zombieClient.takeTurn());
 
@@ -134,6 +138,7 @@ public class LocalZombieTest {
     adversaryLocation.put(this.zombie1, new Point(6,10));
     adversaryLocation.put(this.zombie2, new Point(16,13));
 
+    this.level.placeActorsSpecifiedLocation(this.playerLocations, adversaryLocation);
     this.zombieClient.updateActorLocations(this.playerLocations, adversaryLocation, this.zombie1);
     assertTrue(this.zombieClient.checkValidMove(new Point(6, 11)));
     assertTrue(this.zombieClient.checkValidMove(new Point(6, 9)));
@@ -153,6 +158,7 @@ public class LocalZombieTest {
     adversaryLocation.put(this.zombie1, new Point(6,10));
     adversaryLocation.put(this.zombie2, new Point(3,2));
 
+    this.level.placeActorsSpecifiedLocation(this.playerLocations, adversaryLocation);
     this.zombieClient.updateActorLocations(this.playerLocations, adversaryLocation, this.zombie1);
     assertFalse(this.zombieClient.checkValidMove(new Point(6, 9)));
     assertFalse(this.zombieClient.checkValidMove(new Point(5, 10)));

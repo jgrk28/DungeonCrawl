@@ -81,20 +81,9 @@ public class ActorTest {
 	  Adversary ghost = new Ghost();
 	  assertEquals(InteractionResult.NONE, ghost.getInteractionResult(EntityType.SPACE));
 	  assertEquals(InteractionResult.NONE, ghost.getInteractionResult(EntityType.HALL_SPACE));
+    assertEquals(InteractionResult.NONE, ghost.getInteractionResult(EntityType.KEY));
+    assertEquals(InteractionResult.NONE, ghost.getInteractionResult(EntityType.EXIT));
 	  assertEquals(InteractionResult.REMOVE_PLAYER, ghost.getInteractionResult(EntityType.PLAYER));	  
-  }
-  
-  //Testing invalid interactions for ghosts
-  @Test (expected = IllegalArgumentException.class)
-  public void testInvalidGhostInteractionResultKey() {
-	  Adversary ghost = new Ghost();
-	  ghost.getInteractionResult(EntityType.KEY);
-  }
-  
-  @Test (expected = IllegalArgumentException.class)
-  public void testInvalidGhostInteractionResultExit() {
-	  Adversary ghost = new Ghost();
-	  ghost.getInteractionResult(EntityType.EXIT);
   }
   
   @Test (expected = IllegalArgumentException.class)
@@ -115,22 +104,11 @@ public class ActorTest {
 	  Adversary zombie = new Zombie();
 	  assertEquals(InteractionResult.NONE, zombie.getInteractionResult(EntityType.SPACE));
 	  assertEquals(InteractionResult.NONE, zombie.getInteractionResult(EntityType.HALL_SPACE));
+    assertEquals(InteractionResult.NONE, zombie.getInteractionResult(EntityType.KEY));
+    assertEquals(InteractionResult.NONE, zombie.getInteractionResult(EntityType.EXIT));
 	  assertEquals(InteractionResult.REMOVE_PLAYER, zombie.getInteractionResult(EntityType.PLAYER));	  
   }
-  
-  //Testing invalid interaction for zombies
-  @Test (expected = IllegalArgumentException.class)
-  public void testInvalidZombieInteractionResultKey() {
-	  Adversary zombie = new Zombie();
-	  zombie.getInteractionResult(EntityType.KEY);
-  }
-  
-  @Test (expected = IllegalArgumentException.class)
-  public void testInvalidZombieInteractionResultExit() {
-	  Adversary zombie = new Zombie();
-	  zombie.getInteractionResult(EntityType.EXIT);
-  }
-  
+
   @Test (expected = IllegalArgumentException.class)
   public void testInvalidZombieInteractionResultGhost() {
 	  Adversary zombie = new Zombie();

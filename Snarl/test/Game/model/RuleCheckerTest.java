@@ -285,6 +285,9 @@ public class RuleCheckerTest {
 		level.playerAction(player3, new Point(7, 11));
 		level.playerAction(player3, new Point(9, 11));
 		level.playerAction(player3, new Point(13, 11));
+		level.playerAction(player3, new Point(13, 11));
+		level.playerAction(player3, new Point(13, 11));
+		level.playerAction(player3, new Point(13, 11));
 
 		//Player 2 die
 		level.playerAction(player2, new Point(2, 2));
@@ -297,6 +300,9 @@ public class RuleCheckerTest {
 		level.playerAction(player2, new Point(7, 11));
 		level.playerAction(player2, new Point(9, 11));
 		level.playerAction(player2, new Point(13, 11));
+		level.playerAction(player2, new Point(13, 11));
+		level.playerAction(player2, new Point(13, 11));
+		level.playerAction(player2, new Point(13, 11));
 
 		//Player 1 die
 		level.playerAction(player1, new Point(2, 2));
@@ -308,6 +314,9 @@ public class RuleCheckerTest {
 		level.playerAction(player1, new Point(6, 10));
 		level.playerAction(player1, new Point(7, 11));
 		level.playerAction(player1, new Point(9, 11));
+		level.playerAction(player1, new Point(13, 11));
+		level.playerAction(player1, new Point(13, 11));
+		level.playerAction(player1, new Point(13, 11));
 		level.playerAction(player1, new Point(13, 11));
 	}
 
