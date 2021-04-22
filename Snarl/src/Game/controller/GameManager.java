@@ -2,6 +2,8 @@ package Game.controller;
 
 import Common.AdversaryClient;
 import Game.model.InteractionResult;
+import Game.model.LevelComponent;
+import Game.model.Tile;
 import Game.modelView.DungeonModelView;
 import Game.view.TextualDungeonView;
 import java.awt.Point;
@@ -368,6 +370,14 @@ public class GameManager {
             		message = processResult(result, player, this.playerClients.get(player));
                 this.playerClients.get(player).displayMessage("Eject");
             	}
+            }
+
+            if (result.equals(InteractionResult.DAMAGE_PLAYER)) {
+              Level currLevel = this.dungeon.getCurrentLevel();
+              LevelComponent destComponent = currLevel.findComponent(adversaryDestination);
+              Tile destTile = destComponent.getDestinationTile(adversaryDestination);
+              Player player = (Player) destTile.getActor();
+              message = processResult(result, player, this.playerClients.get(player));
             }
 
             //Notify all observers of the current game state for each turn

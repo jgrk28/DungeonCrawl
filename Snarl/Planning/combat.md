@@ -4,6 +4,7 @@ Our hit point system gives adversaries the ability to attack players. Each playe
 ## Players
 * Players are unable to damage to adversaries or players
 * They store a default starting health of 20 health points
+* Player's health points will reset each level
 * If they get hit, the health points are updated 
 * Once the health points have been reduced to 0 or below, they will be expelled from the level
 * A message is sent to the player when they are hit

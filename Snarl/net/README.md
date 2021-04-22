@@ -25,9 +25,11 @@ Before starting the client, ensure you are in the same directory as the snarlCli
 * `--port NUM`, where `NUM` is the port number the client should connect to. The default is `45678`.
 
 ### Playing the Game
-The user will start by entering their name to register with the GameManager. Once registered, the player's starting state will be displayed in the terminal, along with their current position. The player should pick a move and enter the x and y coordinates when prompted. Their view will update every time any player or adversary moves. If the player enters an invalid move, they will be notified and re-prompted. A user is given 3 retries before their turn is skipped.
+The user will start by entering their name to register with the GameManager. Once registered, the player's starting state will be displayed in the terminal, along with their current position and health points. The player should pick a move and enter the x and y coordinates when prompted. Their view will update every time any player or adversary moves. If the player enters an invalid move, they will be notified and re-prompted. A user is given 3 retries before their turn is skipped.
 
-If a player finds the key, is expelled, or exits the level, the corresponding message will be displayed in the terminal. If they successfully exit the level, they will automatically move on to the next level. Once the game is over, the rankings for all players will be displayed with the number of keys found, times they exited levels, and times they were expelled.
+The player starts each level with 20 health points. If they are attacked by an adversary their health points will decrease. If their health points ever reach zero, they are expelled from the level. A zombie does 7 damage points while a ghost does 5 damage points. A player does not have the ability to attack adversaries or other players.
+
+If a player finds the key, is expelled, is damaged, or exits the level, the corresponding message will be displayed in the terminal. If they successfully exit the level, they will automatically move on to the next level. Once the game is over, the rankings for all players will be displayed with the number of keys found, times they exited levels, and times they were expelled.
 
 ### Viewing the Game
 Each component in the game is represented in the following way:

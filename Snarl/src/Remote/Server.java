@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import java.util.concurrent.TimeUnit;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONTokener;
@@ -97,6 +98,11 @@ public class Server {
 
 		this.gameManager.startGame(levels, 1);	
 		this.gameManager.playGame();
+		try {
+			TimeUnit.SECONDS.sleep(3);
+		} catch (InterruptedException e) {
+			//Do nothing
+		}
 		disconnectClients();
 	}
 	

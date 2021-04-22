@@ -350,6 +350,13 @@ public class Player extends AbstractActor {
 	public void decreaseHealth(int damage) {
 		this.healthPoints = this.healthPoints - damage;
 	}
+
+	/**
+	 * Resets player's health points to starting value
+	 */
+	public void renewHealth() {
+		this.healthPoints = startingHealthPoints;
+	}
 	
 	/**
 	 * Determines if the provided damage value would be fatal for the

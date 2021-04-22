@@ -43,24 +43,30 @@ public class Dungeon implements RuleChecker, DungeonModelView {
 
 	/**
 	 * Starts the current level of the game and places the players and 
-	 * adversaries in the level.
+	 * adversaries in the level. Renews all player's health points
 	 * @return the level
 	 */
 	public Level startCurrentLevel(List<Adversary> adversaries) {
 		Level currLevel = getCurrentLevel();
 		currLevel.placeActors(this.players, adversaries);
+		for (Player player : this.players) {
+			player.renewHealth();
+		}
 		return currLevel;
 	}
 
 	/**
 	 * Starts the current level by placing all players and adversaries randomly
-	 * within the level map
+	 * within the level map. Renews all player's health points
 	 * @param adversaries - all adversaries in the level
 	 * @return the level with the placed actors
 	 */
 	public Level startCurrentLevelRandom(List<Adversary> adversaries) {
 		Level currLevel = getCurrentLevel();
 		currLevel.placeActorsRandomly(this.players, adversaries);
+		for (Player player : this.players) {
+			player.renewHealth();
+		}
 		return currLevel;
 	}
 
